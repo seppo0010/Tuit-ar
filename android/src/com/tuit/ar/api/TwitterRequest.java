@@ -2,14 +2,17 @@ package com.tuit.ar.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -19,6 +22,7 @@ import com.tuit.ar.api.request.Options;
 
 
 public class TwitterRequest {
+	static public enum Method { GET, POST };
 	private Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
@@ -41,15 +45,26 @@ public class TwitterRequest {
 		Twitter.getInstance().finishedRequest(this);
 	}
 
-	TwitterRequest(final Options url) throws Exception {
+	public TwitterRequest(final Options url, final HashMap<String, String> params,
+			final Method method) throws Exception {
 		setUrl(url);
-		final StringEntity entity = new StringEntity("");
 		(new Thread() {
 			public void run() {
 				DefaultHttpClient http = new DefaultHttpClient();
 
-				HttpPost post = new HttpPost("http" + (Twitter.isSecure ? "s" :"") + "://" + Twitter.BASE_URL + url.toString() + ".json");
-				post.setEntity(entity);
+				String full_url = "http" + (Twitter.isSecure ? "s" :"") + "://" + Twitter.BASE_URL + url.toString() + ".json";
+				HttpRequestBase request;
+				if (method == Method.POST) request = new HttpPost(full_url);
+				else {
+					String queryString = "";
+					if (params != null && params.size() > 0) {
+						queryString += "?";
+						for (String key : params.keySet()) {
+							queryString += URLEncoder.encode(key) + "=" + URLEncoder.encode(params.get(key)) + "&";
+						}
+					}
+					request = new HttpGet(full_url);
+				}
 
 				String username = Twitter.getInstance().getUsername();
 				String password = Twitter.getInstance().getPassword();
@@ -60,7 +75,7 @@ public class TwitterRequest {
 				}
 
 				try {
-					HttpResponse response = http.execute(post);
+					HttpResponse response = http.execute(request);
 					HttpEntity resEntity = response.getEntity();
 					setStatusCode(response.getStatusLine().getStatusCode());
 					

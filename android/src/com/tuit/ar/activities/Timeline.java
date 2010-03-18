@@ -25,21 +25,34 @@ import com.tuit.ar.models.Tweet;
 
 abstract public class Timeline extends ListActivity implements TwitterObserver {
 	ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-	TimelineAdapter timelineAdapter; 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.timeline);
-        
+	TimelineAdapter timelineAdapter;
+
+	protected int newestTweet = 0;
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.timeline);
+
 		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
 
 		Twitter twitter = Twitter.getInstance();
-        twitter.addObserver(this);
-        try {
+		twitter.addObserver(this);
+		try {
 			twitter.requestUrl(this.getTimeline());
 		} catch (Exception e) {
 			failedToUpdate();
 		}
-    }
+	}
+
+	protected void refresh() {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("since_id", String.valueOf(newestTweet));
+		try {
+			Twitter.getInstance().requestUrl(this.getTimeline(), params, TwitterRequest.Method.GET);
+		} catch (Exception e) {
+			failedToUpdate();
+		}
+	}
 
 	public void requestHasFinished(TwitterRequest request) {
 		try {
@@ -56,9 +69,15 @@ abstract public class Timeline extends ListActivity implements TwitterObserver {
 
 	protected void failedToUpdate() {
 		Toast.makeText(this, "Unable to fetch your timeline", Toast.LENGTH_SHORT);
-    }
+	}
 
-    abstract protected Options getTimeline();
+	abstract protected Options getTimeline();
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Twitter.getInstance().removeObserver(this);
+	}
 
 	protected class TimelineAdapter extends ArrayAdapter<Tweet> 
 	{
@@ -70,7 +89,7 @@ abstract public class Timeline extends ListActivity implements TwitterObserver {
 			super(context, R.layout.timeline_element, tweets);
 			this.context = context;
 		}
-		
+
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			TimelineElement element = getTimelineElement(convertView);

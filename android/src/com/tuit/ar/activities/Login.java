@@ -66,6 +66,7 @@ public class Login extends Activity implements TwitterObserver {
 
 	@Override
     public void onDestroy() {
+		super.onDestroy();
         Twitter.getInstance().removeObserver(this);
 	}
 }
