@@ -27,7 +27,7 @@ abstract public class Timeline extends ListActivity implements TwitterObserver {
 	ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	TimelineAdapter timelineAdapter;
 
-	protected int newestTweet = 0;
+	protected String newestTweet = "";
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +46,7 @@ abstract public class Timeline extends ListActivity implements TwitterObserver {
 
 	protected void refresh() {
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("since_id", String.valueOf(newestTweet));
+		params.put("since_id", newestTweet);
 		try {
 			Twitter.getInstance().requestUrl(this.getTimeline(), params, TwitterRequest.Method.GET);
 		} catch (Exception e) {
@@ -58,10 +58,15 @@ abstract public class Timeline extends ListActivity implements TwitterObserver {
 		try {
 			JSONArray tweets = new JSONArray(new JSONTokener(request.getResponse()));
 			int c = tweets.length();
-			for (int i = 0; i < c; i++) {
-				this.tweets.add(new Tweet(tweets.getJSONObject(i)));
+			if (c > 0) {
+				for (int i = c-1; i >= 0; i--) {
+					Tweet tweet = new Tweet(tweets.getJSONObject(i));
+					if (i == 0)
+						newestTweet = tweet.getId();
+					this.tweets.add(0, tweet);
+				}
+				timelineAdapter.notifyDataSetChanged();
 			}
-			timelineAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			failedToUpdate();
 		}

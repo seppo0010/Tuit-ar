@@ -63,7 +63,7 @@ public class TwitterRequest {
 							queryString += URLEncoder.encode(key) + "=" + URLEncoder.encode(params.get(key)) + "&";
 						}
 					}
-					request = new HttpGet(full_url);
+					request = new HttpGet(full_url + queryString);
 				}
 
 				String username = Twitter.getInstance().getUsername();

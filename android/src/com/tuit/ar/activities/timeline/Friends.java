@@ -1,6 +1,7 @@
 package com.tuit.ar.activities.timeline;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
@@ -23,6 +24,14 @@ public class Friends extends Timeline {
 		return true;  
 	}  
 
+	public boolean onOptionsItemSelected(MenuItem item) {  
+	    switch (item.getItemId()) {  
+	    case MENU_REFRESH:   
+	        refresh();  
+	        return true;  
+	    }
+	    return false;
+	}
 	public void requestTweets() {
 		try {
 			Twitter.getInstance().requestUrl(Options.FRIENDS_TIMELINE);
