@@ -5,5 +5,9 @@ public enum Options {
 		public String toString() {
 			return "account/verify_credentials";
 		}
-	}, PUBLIC_TIMELINE
+	}, FRIENDS_TIMELINE {
+		public String toString() {
+			return "statuses/home_timeline";
+		}
+	}
 }

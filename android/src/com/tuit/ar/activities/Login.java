@@ -1,6 +1,7 @@
 package com.tuit.ar.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
+import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterObserver;
 import com.tuit.ar.api.TwitterRequest;
@@ -51,18 +53,16 @@ public class Login extends Activity implements TwitterObserver {
 		Toast.makeText(this.getApplicationContext(), this.getString(R.string.unableToVerifyCredentials), Toast.LENGTH_LONG).show();
     }
 
-	@Override
-	public void requestHasFinished(TwitterRequest request) {
-		switch (request.getUrl()) {
-		case LOGIN:
-			if (request.getStatusCode() < 400) Toast.makeText(this.getApplicationContext(), "Welcome", Toast.LENGTH_LONG).show();
-			else loginFailed();
-			break;
-
-		default:
-			break;
-		}
-	}
+    @Override
+    public void requestHasFinished(TwitterRequest request) {
+    	if (request.getUrl().equals(Options.LOGIN)) {
+    		if (request.getStatusCode() >= 200 && request.getStatusCode() < 400) {
+    			Intent intent = new Intent(this.getApplicationContext(), Friends.class);
+    			this.startActivity(intent);		
+    		}
+    		else loginFailed();
+    	}
+    }
 
 	@Override
     public void onDestroy() {

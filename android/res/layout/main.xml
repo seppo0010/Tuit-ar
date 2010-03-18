@@ -5,7 +5,8 @@
 	<EditText android:id="@+id/username" android:hint="@+string/username"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"></EditText>
 	<EditText android:id="@+id/password" android:hint="@+string/password"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"></EditText>
+		android:password="true" android:layout_width="fill_parent"
+		android:layout_height="wrap_content"></EditText>
 	<Button android:text="@+string/login" android:id="@+id/login"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 </LinearLayout>

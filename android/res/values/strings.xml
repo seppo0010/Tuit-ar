@@ -6,4 +6,5 @@
 <string name="unableToVerifyCredentials">No se pudo verificar su usuario.</string>
 <string name="username">Nombre de usuario</string>
 <string name="password">Contraseña</string>
+<string name="unableToFetchTimeline">No se pudieron leer los mensajes</string>
 </resources>
