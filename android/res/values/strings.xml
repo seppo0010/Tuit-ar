@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Tuit-ar</string>
+<string name="login">Ingresar</string>
+<string name="unableToVerifyCredentials">No se pudo verificar su usuario.</string>
+<string name="username">Nombre de usuario</string>
+<string name="password">Contraseña</string>
+</resources>
