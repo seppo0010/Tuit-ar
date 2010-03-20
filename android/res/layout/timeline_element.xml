@@ -4,24 +4,27 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
-	android:background="#ffffff"
+	android:background="#000"
 	android:paddingBottom="10sp">
 	<TextView 
 		android:id="@+id/username"
 		android:text="username"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"/>
+		android:layout_alignParentTop="true"
+		android:textColor="#fff" />
 	<TextView 
 		android:id="@+id/message" 
 		android:text="text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/username" />
+		android:layout_below="@+id/username"
+		android:textColor="#fff" />
 	<TextView 
 		android:id="@+id/date" 
 		android:text="date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/message"/>
+		android:layout_below="@+id/message"
+		android:textColor="#fff" />
 </RelativeLayout>

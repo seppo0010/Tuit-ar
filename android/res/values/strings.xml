@@ -9,4 +9,16 @@
 <string name="unableToFetchTimeline">No se pudieron leer los mensajes</string>
 <string name="refresh">Actualizar</string>
 <string name="replies">Respuestas</string>
+<string name="directMessages">Mensajes Directos</string>
+<string name="preferences">Preferencias</string>
+<string-array name="updateIntervals"><item>1 minute</item>
+<item>5 minutes</item>
+</string-array>
+
+<string name="updatePreferences">Preferencias de Actualizacion</string>
+<string name="automaticUpdate">Actualizacion Automatica</string>
+<string name="updateInterval">Intervalo de Actualizacion</string>
+<string-array name="updateIntervalsValues"><item>1</item>
+<item>5</item>
+</string-array>
 </resources>
