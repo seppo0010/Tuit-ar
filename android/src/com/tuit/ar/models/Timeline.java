@@ -29,12 +29,16 @@ abstract public class Timeline implements TwitterObserver {
 	public void refresh() {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("since_id", newestTweet);
-		params.put("count", "5");
+		params.put("count", "25");
 		try {
 			Twitter.getInstance().requestUrl(this.getTimeline(), params, TwitterRequest.Method.GET);
 		} catch (Exception e) {
 			failedToUpdate();
 		}
+	}
+
+	public void requestHasStarted(TwitterRequest request) {
+		startedUpdate();
 	}
 
 	public void requestHasFinished(TwitterRequest request) {
@@ -49,11 +53,12 @@ abstract public class Timeline implements TwitterObserver {
 						newestTweet = tweet.getId();
 					this.tweets.add(0, tweet);
 				}
-				finishedUpdate();
+				timelineChanged();
 			}
 		} catch (JSONException e) {
 			failedToUpdate();
 		}
+		finishedUpdate();
 	}
 
 	public ArrayList<Tweet> getTweets() {
@@ -64,6 +69,12 @@ abstract public class Timeline implements TwitterObserver {
 		return tweets.subList(0, tweets.indexOf(tweet));
 	}
 
+	protected void startedUpdate() {
+		for (TimelineObserver observer : observers) {
+			observer.timelineRequestStarted(this);
+		}
+    }
+
 	protected void failedToUpdate() {
 		for (TimelineObserver observer : observers) {
 			observer.timelineUpdateHasFailed(this);
@@ -71,6 +82,12 @@ abstract public class Timeline implements TwitterObserver {
     }
 
     protected void finishedUpdate() {
+		for (TimelineObserver observer : observers) {
+			observer.timelineRequestFinished(this);
+		}
+    }
+
+    protected void timelineChanged() {
 		for (TimelineObserver observer : observers) {
 			observer.timelineHasChanged(this);
 		}

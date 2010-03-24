@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,9 +24,12 @@ public class Login extends Activity implements TwitterObserver {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
 
-        username = (EditText) findViewById(R.id.username);
+        setTitle(getString(R.string.login));
+
+		username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
 
         Button login = (Button) findViewById(R.id.login);
@@ -53,8 +57,13 @@ public class Login extends Activity implements TwitterObserver {
 		Toast.makeText(this.getApplicationContext(), this.getString(R.string.unableToVerifyCredentials), Toast.LENGTH_LONG).show();
     }
 
+	public void requestHasStarted(TwitterRequest request) {
+		this.setProgressBarIndeterminateVisibility(true);
+	}
+
     @Override
     public void requestHasFinished(TwitterRequest request) {
+		this.setProgressBarIndeterminateVisibility(false);
     	if (request.getUrl().equals(Options.LOGIN)) {
     		if (request.getStatusCode() >= 200 && request.getStatusCode() < 400) {
     			Intent intent = new Intent(this.getApplicationContext(), Friends.class);

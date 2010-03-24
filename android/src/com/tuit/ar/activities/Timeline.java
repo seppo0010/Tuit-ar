@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline);
 
 		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
@@ -51,6 +53,13 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
     	super.onPause();
     	isVisible = false;
     }
+
+	public void timelineRequestStarted(com.tuit.ar.models.Timeline timeline) {
+		this.setProgressBarIndeterminateVisibility(true);
+	}
+	public void timelineRequestFinished(com.tuit.ar.models.Timeline timeline) {
+		this.setProgressBarIndeterminateVisibility(false);
+	}
 
 	public void timelineHasChanged(com.tuit.ar.models.Timeline timeline) {
 		if (tweets.size() == 0)

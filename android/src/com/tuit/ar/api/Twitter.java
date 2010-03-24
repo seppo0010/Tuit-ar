@@ -26,7 +26,7 @@ public class Twitter {
 	public void requestUrl(Options login) throws Exception { requestUrl(login, null, TwitterRequest.Method.GET); }
 
 	public void requestUrl(Options login, HashMap<String, String> params, TwitterRequest.Method get) throws Exception {
-		new TwitterRequest(login, params, get);
+		startedRequest(new TwitterRequest(login, params, get));
 		
 	}
 	String getUsername() { return username; }
@@ -46,6 +46,11 @@ public class Twitter {
 		observers.remove(observer);
 	}
 
+	public void startedRequest(TwitterRequest twitterRequest) {
+		for (TwitterObserver observer : observers) {
+			observer.requestHasStarted(twitterRequest);
+		}
+	}
 	public void finishedRequest(TwitterRequest twitterRequest) {
 		for (TwitterObserver observer : observers) {
 			observer.requestHasFinished(twitterRequest);

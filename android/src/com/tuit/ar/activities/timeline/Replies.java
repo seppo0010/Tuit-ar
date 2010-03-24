@@ -1,6 +1,7 @@
 package com.tuit.ar.activities.timeline;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,6 +15,11 @@ public class Replies extends Timeline {
 	protected static final int MENU_FRIENDS = 1;
 	protected static final int MENU_DIRECT = 2;
 	protected static final int MENU_PREFERENCES = 3;
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setTitle(getString(R.string.replies));
+	}
 
 	@Override  
 	public boolean onCreateOptionsMenu(Menu menu) {  
