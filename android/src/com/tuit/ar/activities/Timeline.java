@@ -55,9 +55,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
     }
 
 	public void timelineRequestStarted(com.tuit.ar.models.Timeline timeline) {
-		this.setProgressBarIndeterminateVisibility(true);
+		if (isVisible)
+			this.setProgressBarIndeterminateVisibility(true);
 	}
 	public void timelineRequestFinished(com.tuit.ar.models.Timeline timeline) {
+		// We will remove the progress bar always... even if it is not visible
 		this.setProgressBarIndeterminateVisibility(false);
 	}
 
