@@ -7,13 +7,17 @@
 <string name="username">Nombre de usuario</string>
 <string name="password">Contraseña</string>
 <string name="unableToFetchTimeline">No se pudieron leer los mensajes</string>
+<string name="newTweet">Nuevo Mensaje</string>
 <string name="refresh">Actualizar</string>
 <string name="friends">Amigos</string>
 <string name="replies">Respuestas</string>
 <string name="directMessages">Mensajes Directos</string>
 <string name="preferences">Preferencias</string>
-<string-array name="updateIntervals"><item>1 minute</item>
-<item>5 minutes</item>
+<string name="send">Enviar</string>
+<string name="messageSent">Mensaje Enviado</string>
+<string name="unableToPost">No se pudo enviar</string>
+<string-array name="updateIntervals"><item>1 minuto</item>
+<item>5 minutos</item>
 </string-array>
 
 <string name="updatePreferences">Preferencias de Actualizacion</string>

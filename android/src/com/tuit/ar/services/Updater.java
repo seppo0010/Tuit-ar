@@ -10,9 +10,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.tuit.ar.R;
 import com.tuit.ar.models.Settings;
 import com.tuit.ar.models.SettingsObserver;
 import com.tuit.ar.models.timeline.Friends;
+import com.tuit.ar.models.timeline.Replies;
 
 public class Updater extends Service implements SettingsObserver {
 	private Timer timer;
@@ -22,8 +24,9 @@ public class Updater extends Service implements SettingsObserver {
 		public void run() {
 			try {
 				Friends.getInstance().refresh();
+				Replies.getInstance().refresh();
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(), "Unable to update timeline", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
 			}
 		}
 	};

@@ -13,5 +13,9 @@ public enum Options {
 		public String toString() {
 			return "statuses/mentions";
 		}
+	}, POST_TWEET {
+		public String toString() {
+			return "statuses/update";
+		}
 	}
 }

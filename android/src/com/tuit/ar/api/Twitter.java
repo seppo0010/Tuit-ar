@@ -1,7 +1,8 @@
 package com.tuit.ar.api;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import org.apache.http.NameValuePair;
 
 import com.tuit.ar.api.request.Options;
 
@@ -25,7 +26,7 @@ public class Twitter {
 
 	public void requestUrl(Options login) throws Exception { requestUrl(login, null, TwitterRequest.Method.GET); }
 
-	public void requestUrl(Options login, HashMap<String, String> params, TwitterRequest.Method get) throws Exception {
+	public void requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
 		startedRequest(new TwitterRequest(login, params, get));
 		
 	}

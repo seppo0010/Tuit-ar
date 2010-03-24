@@ -2,8 +2,9 @@ package com.tuit.ar.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -27,22 +28,23 @@ abstract public class Timeline implements TwitterObserver {
 	abstract protected Options getTimeline();
 
 	public void refresh() {
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("since_id", newestTweet);
-		params.put("count", "25");
+		ArrayList <NameValuePair> nvps = new ArrayList <NameValuePair>();
+		nvps.add(new BasicNameValuePair("since_id", newestTweet));
+		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
-			Twitter.getInstance().requestUrl(this.getTimeline(), params, TwitterRequest.Method.GET);
+			Twitter.getInstance().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
 		} catch (Exception e) {
 			failedToUpdate();
 		}
 	}
 
 	public void requestHasStarted(TwitterRequest request) {
+		if (!request.getUrl().equals(this.getTimeline())) return;
 		startedUpdate();
 	}
 
 	public void requestHasFinished(TwitterRequest request) {
-		if (request.getUrl() != this.getTimeline()) return;
+		if (!request.getUrl().equals(this.getTimeline())) return;
 		try {
 			JSONArray tweets = new JSONArray(new JSONTokener(request.getResponse()));
 			int c = tweets.length();

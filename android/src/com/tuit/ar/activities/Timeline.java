@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -15,15 +16,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
+import com.tuit.ar.activities.timeline.Friends;
+import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.models.Tweet;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
 
 abstract public class Timeline extends ListActivity implements TimelineObserver {
+	protected static final int MENU_NEW_TWEET = 0;   
+	protected static final int MENU_REFRESH = 1;   
+	protected static final int MENU_FRIENDS = 2;
+	protected static final int MENU_REPLIES = 3;
+	protected static final int MENU_DIRECT = 4;
+	protected static final int MENU_PREFERENCES = 5;
+
 	ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	TimelineAdapter timelineAdapter;
 	protected boolean isVisible;
 	protected String newestTweet = "";
+
+	abstract protected com.tuit.ar.models.Timeline getTimeline();
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,12 +49,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		this.startService(new Intent(this, Updater.class));
 	}
 
-	abstract protected com.tuit.ar.models.Timeline getTimeline();
-
-	protected void refresh() {
-		getTimeline().refresh();
-	}
-
     protected void onResume() {
     	super.onResume();
     	isVisible = true;
@@ -54,12 +60,55 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
     	isVisible = false;
     }
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		getTimeline().removeObserver(this);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {  
+	    switch (item.getItemId()) {  
+	    case MENU_REFRESH:
+	    {
+	        refresh();
+	        return true;
+	    }
+	    case MENU_FRIENDS:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), Friends.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_NEW_TWEET:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), NewTweet.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_REPLIES:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), Replies.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_PREFERENCES:
+	    {
+			Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
+			this.startActivity(intent);		
+	        return true;
+	    }
+	    }
+	    return false;
+	}
+
+	protected void refresh() {
+		getTimeline().refresh();
+	}
+
 	public void timelineRequestStarted(com.tuit.ar.models.Timeline timeline) {
-		if (isVisible)
-			this.setProgressBarIndeterminateVisibility(true);
+		this.setProgressBarIndeterminateVisibility(true);
 	}
 	public void timelineRequestFinished(com.tuit.ar.models.Timeline timeline) {
-		// We will remove the progress bar always... even if it is not visible
 		this.setProgressBarIndeterminateVisibility(false);
 	}
 
@@ -73,13 +122,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	}
 
 	public void timelineUpdateHasFailed(com.tuit.ar.models.Timeline timeline) {
-		Toast.makeText(this, "Unable to fetch your timeline", Toast.LENGTH_SHORT);
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		getTimeline().removeObserver(this);
+		Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT);
 	}
 
 	protected class TimelineAdapter extends ArrayAdapter<Tweet> 

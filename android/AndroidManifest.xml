@@ -14,6 +14,7 @@
     	<activity android:name=".activities.timeline.Friends" android:launchMode="singleInstance"></activity>
     	<activity android:name=".activities.timeline.Replies" android:launchMode="singleInstance"></activity>
     	<activity android:name=".activities.Preferences"></activity>
+    	<activity android:name=".activities.NewTweet"></activity>
 
     <service android:name="com.tuit.ar.services.Updater"></service>
 </application>

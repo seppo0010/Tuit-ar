@@ -2,19 +2,22 @@ package com.tuit.ar.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.HashMap;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 
 import android.os.Handler;
 
@@ -45,7 +48,7 @@ public class TwitterRequest {
 		Twitter.getInstance().finishedRequest(this);
 	}
 
-	public TwitterRequest(final Options url, final HashMap<String, String> params,
+	public TwitterRequest(final Options url, final ArrayList <NameValuePair> nvps,
 			final Method method) throws Exception {
 		setUrl(url);
 		(new Thread() {
@@ -54,13 +57,21 @@ public class TwitterRequest {
 
 				String full_url = "http" + (Twitter.isSecure ? "s" :"") + "://" + Twitter.BASE_URL + url.toString() + ".json";
 				HttpRequestBase request;
-				if (method == Method.POST) request = new HttpPost(full_url);
+				if (method == Method.POST) {
+					request = new HttpPost(full_url);
+					try {
+						((HttpPost) request).setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				}
 				else {
 					String queryString = "";
-					if (params != null && params.size() > 0) {
-						queryString += "?";
-						for (String key : params.keySet()) {
-							queryString += URLEncoder.encode(key) + "=" + URLEncoder.encode(params.get(key)) + "&";
+					if (nvps != null && nvps.size() > 0) {
+						try {
+							queryString += "?" + (new UrlEncodedFormEntity(nvps, HTTP.UTF_8)).toString();
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
 						}
 					}
 					request = new HttpGet(full_url + queryString);
