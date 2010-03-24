@@ -9,5 +9,9 @@ public enum Options {
 		public String toString() {
 			return "statuses/home_timeline";
 		}
+	}, REPLIES_TIMELINE {
+		public String toString() {
+			return "statuses/mentions";
+		}
 	}
 }

@@ -8,17 +8,17 @@ import com.tuit.ar.R;
 import com.tuit.ar.activities.Preferences;
 import com.tuit.ar.activities.Timeline;
 
-public class Friends extends Timeline {
+public class Replies extends Timeline {
 
 	protected static final int MENU_REFRESH = 0;   
-	protected static final int MENU_REPLIES = 1;
+	protected static final int MENU_FRIENDS = 1;
 	protected static final int MENU_DIRECT = 2;
 	protected static final int MENU_PREFERENCES = 3;
 
 	@Override  
 	public boolean onCreateOptionsMenu(Menu menu) {  
 		menu.add(0, MENU_REFRESH, 0, R.string.refresh);  
-		menu.add(0, MENU_REPLIES, 0, R.string.replies);  
+		menu.add(0, MENU_FRIENDS, 0, R.string.friends);  
 		menu.add(0, MENU_DIRECT, 0, R.string.directMessages);  
 		menu.add(0, MENU_PREFERENCES, 0, R.string.preferences);  
 		return true;  
@@ -28,26 +28,26 @@ public class Friends extends Timeline {
 	    switch (item.getItemId()) {  
 	    case MENU_REFRESH:
 	    {
-	        refresh();  
-	        return true;
+	    	refresh();  
+	        return true;  
 	    }
-	    case MENU_REPLIES:
+	    case MENU_FRIENDS:
 	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), Replies.class);
+	    	Intent intent = new Intent(this.getApplicationContext(), Friends.class);
 	    	this.startActivity(intent);		
 	    	return true;
 	    }
 	    case MENU_PREFERENCES:
 	    {
-			Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
-			this.startActivity(intent);		
-	        return true;
+	    	Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
+	    	this.startActivity(intent);		
+	    	return true;  
 	    }
 	    }
 	    return false;
 	}
 
 	protected com.tuit.ar.models.Timeline getTimeline() {
-		return com.tuit.ar.models.timeline.Friends.getInstance();
+		return com.tuit.ar.models.timeline.Replies.getInstance();
 	}
 }

@@ -3,12 +3,9 @@ package com.tuit.ar.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONTokener;
-
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
-import com.tuit.ar.api.Twitter;
-import com.tuit.ar.api.TwitterObserver;
-import com.tuit.ar.api.TwitterRequest;
-import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.Tweet;
+import com.tuit.ar.models.timeline.TimelineObserver;
+import com.tuit.ar.services.Updater;
 
-abstract public class Timeline extends ListActivity implements TwitterObserver {
+abstract public class Timeline extends ListActivity implements TimelineObserver {
 	ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	TimelineAdapter timelineAdapter;
-
+	protected boolean isVisible;
 	protected String newestTweet = "";
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,53 +30,45 @@ abstract public class Timeline extends ListActivity implements TwitterObserver {
 
 		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
 
-		Twitter twitter = Twitter.getInstance();
-		twitter.addObserver(this);
-		try {
-			twitter.requestUrl(this.getTimeline());
-		} catch (Exception e) {
-			failedToUpdate();
-		}
+		getTimeline().addObserver(this);
+		getTimeline().refresh();
+		this.startService(new Intent(this, Updater.class));
 	}
+
+	abstract protected com.tuit.ar.models.Timeline getTimeline();
 
 	protected void refresh() {
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("since_id", newestTweet);
-		try {
-			Twitter.getInstance().requestUrl(this.getTimeline(), params, TwitterRequest.Method.GET);
-		} catch (Exception e) {
-			failedToUpdate();
-		}
+		getTimeline().refresh();
 	}
 
-	public void requestHasFinished(TwitterRequest request) {
-		try {
-			JSONArray tweets = new JSONArray(new JSONTokener(request.getResponse()));
-			int c = tweets.length();
-			if (c > 0) {
-				for (int i = c-1; i >= 0; i--) {
-					Tweet tweet = new Tweet(tweets.getJSONObject(i));
-					if (i == 0)
-						newestTweet = tweet.getId();
-					this.tweets.add(0, tweet);
-				}
-				timelineAdapter.notifyDataSetChanged();
-			}
-		} catch (JSONException e) {
-			failedToUpdate();
-		}
+    protected void onResume() {
+    	super.onResume();
+    	isVisible = true;
+    	timelineAdapter.notifyDataSetChanged();
+    }
+
+    protected void onPause() {
+    	super.onPause();
+    	isVisible = false;
+    }
+
+	public void timelineHasChanged(com.tuit.ar.models.Timeline timeline) {
+		if (tweets.size() == 0)
+			tweets.addAll(getTimeline().getTweets());
+		else
+			tweets.addAll(0, getTimeline().getTweetsNewerThan(tweets.get(0)));
+		if (isVisible)
+			timelineAdapter.notifyDataSetChanged();
 	}
 
-	protected void failedToUpdate() {
+	public void timelineUpdateHasFailed(com.tuit.ar.models.Timeline timeline) {
 		Toast.makeText(this, "Unable to fetch your timeline", Toast.LENGTH_SHORT);
 	}
-
-	abstract protected Options getTimeline();
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Twitter.getInstance().removeObserver(this);
+		getTimeline().removeObserver(this);
 	}
 
 	protected class TimelineAdapter extends ArrayAdapter<Tweet> 

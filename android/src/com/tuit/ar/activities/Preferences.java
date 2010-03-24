@@ -1,16 +1,14 @@
 package com.tuit.ar.activities;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.util.Log;
 
 import com.tuit.ar.R;
+import com.tuit.ar.models.Settings;
 
 public class Preferences extends PreferenceActivity {
 	ListPreference updateInterval;
@@ -21,19 +19,30 @@ public class Preferences extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
 
-		automaticUpdate = (CheckBoxPreference) findPreference("automaticUpdate");
+		automaticUpdate = (CheckBoxPreference) findPreference(Settings.AUTOMATIC_UPDATE);
 		automaticUpdate.setPersistent(true);
+		automaticUpdate.setDefaultValue(Boolean.TRUE);
 		automaticUpdate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				updateInterval.setEnabled(automaticUpdate.isChecked());
+				updateSettings();
 				return false;
 			}
 		});
-		updateInterval = (ListPreference) findPreference("updateInterval");
+		updateInterval = (ListPreference) findPreference(Settings.UPDATE_INTERVAL);
 		updateInterval.setPersistent(true);
-		SharedPreferences customSharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
-		Log.d("au", String.valueOf(customSharedPreference.getBoolean("automaticUpdate", Boolean.TRUE)));
-		Log.d("ui", String.valueOf(customSharedPreference.getString("updateInterval", "")));
+		updateInterval.setDefaultValue("5");
+		updateInterval.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				updateSettings();
+				return false;
+			}
+		});
+		
+	}
+	protected void updateSettings() {
+		Settings.getInstance().callObservers();
 	}
 }
