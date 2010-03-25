@@ -141,9 +141,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			TimelineElement element = getTimelineElement(convertView);
 
 			Tweet tweet = tweets.get(position);
+			if (element.currentTweet == tweet) return element.getView();
+
 			element.getUsername().setText(tweet.getUsername());
 			element.getMessage().setText(tweet.getMessage());
-			element.getDate().setText(tweet.getDate().toString());
+			element.getDate().setText(Tweet.calculateElapsed(tweet.getDateMillis()));
+			element.currentTweet = tweet;
 
 			return element.getView();
 		}
@@ -166,6 +169,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		private TextView username;
 		private TextView message;
 		private TextView date;
+		public Tweet currentTweet; 
 
 		public TimelineElement(View view) {
 			super();
