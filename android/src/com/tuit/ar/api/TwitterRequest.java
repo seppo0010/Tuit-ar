@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -17,6 +18,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 import android.os.Handler;
@@ -84,6 +88,12 @@ public class TwitterRequest {
 					credentials.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 					http.setCredentialsProvider(credentials);
 				}
+
+			    final HttpParams params = new BasicHttpParams();
+			    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			    HttpProtocolParams.setContentCharset(params, "UTF_8");
+			    HttpProtocolParams.setUseExpectContinue(params, false);
+				http.setParams(params);	
 
 				try {
 					HttpResponse response = http.execute(request);

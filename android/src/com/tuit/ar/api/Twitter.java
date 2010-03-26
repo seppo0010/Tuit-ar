@@ -30,7 +30,7 @@ public class Twitter {
 		startedRequest(new TwitterRequest(login, params, get));
 		
 	}
-	String getUsername() { return username; }
+	public String getUsername() { return username; }
 	public void setUsername(String username) { this.username = username; }
 	String getPassword() { return password; }
 	public void setPassword(String username) { this.password = username; }
