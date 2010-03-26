@@ -31,5 +31,5 @@
 <string-array name="updateIntervalsValues"><item>1</item>
 <item>5</item>
 </string-array>
-<string name="twitterSource">Tuit-ar</string>
+<string name="twitterSource">&lt;a href=&quot;http://github.com/seppo0010/Tuit-ar&quot;&gt;Tuit-ar&lt;/a&gt;</string>
 </resources>
