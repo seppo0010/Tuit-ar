@@ -49,6 +49,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterObserv
 		String message = messageField.getText().toString();
 		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("status", message));
+		params.add(new BasicNameValuePair("source", getString(R.string.twitterSource)));
 		if (replyToTweetId != null) params.add(new BasicNameValuePair("in_reply_to_status_id", replyToTweetId));
 		TwitterRequest.Method method = TwitterRequest.Method.POST;
 		try {

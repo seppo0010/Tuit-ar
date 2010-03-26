@@ -31,4 +31,5 @@
 <string-array name="updateIntervalsValues"><item>1</item>
 <item>5</item>
 </string-array>
+<string name="twitterSource">Tuit-ar</string>
 </resources>
