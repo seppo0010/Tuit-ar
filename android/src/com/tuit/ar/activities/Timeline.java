@@ -111,7 +111,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		// FIXME: use user id instead of username!
 		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getUsername());
 		new AlertDialog.Builder(this).
-		setTitle("title").
+		setTitle(getString(R.string.executeAction)).
 		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
