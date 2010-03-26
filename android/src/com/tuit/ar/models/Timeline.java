@@ -2,6 +2,7 @@ package com.tuit.ar.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,7 +19,8 @@ import com.tuit.ar.models.timeline.TimelineObserver;
 abstract public class Timeline implements TwitterObserver {
 	protected ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	protected String newestTweet = "";
-	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>(); 
+	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
+	static private int MAX_SIZE = 100;
 
 	protected Timeline() {
 		super();
@@ -54,6 +56,10 @@ abstract public class Timeline implements TwitterObserver {
 					if (i == 0)
 						newestTweet = tweet.getId();
 					this.tweets.add(0, tweet);
+				}
+
+				if (this.tweets.size() > MAX_SIZE) {
+					this.tweets.subList(MAX_SIZE, this.tweets.size()).clear();
 				}
 				timelineChanged();
 			}
