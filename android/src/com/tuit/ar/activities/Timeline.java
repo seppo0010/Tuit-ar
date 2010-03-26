@@ -4,20 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
+import com.tuit.ar.api.Twitter;
 import com.tuit.ar.models.Tweet;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
@@ -99,6 +104,30 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	    }
 	    }
 	    return false;
+	}
+
+	protected void onListItemClick (ListView l, View v, int position, long id) {
+		final Tweet tweet = tweets.get(position);
+		// FIXME: use user id instead of username!
+		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getUsername());
+		new AlertDialog.Builder(this).
+		setTitle("title").
+		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				//FIXME: something more pretty than hard-coded numbers?
+				case 0:
+				{
+					Intent intent = new Intent(getApplicationContext(), NewTweet.class);
+					intent.putExtra("reply_to_id", tweet.getId());
+					intent.putExtra("reply_to_username", tweet.getUsername());
+					startActivity(intent);
+					break;
+				}
+				}
+			}
+		}).show();
 	}
 
 	protected void refresh() {
