@@ -25,6 +25,7 @@ import com.tuit.ar.api.request.Options;
 public class NewTweet extends Activity implements OnClickListener, TwitterObserver {
 	private String replyToUser;
 	private String replyToTweetId;
+	private EditText messageField;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,15 +38,16 @@ public class NewTweet extends Activity implements OnClickListener, TwitterObserv
 		Intent intent = getIntent();
 		replyToTweetId = intent.getStringExtra("reply_to_id");
 		replyToUser = intent.getStringExtra("reply_to_username");
+		messageField = (EditText) findViewById(R.id.tweetMessage);
 		if (replyToUser != null) {
 			TextView username = (TextView)findViewById(R.id.replyToUsername);
 			username.setText("In reply to: @" + replyToUser);
+			messageField.setText("@" + replyToUser + " ");
 		}
 	}
 
 	@Override
 	public void onClick(View v) {
-		EditText messageField = (EditText) findViewById(R.id.tweetMessage);
 		String message = messageField.getText().toString();
 		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("status", message));
