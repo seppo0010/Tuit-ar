@@ -22,7 +22,7 @@ public class Preferences extends PreferenceActivity {
 
 		automaticUpdate = (CheckBoxPreference) findPreference(Settings.AUTOMATIC_UPDATE);
 		automaticUpdate.setPersistent(true);
-		automaticUpdate.setDefaultValue(Boolean.TRUE);
+		automaticUpdate.setDefaultValue(Settings.AUTOMATIC_UPDATE_DEFAULT);
 		automaticUpdate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -33,7 +33,7 @@ public class Preferences extends PreferenceActivity {
 		});
 		updateInterval = (ListPreference) findPreference(Settings.UPDATE_INTERVAL);
 		updateInterval.setPersistent(true);
-		updateInterval.setDefaultValue("5");
+		updateInterval.setDefaultValue(Settings.UPDATE_INTERVAL_DEFAULT);
 		updateInterval.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
