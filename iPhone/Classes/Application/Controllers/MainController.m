@@ -10,6 +10,7 @@
 #import "Login.h"
 #import "TimelineFriendsController.h"
 #import "TimelineRepliesController.h"
+#import "NewTweet.h"
 
 @implementation MainController
 
@@ -29,8 +30,11 @@ static MainController* instance = NULL;
 	friendsTimeline.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"Amigos" image:nil tag:0] autorelease];
 	UINavigationController* repliesTimeline = [[[UINavigationController alloc] initWithRootViewController:[[[TimelineRepliesController alloc] initWithNibName:@"Timeline" bundle:nil] autorelease]] autorelease];
 	repliesTimeline.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"Respuestas" image:nil tag:0] autorelease];
+	UINavigationController* newTweet = [[[UINavigationController alloc] initWithRootViewController:[[[NewTweet alloc] initWithNibName:@"NewTweet" bundle:nil] autorelease]] autorelease];
+	newTweet.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"Nuevo mensaje" image:nil tag:0] autorelease];
 	
 	self.viewControllers = [NSArray arrayWithObjects:
+							newTweet,
 							friendsTimeline,
 							repliesTimeline,
 							nil];

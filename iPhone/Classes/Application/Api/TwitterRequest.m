@@ -75,6 +75,9 @@
 		case OPTION_REPLIES_TIMELINE:
 			return @"statuses/mentions";
 			break;
+		case OPTION_POST_TWEET:
+			return @"statuses/update";
+			break;
 		default:
 			[NSException raise:@"Unknown option" format:@"The option %d is unknown", _option];
 			break;

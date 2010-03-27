@@ -19,6 +19,7 @@
 @property (readonly) NSArray* tweets;
 
 - (Timeline*) timelineModel;
+- (void) refresh;
 - (void) showLoading;
 - (void) hideLoading;
 

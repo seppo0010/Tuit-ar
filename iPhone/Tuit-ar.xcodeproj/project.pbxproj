@@ -42,6 +42,8 @@
 		C9EB3005115E607E0088586B /* TimelineController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB3000115E607E0088586B /* TimelineController.m */; };
 		C9EB3008115E608A0088586B /* TimelineRepliesController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB3007115E608A0088586B /* TimelineRepliesController.m */; };
 		C9EB300D115E60BB0088586B /* TimelineReplies.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB300C115E60BB0088586B /* TimelineReplies.m */; };
+		C9EB303E115E625E0088586B /* NewTweet.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB303C115E625E0088586B /* NewTweet.m */; };
+		C9EB303F115E625E0088586B /* NewTweet.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9EB303D115E625E0088586B /* NewTweet.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,6 +114,9 @@
 		C9EB3007115E608A0088586B /* TimelineRepliesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineRepliesController.m; sourceTree = "<group>"; };
 		C9EB300B115E60BB0088586B /* TimelineReplies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineReplies.h; sourceTree = "<group>"; };
 		C9EB300C115E60BB0088586B /* TimelineReplies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineReplies.m; sourceTree = "<group>"; };
+		C9EB303B115E625E0088586B /* NewTweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTweet.h; sourceTree = "<group>"; };
+		C9EB303C115E625E0088586B /* NewTweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewTweet.m; sourceTree = "<group>"; };
+		C9EB303D115E625E0088586B /* NewTweet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewTweet.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +215,9 @@
 				C91EA482115D78D600182550 /* Login.xib */,
 				C9EB2E71115E523F0088586B /* MainController.h */,
 				C9EB2E72115E523F0088586B /* MainController.m */,
+				C9EB303B115E625E0088586B /* NewTweet.h */,
+				C9EB303C115E625E0088586B /* NewTweet.m */,
+				C9EB303D115E625E0088586B /* NewTweet.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -377,6 +385,7 @@
 				C91EA484115D78D600182550 /* Login.xib in Resources */,
 				C9EB3001115E607E0088586B /* Timeline.xib in Resources */,
 				C9EB3003115E607E0088586B /* TimelineCell.xib in Resources */,
+				C9EB303F115E625E0088586B /* NewTweet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,6 +423,7 @@
 				C9EB3005115E607E0088586B /* TimelineController.m in Sources */,
 				C9EB3008115E608A0088586B /* TimelineRepliesController.m in Sources */,
 				C9EB300D115E60BB0088586B /* TimelineReplies.m in Sources */,
+				C9EB303E115E625E0088586B /* NewTweet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
