@@ -19,7 +19,6 @@
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
 		Timeline* _timeline = [self timelineModel];
         [_timeline addObserver:self];
-		[_timeline refresh];
     }
     return self;
 }
@@ -28,6 +27,7 @@
 	[super viewWillAppear:animated];
 	visible = TRUE;
 	[timeline reloadData];
+	if ([self.tweets count] == 0) [self refresh];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -39,13 +39,17 @@
 	return nil;
 }
 
+- (NSArray*) tweets {
+	return [self timelineModel].tweets;
+}
+
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section {
-	return [[self timelineModel].tweets count];
+	return [self.tweets count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	TimelineCell* cell = (TimelineCell*)[TimelineCell loadCellNibForTableView:tableView];
-	cell.tweet = [[self timelineModel].tweets objectAtIndex:indexPath.row];
+	cell.tweet = [self.tweets objectAtIndex:indexPath.row];
 	return cell;
 }
 

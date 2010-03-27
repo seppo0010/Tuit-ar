@@ -11,6 +11,11 @@
 
 @implementation TimelineFriendsController
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+	self.title = @"Amigos";
+}
+
 - (Timeline*) timelineModel {
 	return [TimelineFriends getInstance];
 }

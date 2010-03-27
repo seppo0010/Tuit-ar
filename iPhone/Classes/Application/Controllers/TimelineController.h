@@ -16,6 +16,7 @@
 }
 
 @property (assign) UITableView* timeline;
+@property (readonly) NSArray* tweets;
 
 - (Timeline*) timelineModel;
 - (void) showLoading;

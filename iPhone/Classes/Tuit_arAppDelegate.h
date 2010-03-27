@@ -11,7 +11,7 @@
 @interface Tuit_arAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
 
-	UIViewController* controller;
+	IBOutlet UIViewController* controller;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

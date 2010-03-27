@@ -7,7 +7,6 @@
 //
 
 #import "Tuit_arAppDelegate.h"
-#import "Login.h"
 
 @implementation Tuit_arAppDelegate
 
@@ -20,8 +19,7 @@
 	
     [window makeKeyAndVisible];
 
-	controller = [[Login alloc] initWithNibName:@"Login" bundle:nil];
-	UIViewController* navController = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+	UIViewController* navController = controller;
 	[window addSubview:navController.view];
 
 	return YES;
