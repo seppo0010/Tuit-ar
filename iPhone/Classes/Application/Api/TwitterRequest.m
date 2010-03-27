@@ -69,7 +69,14 @@
 		case OPTION_CHECK_CREDENTIALS:
 			return @"account/verify_credentials";
 			break;
+		case OPTION_FRIENDS_TIMELINE:
+			return @"statuses/home_timeline";
+			break;
+		case OPTION_REPLIES_TIMELINE:
+			return @"statuses/mentions";
+			break;
 		default:
+			[NSException raise:@"Unknown option" format:@"The option %d is unknown", _option];
 			break;
 	}
 	return nil;

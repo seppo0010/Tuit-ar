@@ -8,6 +8,7 @@
 
 #import "Twitter.h"
 #import "TwitterRequest.h"
+#import "NSMutableSetNonRetain.h"
 
 @interface Twitter (private)
 
@@ -28,7 +29,7 @@ static Twitter* instance = NULL;
 
 - (Twitter*)init {
 	self = [super init];
-	observers = [[NSMutableSet alloc] initWithCapacity:1];
+	observers = [[NSMutableSet setNonRetaining] retain];
 	return self;
 }
 

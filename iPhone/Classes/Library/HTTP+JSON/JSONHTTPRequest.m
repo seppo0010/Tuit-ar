@@ -7,7 +7,7 @@
 //
 
 #import "JSONHTTPRequest.h"
-#import "NSDictionary+BSJSONAdditions.h"
+#import "NSString+SBJSON.h"
 
 @implementation JSONHTTPRequest
 
@@ -15,8 +15,7 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	NSString* s = [[[NSString alloc] initWithData:loadedData encoding:NSUTF8StringEncoding] autorelease];
-	NSDictionary* _response = [NSDictionary dictionaryWithJSONString:[NSString stringWithFormat:@"{\"key\":%@}", s]];
-	self.response = [_response valueForKey:@"key"];
+	self.response = [s JSONValue];
 	[self callSuccess];
 }
 

@@ -1,3 +1,3 @@
-¿@interface UITableViewCell (loadCellNib)
+@interface UITableViewCell (loadCellNib)
 + (UITableViewCell*) loadCellNibForTableView:(UITableView*)tableView;
 @end

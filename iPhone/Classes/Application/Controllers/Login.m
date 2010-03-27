@@ -9,6 +9,7 @@
 #import "Login.h"
 #import "Twitter.h"
 #import "TwitterRequest.h"
+#import "TimelineFriendsController.h"
 
 @implementation Login
 
@@ -60,6 +61,8 @@
 	[self hideLoading];
 	if (request.option == OPTION_CHECK_CREDENTIALS) {
 		if (request.success) {
+			UIViewController* timelineController = [[[TimelineFriendsController alloc] initWithNibName:@"Timeline" bundle:nil] autorelease];
+			[self presentModalViewController:timelineController animated:YES];
 		} else {
 			[self loginFailed];
 		}

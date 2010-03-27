@@ -13,6 +13,8 @@
 #define METHOD_POST 1
 
 #define OPTION_CHECK_CREDENTIALS 0
+#define OPTION_FRIENDS_TIMELINE 1
+#define OPTION_REPLIES_TIMELINE 2
 
 @interface TwitterRequest : JSONHTTPRequest {
 	NSMutableString* buildUrl;
