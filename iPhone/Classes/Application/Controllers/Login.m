@@ -71,7 +71,7 @@
 }
 
 - (void) dealloc {
-	[[Twitter getInstance] addObserver:self];
+	[[Twitter getInstance] removeObserver:self];
 	[super dealloc];
 }
 
