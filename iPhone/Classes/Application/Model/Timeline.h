@@ -8,15 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "TwitterObserver.h"
+#import "SettingsObserver.h"
 
 #define TIMELINE_MAX_SIZE 100
 
 @protocol TimelineObserver;
 @class TwitterRequest;
-@interface Timeline : NSObject <TwitterObserver> {
+@interface Timeline : NSObject <TwitterObserver, SettingsObserver> {
 	NSMutableArray* tweets;
 	NSString* newestTweet;
 	NSMutableSet* observers;
+
+	NSTimer* updateTimer;
 }
 
 @property (retain) NSString* newestTweet;
@@ -28,6 +31,7 @@
 - (void) timelineChanged;
 - (void) finishedUpdate;
 - (void) refresh;
+- (void) createUpdateTimer;
 
 - (void) addObserver:(id<TimelineObserver>)_observer;
 - (void) removeObserver:(id<TimelineObserver>)_observer;

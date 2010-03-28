@@ -12,6 +12,7 @@
 #import "TwitterRequest.h"
 #import "Tweet.h"
 #import "TimelineObserver.h"
+#import "Settings.h"
 
 @implementation Timeline
 
@@ -22,7 +23,25 @@
 	[[Twitter getInstance] addObserver:self];
 	observers = [[NSMutableSet setNonRetaining] retain];
 	tweets = [[NSMutableArray alloc] initWithCapacity:TIMELINE_MAX_SIZE];
+	[[Settings getInstance] addObserver:self];
+	[self createUpdateTimer];
 	return self;
+}
+
+- (void) createUpdateTimer {
+	Settings* settings = [Settings getInstance];
+	int freq = settings.updateInterval;
+
+	[updateTimer invalidate];
+	if (settings.automaticUpdate && freq > 0) {
+		updateTimer = [NSTimer scheduledTimerWithTimeInterval:freq * 60 target:self selector:@selector(refresh) userInfo:nil repeats:YES];
+	} else {
+		updateTimer = nil;
+	}
+}
+
+- (void) settingsHasChanged:(Settings*)settings {
+	[self createUpdateTimer];
 }
 
 - (int) getTimeline {
@@ -99,6 +118,7 @@
 - (void) dealloc {
 	[observers release];
 	[[Twitter getInstance] removeObserver:self];
+	[[Settings getInstance] removeObserver:self];
 	[super dealloc];
 }
 

@@ -13,6 +13,8 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
+		C9023EC5116000E60013A900 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C9023EC3116000E60013A900 /* Preferences.m */; };
+		C9023EC6116000E60013A900 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9023EC4116000E60013A900 /* Preferences.xib */; };
 		C91EA483115D78D600182550 /* Login.m in Sources */ = {isa = PBXBuildFile; fileRef = C91EA481115D78D600182550 /* Login.m */; };
 		C91EA484115D78D600182550 /* Login.xib in Resources */ = {isa = PBXBuildFile; fileRef = C91EA482115D78D600182550 /* Login.xib */; };
 		C91EA532115D7CAD00182550 /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = C91EA531115D7CAD00182550 /* Twitter.m */; };
@@ -28,6 +30,7 @@
 		C91EA6FC115D8E8200182550 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = C91EA6FB115D8E8200182550 /* Tweet.m */; };
 		C91EA71D115DA16200182550 /* Timeline.m in Sources */ = {isa = PBXBuildFile; fileRef = C91EA71C115DA16200182550 /* Timeline.m */; };
 		C91EA781115DA5AF00182550 /* TimelineFriends.m in Sources */ = {isa = PBXBuildFile; fileRef = C91EA780115DA5AF00182550 /* TimelineFriends.m */; };
+		C9351D2311601069001CFE7C /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = C9351D2211601069001CFE7C /* Settings.m */; };
 		C9EB2E07115E4DDD0088586B /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB2DFC115E4DDD0088586B /* NSObject+SBJSON.m */; };
 		C9EB2E08115E4DDD0088586B /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB2DFE115E4DDD0088586B /* NSString+SBJSON.m */; };
 		C9EB2E09115E4DDD0088586B /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EB2E00115E4DDD0088586B /* SBJSON.m */; };
@@ -59,6 +62,9 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Tuit_ar_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tuit_ar_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Tuit_ar-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tuit_ar-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C9023EC2116000E60013A900 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
+		C9023EC3116000E60013A900 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
+		C9023EC4116000E60013A900 /* Preferences.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
 		C91EA480115D78D600182550 /* Login.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Login.h; sourceTree = "<group>"; };
 		C91EA481115D78D600182550 /* Login.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Login.m; sourceTree = "<group>"; };
 		C91EA482115D78D600182550 /* Login.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Login.xib; sourceTree = "<group>"; };
@@ -89,6 +95,9 @@
 		C91EA76C115DA4D200182550 /* TimelineObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineObserver.h; sourceTree = "<group>"; };
 		C91EA77F115DA5AF00182550 /* TimelineFriends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineFriends.h; sourceTree = "<group>"; };
 		C91EA780115DA5AF00182550 /* TimelineFriends.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineFriends.m; sourceTree = "<group>"; };
+		C9351D2111601069001CFE7C /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		C9351D2211601069001CFE7C /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		C9351D24116010D4001CFE7C /* SettingsObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsObserver.h; sourceTree = "<group>"; };
 		C9EB2DFA115E4DDD0088586B /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		C9EB2DFB115E4DDD0088586B /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		C9EB2DFC115E4DDD0088586B /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -226,6 +235,9 @@
 				C9EB308F115E6AB10088586B /* TweetOptions.h */,
 				C9EB3090115E6AB10088586B /* TweetOptions.m */,
 				C9EB3091115E6AB10088586B /* TweetOptions.xib */,
+				C9023EC2116000E60013A900 /* Preferences.h */,
+				C9023EC3116000E60013A900 /* Preferences.m */,
+				C9023EC4116000E60013A900 /* Preferences.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -317,6 +329,9 @@
 				C91EA71B115DA16200182550 /* Timeline.h */,
 				C91EA71C115DA16200182550 /* Timeline.m */,
 				C91EA76C115DA4D200182550 /* TimelineObserver.h */,
+				C9351D2111601069001CFE7C /* Settings.h */,
+				C9351D2211601069001CFE7C /* Settings.m */,
+				C9351D24116010D4001CFE7C /* SettingsObserver.h */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -395,6 +410,7 @@
 				C9EB3003115E607E0088586B /* TimelineCell.xib in Resources */,
 				C9EB303F115E625E0088586B /* NewTweet.xib in Resources */,
 				C9EB3093115E6AB10088586B /* TweetOptions.xib in Resources */,
+				C9023EC6116000E60013A900 /* Preferences.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +450,8 @@
 				C9EB300D115E60BB0088586B /* TimelineReplies.m in Sources */,
 				C9EB303E115E625E0088586B /* NewTweet.m in Sources */,
 				C9EB3092115E6AB10088586B /* TweetOptions.m in Sources */,
+				C9023EC5116000E60013A900 /* Preferences.m in Sources */,
+				C9351D2311601069001CFE7C /* Settings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

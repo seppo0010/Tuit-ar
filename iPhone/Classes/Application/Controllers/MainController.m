@@ -8,9 +8,11 @@
 
 #import "MainController.h"
 #import "Login.h"
+
 #import "TimelineFriendsController.h"
 #import "TimelineRepliesController.h"
 #import "NewTweet.h"
+#import "Preferences.h"
 
 @implementation MainController
 
@@ -32,11 +34,14 @@ static MainController* instance = NULL;
 	repliesTimeline.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"Respuestas" image:nil tag:0] autorelease];
 	UINavigationController* newTweet = [[[UINavigationController alloc] initWithRootViewController:[[[NewTweet alloc] initWithNibName:@"NewTweet" bundle:nil] autorelease]] autorelease];
 	newTweet.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"Nuevo mensaje" image:nil tag:0] autorelease];
+	UINavigationController* preferences = [[[UINavigationController alloc] initWithRootViewController:[[[Preferences alloc] initWithNibName:@"Preferences" bundle:nil] autorelease]] autorelease];
+	preferences.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"Preferencias" image:nil tag:0] autorelease];
 	
 	self.viewControllers = [NSArray arrayWithObjects:
 							newTweet,
 							friendsTimeline,
 							repliesTimeline,
+							preferences,
 							nil];
 }
 
