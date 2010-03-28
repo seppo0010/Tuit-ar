@@ -63,19 +63,27 @@
 }
 
 - (void) startedUpdate {
-	[observers makeObjectsPerformSelector:@selector(timelineRequestStarted:) withObject:self];
+	NSSet* _observers = [observers copy];
+	[_observers makeObjectsPerformSelector:@selector(timelineRequestStarted:) withObject:self];
+	[_observers release];
 }
 
 - (void) failedToUpdate {
-	[observers makeObjectsPerformSelector:@selector(timelineUpdateHasFailed:) withObject:self];
+	NSSet* _observers = [observers copy];
+	[_observers makeObjectsPerformSelector:@selector(timelineUpdateHasFailed:) withObject:self];
+	[_observers release];
 }
 
 - (void) finishedUpdate {
-	[observers makeObjectsPerformSelector:@selector(timelineRequestFinished:) withObject:self];
+	NSSet* _observers = [observers copy];
+	[_observers makeObjectsPerformSelector:@selector(timelineRequestFinished:) withObject:self];
+	[_observers release];
 }
 
 - (void) timelineChanged {
-	[observers makeObjectsPerformSelector:@selector(timelineHasChanged:) withObject:self];
+	NSSet* _observers = [observers copy];
+	[_observers makeObjectsPerformSelector:@selector(timelineHasChanged:) withObject:self];
+	[_observers release];
 }
 
 - (void) addObserver:(id<TimelineObserver>)_observer {

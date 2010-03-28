@@ -13,8 +13,10 @@
 	IBOutlet UITextField* username;
 	IBOutlet UITextField* password;
 	IBOutlet UIButton* loginButton;
+	IBOutlet UIActivityIndicatorView* loading;
 }
 
+@property (assign) UIActivityIndicatorView* loading;
 @property (assign) UITextField* username;
 @property (assign) UITextField* password;
 @property (assign) UIButton* loginButton;

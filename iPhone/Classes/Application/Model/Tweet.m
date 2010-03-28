@@ -15,7 +15,7 @@
 
 - (Tweet*)initWithDictionary:(NSDictionary*)dictionary {
 	self = [super init];
-	self.tweet_id = [dictionary valueForKey:@"id"];
+	self.tweet_id = [NSString stringWithFormat:@"%d", [[dictionary valueForKey:@"id"] intValue]];
 	self.username = [[dictionary valueForKey:@"user"] valueForKey:@"screen_name"];
 	self.message = [dictionary valueForKey:@"text"];
 
@@ -24,7 +24,6 @@
 	NSLocale* locale = [[NSLocale alloc] initWithLocaleIdentifier:@"US"];
 	[dateFormatter setLocale:locale];
 	self.date = [dateFormatter dateFromString:[dictionary valueForKey:@"created_at"]];
-	NSLog(@"%@: %d", [dictionary valueForKey:@"created_at"], [date timeIntervalSinceNow]);
 	[dateFormatter release];
 	[locale release];
 

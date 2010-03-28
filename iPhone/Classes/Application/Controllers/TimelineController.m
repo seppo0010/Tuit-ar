@@ -10,10 +10,11 @@
 #import "Timeline.h"
 #import "TimelineCell.h"
 #import "UITableViewCellLoader.h"
+#import "TweetOptions.h"
 
 @implementation TimelineController
 
-@synthesize timeline;
+@synthesize timeline, loading;
 
 - (TimelineController*)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
@@ -21,6 +22,11 @@
         [_timeline addObserver:self];
     }
     return self;
+}
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)] autorelease];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -41,6 +47,12 @@
 
 - (NSArray*) tweets {
 	return [self timelineModel].tweets;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	TweetOptions* options = [[[TweetOptions alloc] initWithNibName:@"TweetOptions" bundle:nil] autorelease];
+	options.tweet = [self.tweets objectAtIndex:indexPath.row];
+	[self.navigationController pushViewController:options animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section {
@@ -70,9 +82,13 @@
 }
 
 - (void) showLoading {
+	loading.hidden = NO;
+	[loading startAnimating];
 }
 
 - (void) hideLoading {
+	loading.hidden = YES;
+	[loading stopAnimating];
 }
 
 - (void) refresh {

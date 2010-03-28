@@ -14,7 +14,7 @@
 
 @implementation Login
 
-@synthesize username, password, loginButton;
+@synthesize username, password, loginButton, loading;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -61,11 +61,13 @@
 }
 
 - (void) showLoading {
-	
+	loading.hidden = NO;
+	[loading startAnimating];
 }
 
 - (void) hideLoading {
-	
+	loading.hidden = YES;
+	[loading stopAnimating];
 }
 
 - (void) dealloc {

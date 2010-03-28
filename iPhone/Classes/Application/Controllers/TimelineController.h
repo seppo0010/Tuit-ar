@@ -11,10 +11,12 @@
 
 @class Timeline;
 @interface TimelineController : UIViewController <UITableViewDelegate, UITableViewDataSource, TimelineObserver> {
+	IBOutlet UIActivityIndicatorView* loading;
 	IBOutlet UITableView* timeline;
 	BOOL visible;
 }
 
+@property (assign) UIActivityIndicatorView* loading;
 @property (assign) UITableView* timeline;
 @property (readonly) NSArray* tweets;
 

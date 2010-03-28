@@ -57,11 +57,15 @@ static Twitter* instance = NULL;
 }
 
 - (void) startedRequest:(TwitterRequest*)_request {
-	[observers makeObjectsPerformSelector:@selector(requestHasStarted:) withObject:_request];
+	NSSet* _observers = [observers copy];
+	[_observers makeObjectsPerformSelector:@selector(requestHasStarted:) withObject:_request];
+	[_observers release];
 }
 
 - (void) finishedRequest:(TwitterRequest*)_request {
-	[observers makeObjectsPerformSelector:@selector(requestHasFinished:) withObject:_request];
+	NSSet* _observers = [observers copy];
+	[_observers makeObjectsPerformSelector:@selector(requestHasFinished:) withObject:_request];
+	[_observers release];
 }
 
 @end

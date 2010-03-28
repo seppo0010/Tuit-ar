@@ -13,6 +13,7 @@
 	IBOutlet UILabel* username;
 	IBOutlet UITextView* messageField;
 	IBOutlet UIButton* send;
+	IBOutlet UIActivityIndicatorView* loading;
 
 	NSString* replyToUser;
 	NSString* replyToTweetId;
@@ -23,6 +24,7 @@
 @property (assign) UILabel* username;
 @property (assign) UITextView* messageField;
 @property (assign) UIButton* send;
+@property (assign) UIActivityIndicatorView* loading;
 
 - (IBAction) submit;
 - (void) showLoading;
