@@ -2,9 +2,6 @@ package com.tuit.ar.api;
 
 import java.util.ArrayList;
 
-import org.apache.http.NameValuePair;
-
-import com.tuit.ar.api.request.Options;
 
 public class Twitter {
 	static boolean isSecure = false;
@@ -12,8 +9,7 @@ public class Twitter {
 	static private Twitter instance;
 
 	private ArrayList<TwitterObserver> observers = new ArrayList<TwitterObserver>(); 
-	private String username;
-	private String password;
+	private ArrayList<TwitterAccount> accounts = new ArrayList<TwitterAccount>(); 
 
 	public static Twitter getInstance() {
 		if (instance == null)
@@ -24,21 +20,6 @@ public class Twitter {
 		super();
 	}
 
-	public void requestUrl(Options login) throws Exception { requestUrl(login, null, TwitterRequest.Method.GET); }
-
-	public void requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
-		startedRequest(new TwitterRequest(login, params, get));
-		
-	}
-	public String getUsername() { return username; }
-	public void setUsername(String username) { this.username = username; }
-	String getPassword() { return password; }
-	public void setPassword(String username) { this.password = username; }
-	public void clearCredentials() {
-		this.setUsername(null);
-		this.setPassword(null);
-	}
-
 	public void addObserver(TwitterObserver observer) {
 		observers.add(observer);
 	}
@@ -47,14 +28,28 @@ public class Twitter {
 		observers.remove(observer);
 	}
 
-	public void startedRequest(TwitterRequest twitterRequest) {
+	protected void notifyChanges() {
 		for (TwitterObserver observer : observers) {
-			observer.requestHasStarted(twitterRequest);
+			observer.accountListHasChanged(this);
 		}
 	}
-	public void finishedRequest(TwitterRequest twitterRequest) {
-		for (TwitterObserver observer : observers) {
-			observer.requestHasFinished(twitterRequest);
-		}
+
+	public void addAccount(TwitterAccount account) {
+		this.accounts.add(account);
+		notifyChanges();
 	}
+
+	public void removeAccount(TwitterAccount account) {
+		this.accounts.remove(account);
+		notifyChanges();
+	}
+
+	public ArrayList<TwitterAccount> getAccounts() {
+		return this.accounts;
+	}
+	public TwitterAccount getDefaultAccount() {
+		if (this.accounts.size() == 0) return null;
+		return this.accounts.get(0);
+	}
+
 }

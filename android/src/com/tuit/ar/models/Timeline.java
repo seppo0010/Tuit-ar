@@ -10,12 +10,12 @@ import org.json.JSONException;
 import org.json.JSONTokener;
 
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.api.TwitterObserver;
+import com.tuit.ar.api.TwitterAccountObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.timeline.TimelineObserver;
 
-abstract public class Timeline implements TwitterObserver {
+abstract public class Timeline implements TwitterAccountObserver {
 	protected ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	protected String newestTweet = "";
 	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
@@ -23,7 +23,7 @@ abstract public class Timeline implements TwitterObserver {
 
 	protected Timeline() {
 		super();
-		Twitter.getInstance().addObserver(this);
+		Twitter.getInstance().getDefaultAccount().addObserver(this);
 	}
 
 	abstract protected Options getTimeline();
@@ -33,7 +33,7 @@ abstract public class Timeline implements TwitterObserver {
 		nvps.add(new BasicNameValuePair("since_id", newestTweet));
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
-			Twitter.getInstance().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
+			Twitter.getInstance().getDefaultAccount().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
 		} catch (Exception e) {
 			failedToUpdate();
 		}

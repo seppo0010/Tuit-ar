@@ -109,7 +109,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected void onListItemClick (ListView l, View v, int position, long id) {
 		final Tweet tweet = tweets.get(position);
 		// FIXME: use user id instead of username!
-		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getUsername());
+		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
 		new AlertDialog.Builder(this).
 		setTitle(getString(R.string.executeAction)).
 		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, new OnClickListener() {

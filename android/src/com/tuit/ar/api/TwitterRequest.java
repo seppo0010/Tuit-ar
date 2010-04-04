@@ -5,18 +5,19 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -49,10 +50,10 @@ public class TwitterRequest {
 	public void setResponse(String response) { this.response = response; }
 
 	private void finishedRequest() {
-		Twitter.getInstance().finishedRequest(this);
+		Twitter.getInstance().getDefaultAccount().finishedRequest(this);
 	}
 
-	public TwitterRequest(final Options url, final ArrayList <NameValuePair> nvps,
+	public TwitterRequest(final TwitterAccount account, final Options url, final ArrayList <NameValuePair> nvps,
 			final Method method) throws Exception {
 		setUrl(url);
 		(new Thread() {
@@ -81,14 +82,6 @@ public class TwitterRequest {
 					request = new HttpGet(full_url + queryString);
 				}
 
-				String username = Twitter.getInstance().getUsername();
-				String password = Twitter.getInstance().getPassword();
-				if (username != null && password != null) {
-					BasicCredentialsProvider credentials = new BasicCredentialsProvider();
-					credentials.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-					http.setCredentialsProvider(credentials);
-				}
-
 			    final HttpParams params = new BasicHttpParams();
 			    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			    HttpProtocolParams.setContentCharset(params, "UTF_8");
@@ -96,6 +89,7 @@ public class TwitterRequest {
 				http.setParams(params);	
 
 				try {
+					account.getConsumer().sign(request);
 					HttpResponse response = http.execute(request);
 					HttpEntity resEntity = response.getEntity();
 					setStatusCode(response.getStatusLine().getStatusCode());
@@ -107,6 +101,12 @@ public class TwitterRequest {
 						byte[] bytes = output.toByteArray();
 						setResponse(new String(bytes));
 					}
+				} catch (OAuthMessageSignerException e1) {
+					e1.printStackTrace();
+				} catch (OAuthExpectationFailedException e1) {
+					e1.printStackTrace();
+				} catch (OAuthCommunicationException e1) {
+					e1.printStackTrace();
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

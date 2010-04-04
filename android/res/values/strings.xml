@@ -7,6 +7,7 @@
 <string name="username">Nombre de usuario</string>
 <string name="password">Contraseña</string>
 <string name="unableToFetchTimeline">No se pudieron leer los mensajes</string>
+<string name="newAccount">Nueva Cuenta</string>
 <string name="newTweet">Nuevo Mensaje</string>
 <string name="refresh">Actualizar</string>
 <string name="friends">Amigos</string>
@@ -16,6 +17,7 @@
 <string name="send">Enviar</string>
 <string name="messageSent">Mensaje Enviado</string>
 <string name="unableToPost">No se pudo enviar</string>
+<string name="unableToAddAccount">No se pudo agregar cuenta</string>
 <string-array name="tweetOptions"><item>Responder</item>
 </string-array>
 <string-array name="myTweetOptions"><item>Responder</item>
