@@ -1,17 +1,20 @@
 package com.tuit.ar.activities;
 
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.exception.OAuthNotAuthorizedException;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.tuit.ar.R;
 import com.tuit.ar.activities.timeline.Friends;
@@ -24,11 +27,64 @@ public class Login extends Activity implements TwitterObserver {
 	private EditText username;
 	private EditText password;
 	private Button login;
+	private static String CONSUMER_KEY = "wLR28XpgOKbmpaFFvtMVA";
+	private static String CONSUMER_SECRET = "WOMQjlVaeuTs0eVQfTqXRxfLD58gbGCQrZdDIrQUSU";
+	private static String CALLBACK_URL = "tuitar://login";
+	private static OAuthProvider provider;
+	private static CommonsHttpOAuthConsumer consumer;
+
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		Uri uri = this.getIntent().getData();  
+		if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {  
+		    String verifier = uri.getQueryParameter("oauth_verifier");  
+		    // this will populate token and token_secret in consumer  
+		    try {
+				provider.retrieveAccessToken(consumer, verifier);
+			    String a = consumer.getToken();
+			    String b = consumer.getTokenSecret();
+			    Log.d("token", a + " - " + b);
+			} catch (OAuthMessageSignerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (OAuthNotAuthorizedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (OAuthExpectationFailedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (OAuthCommunicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}  
+        consumer = new CommonsHttpOAuthConsumer(  
+                CONSUMER_KEY, CONSUMER_SECRET);  
+          
+        provider = new CommonsHttpOAuthProvider("http://twitter.com/oauth/request_token", "http://twitter.com/oauth/access_token",  
+                "http://twitter.com/oauth/authorize");
+        String authUrl;
+		try {
+			authUrl = provider.retrieveRequestToken(consumer, CALLBACK_URL);
+	        this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));  
+		} catch (OAuthMessageSignerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OAuthNotAuthorizedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OAuthExpectationFailedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OAuthCommunicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+
+        /*        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
 
         setTitle(getString(R.string.login));
@@ -49,7 +105,7 @@ public class Login extends Activity implements TwitterObserver {
 				return true;
 			}
 		});
-        Twitter.getInstance().addObserver(this);
+        Twitter.getInstance().addObserver(this);*/
     }
 
     private void login() {
