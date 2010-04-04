@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Twitter {
 	static boolean isSecure = false;
-	static String BASE_URL = "boludeo.delapalo.net/api/";
+	static String BASE_URL = "api.twitter.com/1/";
 	static private Twitter instance;
 
 	private ArrayList<TwitterObserver> observers = new ArrayList<TwitterObserver>(); 

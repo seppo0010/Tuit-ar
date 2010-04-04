@@ -41,6 +41,7 @@ public class TwitterRequest {
 	private Options url = null;
 	private int statusCode;
 	private String response;
+	private final TwitterAccount account;
 
 	public Options getUrl() { return url; }
 	public void setUrl(Options url) { this.url = url; } 
@@ -53,8 +54,9 @@ public class TwitterRequest {
 		Twitter.getInstance().getDefaultAccount().finishedRequest(this);
 	}
 
-	public TwitterRequest(final TwitterAccount account, final Options url, final ArrayList <NameValuePair> nvps,
+	public TwitterRequest(TwitterAccount _account, final Options url, final ArrayList <NameValuePair> nvps,
 			final Method method) throws Exception {
+		account = _account;
 		setUrl(url);
 		(new Thread() {
 			public void run() {
