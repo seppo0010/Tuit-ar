@@ -53,7 +53,7 @@ public class TwitterRequest {
 	public void setResponse(String response) { this.response = response; }
 
 	private void finishedRequest() {
-		Twitter.getInstance().getDefaultAccount().finishedRequest(this);
+		account.finishedRequest(this);
 	}
 
 	public TwitterRequest(TwitterAccount _account, final Options url, final ArrayList <NameValuePair> nvps,

@@ -162,6 +162,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		}
 
 		public void setCurrentAccount(TwitterAccount account) {
+			if (account == currentAccount) return;
 			if (currentAccount != null) currentAccount.removeObserver(this);
 			currentAccount = account;
 			if (currentAccount != null) currentAccount.addObserver(this);

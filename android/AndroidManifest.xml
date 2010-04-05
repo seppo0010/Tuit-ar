@@ -17,8 +17,8 @@
 				<data android:scheme="tuitar" android:host="login"></data>  
 			</intent-filter>  
         </activity>
-    	<activity android:name=".activities.timeline.Friends" android:launchMode="singleInstance"></activity>
-    	<activity android:name=".activities.timeline.Replies" android:launchMode="singleInstance"></activity>
+    	<activity android:name=".activities.timeline.Friends"></activity>
+    	<activity android:name=".activities.timeline.Replies"></activity>
     	<activity android:name=".activities.Preferences"></activity>
     	<activity android:name=".activities.NewTweet"></activity>
 
