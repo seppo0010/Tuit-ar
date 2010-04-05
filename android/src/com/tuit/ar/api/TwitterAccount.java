@@ -9,15 +9,16 @@ import org.json.JSONTokener;
 
 import com.tuit.ar.api.request.Options;
 
-public class TwitterAccount implements TwitterAccountObserver {
+public class TwitterAccount implements TwitterAccountRequestsObserver {
 	private oauth.signpost.AbstractOAuthConsumer consumer;
 	private String username;
 
 	private ArrayList<TwitterAccountObserver> observers = new ArrayList<TwitterAccountObserver>(); 
+	private ArrayList<TwitterAccountRequestsObserver> requestsObservers = new ArrayList<TwitterAccountRequestsObserver>(); 
 
 	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer) throws Exception {
 		consumer = _consumer;
-		this.addObserver(this);
+		this.addRequestObserver(this);
 		this.requestUrl(Options.LOGIN);
 	}
 
@@ -38,30 +39,44 @@ public class TwitterAccount implements TwitterAccountObserver {
 		observers.remove(observer);
 	}
 
-	public void startedRequest(TwitterRequest twitterRequest) {
+	public void accountChanged() {
 		for (TwitterAccountObserver observer : observers) {
+			observer.accountHasChanged(this);
+		}
+	}
+
+	public void addRequestObserver(TwitterAccountRequestsObserver observer) {
+		requestsObservers.add(observer);
+	}
+
+	public void removeRequestObserver(TwitterAccountRequestsObserver observer) {
+		requestsObservers.remove(observer);
+	}
+
+	public void startedRequest(TwitterRequest twitterRequest) {
+		for (TwitterAccountRequestsObserver observer : requestsObservers) {
 			observer.requestHasStarted(twitterRequest);
 		}
 	}
+
 	public void finishedRequest(TwitterRequest twitterRequest) {
-		for (TwitterAccountObserver observer : observers) {
+		for (TwitterAccountRequestsObserver  observer : requestsObservers) {
 			observer.requestHasFinished(twitterRequest);
 		}
 	}
 
-	@Override
 	public void requestHasFinished(TwitterRequest request) {
 		if (request.getUrl() == Options.LOGIN) {
 			String response = request.getResponse();
 			try {
 				JSONObject data = new JSONObject(new JSONTokener(response));
-				this.setUsername(data.getString("username"));
+				this.setUsername(data.getString("screen_name"));
+				accountChanged();
 			} catch (JSONException e) {
 			}
 		}
 	}
 
-	@Override
 	public void requestHasStarted(TwitterRequest request) {
 	}
 

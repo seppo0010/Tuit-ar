@@ -47,9 +47,17 @@ public class Twitter {
 	public ArrayList<TwitterAccount> getAccounts() {
 		return this.accounts;
 	}
+
 	public TwitterAccount getDefaultAccount() {
 		if (this.accounts.size() == 0) return null;
 		return this.accounts.get(0);
 	}
 
+	public void setDefaultAccount(TwitterAccount account) {
+		TwitterAccount previousDefault = this.getDefaultAccount();
+		if (previousDefault == account) return;
+		this.accounts.remove(account);
+		this.accounts.set(0, account);
+		this.accounts.add(previousDefault);
+	}
 }

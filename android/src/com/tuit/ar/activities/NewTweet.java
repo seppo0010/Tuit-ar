@@ -18,11 +18,11 @@ import android.widget.Toast;
 
 import com.tuit.ar.R;
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.api.TwitterAccountObserver;
+import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 
-public class NewTweet extends Activity implements OnClickListener, TwitterAccountObserver {
+public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
 	private String replyToUser;
 	private String replyToTweetId;
 	private EditText messageField;
@@ -33,7 +33,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		setContentView(R.layout.new_tweet);
 		Button send = (Button)findViewById(R.id.send);
 		send.setOnClickListener(this);
-		Twitter.getInstance().getDefaultAccount().addObserver(this);
+		Twitter.getInstance().getDefaultAccount().addRequestObserver(this);
 
 		Intent intent = getIntent();
 		replyToTweetId = intent.getStringExtra("reply_to_id");
@@ -72,7 +72,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		setProgressBarIndeterminateVisibility(false);
     	if (request.getUrl().equals(Options.POST_TWEET)) {
     		if (request.getStatusCode() >= 200 && request.getStatusCode() < 400) {
-    			Toast.makeText(this, getString(R.string.messageSent), Toast.LENGTH_SHORT);
+    			Toast.makeText(this, getString(R.string.messageSent), Toast.LENGTH_SHORT).show();
     			finish();
     			try {
     				Twitter.getInstance().getDefaultAccount().requestUrl(Options.FRIENDS_TIMELINE);
@@ -84,6 +84,6 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 
 	public void onDestroy() {
 		super.onDestroy();
-		Twitter.getInstance().getDefaultAccount().removeObserver(this);
+		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
 	}
 }

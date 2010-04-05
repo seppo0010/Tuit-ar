@@ -15,12 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
+import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
+import com.tuit.ar.api.TwitterAccountObserver;
 import com.tuit.ar.api.TwitterObserver;
 
 public class SelectAccount extends ListActivity implements TwitterObserver {
@@ -54,6 +57,15 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 	public boolean onOptionsItemSelected(MenuItem item) {  
 		addAccount();
 		return true;
+	}
+
+	protected void onListItemClick (ListView l, View v, int position, long id) {
+		Twitter twitter = Twitter.getInstance();
+		TwitterAccount account = twitter.getAccounts().get(position);
+		twitter.setDefaultAccount(account);
+
+		Intent intent = new Intent(this, Friends.class);
+		this.startActivity(intent);
 	}
 
 	private void createConsumerAndProvider() {
@@ -120,8 +132,8 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 			if (element.currentAccount == account) return element.getView();
 
 			String username = account.getUsername();
-			element.getUsername().setText(username != null ? username : "Username?");
-			element.currentAccount = account;
+			element.getUsername().setText(username != null ? username : "Loading...");
+			element.setCurrentAccount(account);
 
 			return element.getView();
 		}
@@ -139,7 +151,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		}
 	}
 
-	protected class AccountElement {
+	protected class AccountElement implements TwitterAccountObserver {
 		private View view;
 		private TextView username;
 		public TwitterAccount currentAccount; 
@@ -149,11 +161,23 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 			this.view = view;
 		}
 
+		public void setCurrentAccount(TwitterAccount account) {
+			if (currentAccount != null) currentAccount.removeObserver(this);
+			currentAccount = account;
+			if (currentAccount != null) currentAccount.addObserver(this);
+		}
+
 		public TextView getUsername() {
 			if (username != null) return username;
 			else return username = (TextView)view.findViewById(R.id.username);
 		}
 
 		public View getView() { return view; }
+
+		@Override
+		public void accountHasChanged(TwitterAccount account) {
+			String username = account.getUsername();
+			this.getUsername().setText(username != null ? username : "Loading...");
+		}
 	}
 }

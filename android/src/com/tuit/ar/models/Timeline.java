@@ -6,16 +6,15 @@ import java.util.Collection;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONTokener;
 
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.api.TwitterAccountObserver;
+import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.timeline.TimelineObserver;
 
-abstract public class Timeline implements TwitterAccountObserver {
+abstract public class Timeline implements TwitterAccountRequestsObserver {
 	protected ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	protected String newestTweet = "";
 	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
@@ -23,14 +22,14 @@ abstract public class Timeline implements TwitterAccountObserver {
 
 	protected Timeline() {
 		super();
-		Twitter.getInstance().getDefaultAccount().addObserver(this);
+		Twitter.getInstance().getDefaultAccount().addRequestObserver(this);
 	}
 
 	abstract protected Options getTimeline();
 
 	public void refresh() {
 		ArrayList <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		nvps.add(new BasicNameValuePair("since_id", newestTweet));
+		if (newestTweet.equals("") == false) nvps.add(new BasicNameValuePair("since_id", newestTweet));
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
 			Twitter.getInstance().getDefaultAccount().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
@@ -62,7 +61,7 @@ abstract public class Timeline implements TwitterAccountObserver {
 				}
 				timelineChanged();
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			failedToUpdate();
 		}
 		finishedUpdate();

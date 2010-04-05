@@ -2,6 +2,7 @@ package com.tuit.ar.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -30,6 +31,7 @@ import com.tuit.ar.api.request.Options;
 
 
 public class TwitterRequest {
+	static private int BUFFER_SIZE = 1024;
 	static public enum Method { GET, POST };
 	private Runnable runnable = new Runnable() {
 		@Override
@@ -76,8 +78,16 @@ public class TwitterRequest {
 					String queryString = "";
 					if (nvps != null && nvps.size() > 0) {
 						try {
-							queryString += "?" + (new UrlEncodedFormEntity(nvps, HTTP.UTF_8)).toString();
-						} catch (UnsupportedEncodingException e) {
+							UrlEncodedFormEntity entities = new UrlEncodedFormEntity(nvps, HTTP.UTF_8);
+							ByteArrayOutputStream output = new ByteArrayOutputStream();
+							InputStream input = entities.getContent();
+							int read = 0;
+							byte[] buffer = new byte[BUFFER_SIZE];
+							while ((read = input.read(buffer, 0, BUFFER_SIZE)) != -1) {
+								output.write(buffer, 0, read);
+							}
+							queryString = "?" + new String(output.toByteArray());
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
