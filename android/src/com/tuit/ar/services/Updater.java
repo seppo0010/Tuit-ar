@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
+import com.tuit.ar.api.Twitter;
 import com.tuit.ar.models.Settings;
 import com.tuit.ar.models.SettingsObserver;
 import com.tuit.ar.models.timeline.Friends;
@@ -23,8 +24,8 @@ public class Updater extends Service implements SettingsObserver {
 		@Override
 		public void run() {
 			try {
-//				Friends.getInstance().refresh();
-//				Replies.getInstance().refresh();
+				Friends.getInstance(Twitter.getInstance().getDefaultAccount()).refresh();
+				Replies.getInstance(Twitter.getInstance().getDefaultAccount()).refresh();
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(), getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
 			}
