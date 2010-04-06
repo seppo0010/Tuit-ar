@@ -35,7 +35,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MENU_DIRECT = 4;
 	protected static final int MENU_PREFERENCES = 5;
 
-	ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+	ArrayList<Tweet> tweets;
 	TimelineAdapter timelineAdapter;
 	protected boolean isVisible;
 	protected String newestTweet = "";
@@ -46,6 +46,8 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline);
+
+		tweets = getTimeline().getTweets(); 
 
 		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
 

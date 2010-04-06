@@ -1,5 +1,6 @@
 package com.tuit.ar.activities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import oauth.signpost.OAuthProvider;
@@ -33,19 +34,28 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 	private OAuthProvider provider;
 	static private CommonsHttpOAuthConsumer consumer;
 	static private AccountsAdapter accountsAdapter;
+	private ArrayList<TwitterAccount> accounts;
 
+	// FIXME: is there any way to avoid using the same Intent data twice?
+	private boolean isURIUsed = false;
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.select_account);
 
+		Twitter twitter = Twitter.getInstance();
+		accounts = (ArrayList<TwitterAccount>) twitter.getAccounts().clone();
 		this.setListAdapter(accountsAdapter = new AccountsAdapter(this));
 
-		Twitter.getInstance().addObserver(this);
+		twitter.addObserver(this);
 	}
 
 	@Override
 	public void accountListHasChanged(Twitter twitter) {
+		accounts.clear();
+		accounts.addAll(Twitter.getInstance().getAccounts());
 		accountsAdapter.notifyDataSetChanged();
 	}
 
@@ -61,7 +71,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 
 	protected void onListItemClick (ListView l, View v, int position, long id) {
 		Twitter twitter = Twitter.getInstance();
-		TwitterAccount account = twitter.getAccounts().get(position);
+		TwitterAccount account = accounts.get(position);
 		twitter.setDefaultAccount(account);
 
 		Intent intent = new Intent(this, Friends.class);
@@ -91,8 +101,9 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 
 	public void onResume() {
 		super.onResume();
-		Uri uri = this.getIntent().getData();  
-		if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {  
+		Uri uri = this.getIntent().getData();
+		if (isURIUsed == false && uri != null && uri.toString().startsWith(CALLBACK_URL)) {
+			isURIUsed = true;
 			String verifier = uri.getQueryParameter("oauth_verifier");  
   
 			try {
@@ -120,7 +131,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 
 		public AccountsAdapter(Activity context)
 		{
-			super(context, R.layout.select_account_element, Twitter.getInstance().getAccounts());
+			super(context, R.layout.select_account_element, accounts);
 			this.context = context;
 		}
 
@@ -128,7 +139,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		{
 			AccountElement element = getAccountElement(convertView);
 
-			TwitterAccount account = Twitter.getInstance().getAccounts().get(position);
+			TwitterAccount account = accounts.get(position);
 			if (element.currentAccount == account) return element.getView();
 
 			String username = account.getUsername();

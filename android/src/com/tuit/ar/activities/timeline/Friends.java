@@ -5,6 +5,7 @@ import android.view.Menu;
 
 import com.tuit.ar.R;
 import com.tuit.ar.activities.Timeline;
+import com.tuit.ar.api.Twitter;
 
 public class Friends extends Timeline {
 
@@ -24,6 +25,6 @@ public class Friends extends Timeline {
 	}  
 
 	protected com.tuit.ar.models.Timeline getTimeline() {
-		return com.tuit.ar.models.timeline.Friends.getInstance();
+		return com.tuit.ar.models.timeline.Friends.getInstance(Twitter.getInstance().getDefaultAccount());
 	}
 }

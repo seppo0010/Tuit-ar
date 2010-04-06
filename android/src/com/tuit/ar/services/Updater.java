@@ -23,8 +23,8 @@ public class Updater extends Service implements SettingsObserver {
 		@Override
 		public void run() {
 			try {
-				Friends.getInstance().refresh();
-				Replies.getInstance().refresh();
+//				Friends.getInstance().refresh();
+//				Replies.getInstance().refresh();
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(), getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
 			}

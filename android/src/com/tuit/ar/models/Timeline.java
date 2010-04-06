@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONTokener;
 
 import com.tuit.ar.api.Twitter;
+import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
@@ -20,9 +21,8 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
 	static private int MAX_SIZE = 100;
 
-	protected Timeline() {
-		super();
-		Twitter.getInstance().getDefaultAccount().addRequestObserver(this);
+	protected Timeline(TwitterAccount account) {
+		account.addRequestObserver(this);
 	}
 
 	abstract protected Options getTimeline();
