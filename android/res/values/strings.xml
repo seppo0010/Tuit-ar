@@ -18,10 +18,13 @@
 <string name="messageSent">Mensaje Enviado</string>
 <string name="unableToPost">No se pudo enviar</string>
 <string name="unableToAddAccount">No se pudo agregar cuenta</string>
-<string-array name="tweetOptions"><item>Responder</item>
+<string-array name="tweetOptions">
+<item>Responder</item>
+<item>Retweet nativo</item>
+<item>Retweet manual</item>
 </string-array>
 <string-array name="myTweetOptions"><item>Responder</item>
-<item>Delete</item>
+<item>Borrar</item>
 </string-array>
 <string-array name="updateIntervals"><item>1 minuto</item>
 <item>5 minutos</item>

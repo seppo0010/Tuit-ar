@@ -35,6 +35,13 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MENU_DIRECT = 4;
 	protected static final int MENU_PREFERENCES = 5;
 
+	protected static final int TWEET_MENU_REPLY = 0;
+	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
+	protected static final int TWEET_MENU_RETWEET_NATIVE = 2;
+
+	protected static final int MY_TWEET_MENU_REPLY = 0;
+	protected static final int MY_TWEET_MENU_DELETE = 1;
+	
 	ArrayList<Tweet> tweets;
 	TimelineAdapter timelineAdapter;
 	protected boolean isVisible;
@@ -114,16 +121,42 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
 		new AlertDialog.Builder(this).
 		setTitle(getString(R.string.executeAction)).
-		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, new OnClickListener() {
+		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, mine ?
+				new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case MY_TWEET_MENU_REPLY:
+						{
+							Intent intent = new Intent(getApplicationContext(), NewTweet.class);
+							intent.putExtra("reply_to_id", tweet.getId());
+							intent.putExtra("reply_to_username", tweet.getUsername());
+							intent.putExtra("default_text", "@" + tweet.getUsername() + " ");
+							startActivity(intent);
+							break;
+						}
+						}
+					}
+				} :
+			new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
-				//FIXME: something more pretty than hard-coded numbers?
-				case 0:
+				case TWEET_MENU_REPLY:
 				{
 					Intent intent = new Intent(getApplicationContext(), NewTweet.class);
 					intent.putExtra("reply_to_id", tweet.getId());
 					intent.putExtra("reply_to_username", tweet.getUsername());
+					intent.putExtra("default_text", "@" + tweet.getUsername() + " ");
+					startActivity(intent);
+					break;
+				}
+				case TWEET_MENU_RETWEET_MANUAL:
+				{
+					Intent intent = new Intent(getApplicationContext(), NewTweet.class);
+					intent.putExtra("reply_to_id", tweet.getId());
+					intent.putExtra("reply_to_username", tweet.getUsername());
+					intent.putExtra("default_text", "RT @" + tweet.getUsername() + ": " + tweet.getMessage());
 					startActivity(intent);
 					break;
 				}

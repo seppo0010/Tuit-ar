@@ -23,7 +23,6 @@ import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 
 public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
-	private String replyToUser;
 	private String replyToTweetId;
 	private EditText messageField;
 
@@ -37,12 +36,15 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 
 		Intent intent = getIntent();
 		replyToTweetId = intent.getStringExtra("reply_to_id");
-		replyToUser = intent.getStringExtra("reply_to_username");
-		messageField = (EditText) findViewById(R.id.tweetMessage);
+		String replyToUser = intent.getStringExtra("reply_to_username");
 		if (replyToUser != null) {
 			TextView username = (TextView)findViewById(R.id.replyToUsername);
 			username.setText("In reply to: @" + replyToUser);
-			messageField.setText("@" + replyToUser + " ");
+		}
+		String defaultMessage = intent.getStringExtra("default_text"); 
+		messageField = (EditText) findViewById(R.id.tweetMessage);
+		if (defaultMessage != null) {
+			messageField.setText(defaultMessage);
 		}
 	}
 
