@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
@@ -33,6 +34,7 @@ import com.tuit.ar.api.request.Options;
 public class TwitterRequest {
 	static private int BUFFER_SIZE = 1024;
 	static public enum Method { GET, POST };
+	static private HashSet<Options> urlOnRequest = new HashSet<Options>();
 	private Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
@@ -58,10 +60,13 @@ public class TwitterRequest {
 
 	public TwitterRequest(TwitterAccount _account, final Options url, final ArrayList <NameValuePair> nvps,
 			final Method method) throws Exception {
+		// this avoid having 2 request of the same kind at a time
+		if (urlOnRequest.contains(url)) throw new Exception(); // FIXME: yeah, I know, not pretty at all
 		account = _account;
 		setUrl(url);
 		(new Thread() {
 			public void run() {
+				urlOnRequest.add(url);
 				DefaultHttpClient http = new DefaultHttpClient();
 
 				String full_url = "http" + (Twitter.isSecure ? "s" :"") + "://" + Twitter.BASE_URL + url.toString() + ".json";
@@ -125,6 +130,7 @@ public class TwitterRequest {
 					e.printStackTrace();
 				}
 				handler.post(runnable);
+				urlOnRequest.remove(url);
 			}
 		}).start();
 	}
