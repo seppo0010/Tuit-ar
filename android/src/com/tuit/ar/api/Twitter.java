@@ -9,15 +9,17 @@ public class Twitter {
 	static private Twitter instance;
 
 	private ArrayList<TwitterObserver> observers = new ArrayList<TwitterObserver>(); 
-	private ArrayList<TwitterAccount> accounts = new ArrayList<TwitterAccount>(); 
+	private ArrayList<TwitterAccount> accounts; 
 
 	public static Twitter getInstance() {
 		if (instance == null)
 			instance = new Twitter();
 		return instance;
 	}
+
 	private Twitter() {
 		super();
+		accounts = TwitterAccount.fetchAllFromCache();
 	}
 
 	public void addObserver(TwitterObserver observer) {
@@ -36,6 +38,7 @@ public class Twitter {
 
 	public void addAccount(TwitterAccount account) {
 		this.accounts.add(account);
+		account.serialize();
 		notifyChanges();
 	}
 
