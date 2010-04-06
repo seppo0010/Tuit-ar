@@ -8,9 +8,11 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,8 +25,11 @@ import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 
 public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
+	static private int MAX_CHARS = 140;
+
 	private String replyToTweetId;
 	private EditText messageField;
+	private TextView charCount;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,9 +48,23 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		}
 		String defaultMessage = intent.getStringExtra("default_text"); 
 		messageField = (EditText) findViewById(R.id.tweetMessage);
+		charCount = (TextView) findViewById(R.id.charCount);
 		if (defaultMessage != null) {
 			messageField.setText(defaultMessage);
+			charCount.setText(String.valueOf(MAX_CHARS - defaultMessage.length()));
 		}
+
+		messageField.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				updateCharCount();
+				return false;
+			}
+		});
+	}
+
+	private void updateCharCount() {
+		charCount.setText(String.valueOf(MAX_CHARS - messageField.getText().toString().length()));
 	}
 
 	@Override
