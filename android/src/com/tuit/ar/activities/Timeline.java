@@ -38,9 +38,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int TWEET_MENU_REPLY = 0;
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
 	protected static final int TWEET_MENU_RETWEET_NATIVE = 2;
+	protected static final int TWEET_MENU_SHARE = 2;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
+	protected static final int MY_TWEET_MENU_SHARE = 2;
 	
 	ArrayList<Tweet> tweets;
 	TimelineAdapter timelineAdapter;
@@ -135,6 +137,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 							startActivity(intent);
 							break;
 						}
+						case MY_TWEET_MENU_SHARE:
+						{
+							shareTweet(tweet);
+							break;
+						}
 						}
 					}
 				} :
@@ -160,9 +167,23 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 					startActivity(intent);
 					break;
 				}
+				case TWEET_MENU_SHARE:
+				{
+					shareTweet(tweet);
+					break;
+				}
 				}
 			}
 		}).show();
+	}
+
+	protected void shareTweet(Tweet tweet) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain"); 
+		// FIXME: no sprintf... this will do it, for now
+		intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.shareSubject).replace("%s", tweet.getUsername()));
+		intent.putExtra(Intent.EXTRA_TEXT, tweet.getMessage());
+		startActivity(Intent.createChooser(intent, getString(R.string.shareChooserTitle)));
 	}
 
 	protected void refresh() {

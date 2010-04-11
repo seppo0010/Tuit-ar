@@ -21,9 +21,11 @@
 <string-array name="tweetOptions">
 <item>Responder</item>
 <item>Retweet manual</item>
+<item>Compartir</item>
 </string-array>
 <string-array name="myTweetOptions"><item>Responder</item>
 <item>Borrar</item>
+<item>Compartir</item>
 </string-array>
 <string-array name="updateIntervals"><item>1 minuto</item>
 <item>5 minutos</item>
@@ -36,4 +38,6 @@
 <string-array name="updateIntervalsValues"><item>1</item>
 <item>5</item>
 </string-array>
+<string name="shareSubject">Tweet de %s</string>
+<string name="shareChooserTitle">Elija aplicación</string>
 </resources>
