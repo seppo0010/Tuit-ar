@@ -37,7 +37,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 
 	protected static final int TWEET_MENU_REPLY = 0;
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
-	protected static final int TWEET_MENU_RETWEET_NATIVE = 2;
 	protected static final int TWEET_MENU_SHARE = 2;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
