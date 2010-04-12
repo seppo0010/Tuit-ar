@@ -1,13 +1,22 @@
 package com.tuit.ar.activities;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import oauth.signpost.AbstractOAuthConsumer;
+
 import org.apache.http.NameValuePair;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +32,9 @@ import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
+import com.tweetphoto.api.ConcreteTweetPhoto;
+import com.tweetphoto.api.ConcreteTweetPhotoResponse;
+import com.tweetphoto.api.Profile;
 
 public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
 	static private int MAX_CHARS = 140;
@@ -61,6 +73,36 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 				return false;
 			}
 		});
+
+		ConcreteTweetPhoto tweetPhoto = new ConcreteTweetPhoto();
+		AbstractOAuthConsumer consumer = Twitter.getInstance().getDefaultAccount().getConsumer();
+		String key = consumer.getToken();
+		String secret = consumer.getTokenSecret();
+		
+		Profile profile = tweetPhoto.signIn("d21221d4-bbdd-47d7-831e-6e3eab2cc86b", "Twitter", true, key, secret);
+		if (profile!=null) { 
+			try {          
+				FileOutputStream fos = super.openFileOutput("TestFile.jpg", MODE_WORLD_READABLE);
+
+				Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.icon2);
+				bm.compress(CompressFormat.JPEG, 75, fos);
+
+				fos.flush();
+				fos.close();
+
+				File photo = new File("/data/data/com.tuit.ar/files", "TestFile.jpg");
+				FileEntity file = new FileEntity(photo, "image/jpg");
+
+				ConcreteTweetPhotoResponse response = tweetPhoto.concreteUploadPhoto(file, "This is a sample", "Test, Java API, Demo", 24.558521, -81.78257, "image/jpg");
+
+				if (response!=null) {
+					Log.i("TAG", "TweetPhoto Upload: " + response.describe());
+				}
+			}
+			catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void updateCharCount() {
