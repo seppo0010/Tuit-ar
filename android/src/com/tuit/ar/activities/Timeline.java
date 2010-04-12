@@ -1,5 +1,7 @@
 package com.tuit.ar.activities;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,6 +11,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,10 +41,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int TWEET_MENU_REPLY = 0;
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
 	protected static final int TWEET_MENU_SHARE = 2;
+	protected static final int TWEET_MENU_OPEN_LINKS = 3;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
 	protected static final int MY_TWEET_MENU_SHARE = 2;
+	protected static final int MY_TWEET_MENU_OPEN_LINKS = 3;
 	
 	ArrayList<Tweet> tweets;
 	TimelineAdapter timelineAdapter;
@@ -141,6 +146,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 							shareTweet(tweet);
 							break;
 						}
+						case MY_TWEET_MENU_OPEN_LINKS:
+						{
+							openLinks(tweet);
+							break;
+						}
 						}
 					}
 				} :
@@ -171,11 +181,49 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 					shareTweet(tweet);
 					break;
 				}
+				case TWEET_MENU_OPEN_LINKS:
+				{
+					openLinks(tweet);
+					break;
+				}
 				}
 			}
 		}).show();
 	}
 
+	protected void openLinks(Tweet tweet) {
+		ArrayList<URL> urls = parseUrls(tweet.getMessage());
+		if (urls.size() == 0) {
+			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
+		} else if (urls.size() == 1) {
+			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(0).toString())));
+		} else { // we have 2+ urls
+			final ArrayList<String> urlsStr = new ArrayList<String>();
+			for (int i = 0; i < urls.size(); i++) {
+				urlsStr.add(urls.get(i).toString());
+			}
+			new AlertDialog.Builder(this).
+			setTitle(getString(R.string.executeAction)).
+			setItems((String[]) urlsStr.toArray(new String[urlsStr.size()]),
+					new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlsStr.get(which).toString())));
+						}
+			}).show();
+		}
+	}
+
+	static private ArrayList<URL> parseUrls(String message) {
+        String [] parts = message.split("\\s");
+
+        ArrayList<URL> foundURLs = new ArrayList<URL>();
+        for( String item : parts ) try {
+            foundURLs.add(new URL(item));
+        } catch (MalformedURLException e) {
+        }
+        return foundURLs;
+	}
 	protected void shareTweet(Tweet tweet) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain"); 
