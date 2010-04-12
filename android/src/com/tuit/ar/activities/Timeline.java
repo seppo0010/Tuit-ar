@@ -148,7 +148,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 						}
 						case MY_TWEET_MENU_OPEN_LINKS:
 						{
-							openLinks(tweet);
+							openLinksInBrowser(tweet);
 							break;
 						}
 						}
@@ -183,7 +183,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 				}
 				case TWEET_MENU_OPEN_LINKS:
 				{
-					openLinks(tweet);
+					openLinksInBrowser(tweet);
 					break;
 				}
 				}
@@ -191,7 +191,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}).show();
 	}
 
-	protected void openLinks(Tweet tweet) {
+	protected void openLinksInBrowser(Tweet tweet) {
 		ArrayList<URL> urls = parseUrls(tweet.getMessage());
 		if (urls.size() == 0) {
 			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
@@ -203,7 +203,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 				urlsStr.add(urls.get(i).toString());
 			}
 			new AlertDialog.Builder(this).
-			setTitle(getString(R.string.executeAction)).
+			setTitle(getString(R.string.selectURL)).
 			setItems((String[]) urlsStr.toArray(new String[urlsStr.size()]),
 					new OnClickListener() {
 						@Override
