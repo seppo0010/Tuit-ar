@@ -2,6 +2,7 @@ package com.tuit.ar.activities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,10 +14,16 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnKeyListener;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,11 +49,15 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
 	protected static final int TWEET_MENU_SHARE = 2;
 	protected static final int TWEET_MENU_OPEN_LINKS = 3;
+	protected static final int TWEET_MENU_OPEN_LINKS_IN_BAKGROUND = 4;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
 	protected static final int MY_TWEET_MENU_SHARE = 2;
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 3;
+	protected static final int MY_TWEET_MENU_OPEN_LINKS_IN_BAKGROUND = 4;
+
+	ArrayList<WebView> webs;
 	
 	ArrayList<Status> tweets;
 	TimelineAdapter timelineAdapter;
@@ -150,6 +161,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 							openLinksInBrowser(tweet);
 							break;
 						}
+						case MY_TWEET_MENU_OPEN_LINKS_IN_BAKGROUND:
+						{
+							openLinksInBackground(tweet);
+							break;
+						}
 						}
 					}
 				} :
@@ -185,9 +201,67 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 					openLinksInBrowser(tweet);
 					break;
 				}
+				case TWEET_MENU_OPEN_LINKS_IN_BAKGROUND:
+				{
+					openLinksInBackground(tweet);
+					break;
+				}
 				}
 			}
 		}).show();
+	}
+
+	protected void openLinksInBackground(Status tweet) {
+		final String[] urls = parseUrls(tweet.getMessage());
+		if (urls.length == 0) {
+			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
+		} else if (urls.length == 1) {
+			loadURLInBackground(urls[0]);
+		} else { // we have 2+ urls
+			new AlertDialog.Builder(this).
+			setTitle(getString(R.string.selectURL)).
+			setItems(urls,
+					new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							loadURLInBackground(urls[which]);
+						}
+			}).show();
+		}
+	}
+
+	protected void loadURLInBackground(String url) {
+		if (webs == null) webs = new ArrayList<WebView>();
+		final WebView webview = new WebView(this);
+		webs.add(webview);
+		webview.loadUrl(url);
+		webview.getSettings().setJavaScriptEnabled(true);
+
+		webview.setWebChromeClient(new WebChromeClient() {
+			public void onProgressChanged(WebView view, int progress) {
+				if (progress >= 100) {
+					Timeline.this.addContentView(webview, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+				}
+			}
+		});
+		webview.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_BACK) {
+					webs.remove(webview);
+					webview.setVisibility(View.INVISIBLE);
+					webview.destroy();
+					return true;
+				}
+				return false;
+			}
+		});
+		webview.setWebViewClient(new WebViewClient() {
+			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+				Toast.makeText(Timeline.this, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+				webs.remove(webview);
+			}
+		});
 	}
 
 	protected void openLinksInBrowser(Status tweet) {
@@ -195,7 +269,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		if (urls.length == 0) {
 			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
 		} else if (urls.length == 1) {
-			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls[0].toString())));
+			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls[0])));
 		} else { // we have 2+ urls
 			new AlertDialog.Builder(this).
 			setTitle(getString(R.string.selectURL)).
