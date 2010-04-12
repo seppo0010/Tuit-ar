@@ -1,7 +1,9 @@
 package com.tuit.ar.activities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import oauth.signpost.AbstractOAuthConsumer;
@@ -16,8 +18,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -37,7 +42,9 @@ import com.tweetphoto.api.ConcreteTweetPhotoResponse;
 import com.tweetphoto.api.Profile;
 
 public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
-	static private int MAX_CHARS = 140;
+	static private final int MENU_ADD_PHOTO = 0;
+
+	static private final int MAX_CHARS = 140;
 
 	private String replyToTweetId;
 	private EditText messageField;
@@ -73,35 +80,47 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 				return false;
 			}
 		});
+	}
 
-		ConcreteTweetPhoto tweetPhoto = new ConcreteTweetPhoto();
-		AbstractOAuthConsumer consumer = Twitter.getInstance().getDefaultAccount().getConsumer();
-		String key = consumer.getToken();
-		String secret = consumer.getTokenSecret();
-		
-		Profile profile = tweetPhoto.signIn("d21221d4-bbdd-47d7-831e-6e3eab2cc86b", "Twitter", true, key, secret);
-		if (profile!=null) { 
-			try {          
-				FileOutputStream fos = super.openFileOutput("TestFile.jpg", MODE_WORLD_READABLE);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, MENU_ADD_PHOTO, 0, R.string.addPhoto);
+		return true;
+	}
 
-				Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.icon2);
+	public boolean onOptionsItemSelected(MenuItem item) {  
+	    switch (item.getItemId()) {  
+	    case MENU_ADD_PHOTO:
+	    {
+            startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 0);
+	    	break;
+	    }
+	    }
+	    return true;
+    }
+	    
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		try {
+			if (resultCode == Activity.RESULT_OK) {
+				String message = messageField.getText().toString();
+				String path = data.getData().toString();
+
+				FileOutputStream fos;
+				// FIXME: not using temporary files?
+				fos = super.openFileOutput("upload.jpg", MODE_WORLD_READABLE);
+				Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
 				bm.compress(CompressFormat.JPEG, 75, fos);
 
 				fos.flush();
 				fos.close();
 
-				File photo = new File("/data/data/com.tuit.ar/files", "TestFile.jpg");
-				FileEntity file = new FileEntity(photo, "image/jpg");
+				File photo = new File("/data/data/com.tuit.ar/files", "upload.jpg");
 
-				ConcreteTweetPhotoResponse response = tweetPhoto.concreteUploadPhoto(file, "This is a sample", "Test, Java API, Demo", 24.558521, -81.78257, "image/jpg");
-
-				if (response!=null) {
-					Log.i("TAG", "TweetPhoto Upload: " + response.describe());
-				}
+				Twitter.getInstance().getDefaultAccount().upload(photo, message);
+				photo.delete();
 			}
-			catch (java.io.IOException e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			Toast.makeText(this, getString(R.string.unableToUpload), Toast.LENGTH_LONG).show();
 		}
 	}
 

@@ -11,19 +11,29 @@ import java.util.ArrayList;
 import oauth.signpost.AbstractOAuthConsumer;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.entity.FileEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.util.Log;
+import android.webkit.MimeTypeMap;
+
 import com.tuit.ar.api.request.Options;
+import com.tweetphoto.api.ConcreteTweetPhoto;
+import com.tweetphoto.api.ConcreteTweetPhotoResponse;
+import com.tweetphoto.api.Profile;
 
 public class TwitterAccount implements TwitterAccountRequestsObserver {
-	static private String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
+	static private final String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
+	static private final String TWEET_PHOTO_API_KEY = "d21221d4-bbdd-47d7-831e-6e3eab2cc86b";
 	private oauth.signpost.AbstractOAuthConsumer consumer;
 	private String username;
 
 	private ArrayList<TwitterAccountObserver> observers = new ArrayList<TwitterAccountObserver>(); 
 	private ArrayList<TwitterAccountRequestsObserver> requestsObservers = new ArrayList<TwitterAccountRequestsObserver>(); 
+
+	private ConcreteTweetPhoto tweetPhoto;
 
 	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer) throws Exception {
 		consumer = _consumer;
@@ -42,7 +52,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	public void requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
 		startedRequest(new TwitterRequest(this, login, params, get));
-		
+
 	}
 	public String getUsername() { return username; }
 	private void setUsername(String username) { this.username = username; }
@@ -159,5 +169,25 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 			}
 		}
 		return accounts;
+	}
+
+	protected ConcreteTweetPhoto getTweetPhotoProfile() {
+		if (tweetPhoto != null) return tweetPhoto;  
+		ConcreteTweetPhoto tweetPhoto = new ConcreteTweetPhoto();
+
+		AbstractOAuthConsumer consumer = getConsumer();
+		String key = consumer.getToken();
+		String secret = consumer.getTokenSecret();
+		tweetPhoto.signIn(TWEET_PHOTO_API_KEY , "Twitter", true, key, secret);
+		return tweetPhoto;
+	}
+
+	public ConcreteTweetPhotoResponse upload(File photo, String text) {
+		ConcreteTweetPhoto tweetPhoto = getTweetPhotoProfile();
+		if (tweetPhoto != null) {
+			String mime = MimeTypeMap.getFileExtensionFromUrl(photo.getAbsolutePath());
+			return tweetPhoto.concreteUploadPhoto(new FileEntity(photo, mime), text, null, 0.0,0.0, "image/" + mime);
+		}
+		return null;
 	}
 }

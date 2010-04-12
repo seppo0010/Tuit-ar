@@ -74,7 +74,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		TwitterAccount account = accounts.get(position);
 		twitter.setDefaultAccount(account);
 
-		Intent intent = new Intent(this, Friends.class);
+		Intent intent = new Intent(this, NewTweet.class);
 		this.startActivity(intent);
 	}
 
