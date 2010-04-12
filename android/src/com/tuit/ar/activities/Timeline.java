@@ -192,38 +192,36 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	}
 
 	protected void openLinksInBrowser(Tweet tweet) {
-		ArrayList<URL> urls = parseUrls(tweet.getMessage());
-		if (urls.size() == 0) {
+		final String[] urls = parseUrls(tweet.getMessage());
+		if (urls.length == 0) {
 			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
-		} else if (urls.size() == 1) {
-			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(0).toString())));
+		} else if (urls.length == 1) {
+			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls[0].toString())));
 		} else { // we have 2+ urls
-			final ArrayList<String> urlsStr = new ArrayList<String>();
-			for (int i = 0; i < urls.size(); i++) {
-				urlsStr.add(urls.get(i).toString());
-			}
 			new AlertDialog.Builder(this).
 			setTitle(getString(R.string.selectURL)).
-			setItems((String[]) urlsStr.toArray(new String[urlsStr.size()]),
+			setItems(urls,
 					new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlsStr.get(which).toString())));
+							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls[which])));
 						}
 			}).show();
 		}
 	}
 
-	static private ArrayList<URL> parseUrls(String message) {
+	static private String[] parseUrls(String message) {
         String [] parts = message.split("\\s");
 
-        ArrayList<URL> foundURLs = new ArrayList<URL>();
+        ArrayList<String> foundURLs = new ArrayList<String>();
         for( String item : parts ) try {
-            foundURLs.add(new URL(item));
+            foundURLs.add((new URL(item)).toString());
         } catch (MalformedURLException e) {
         }
-        return foundURLs;
+
+        return (String[])foundURLs.toArray(new String[foundURLs.size()]);
 	}
+
 	protected void shareTweet(Tweet tweet) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain"); 
