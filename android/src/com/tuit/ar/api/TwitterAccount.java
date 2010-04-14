@@ -16,17 +16,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.tuit.ar.api.request.Options;
 import com.tweetphoto.api.ConcreteTweetPhoto;
 import com.tweetphoto.api.ConcreteTweetPhotoResponse;
-import com.tweetphoto.api.Profile;
 
 public class TwitterAccount implements TwitterAccountRequestsObserver {
 	static private final String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
-	static private final String TWEET_PHOTO_API_KEY = "d21221d4-bbdd-47d7-831e-6e3eab2cc86b";
 	private oauth.signpost.AbstractOAuthConsumer consumer;
 	private String username;
 

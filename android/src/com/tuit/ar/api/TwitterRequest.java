@@ -64,6 +64,10 @@ public class TwitterRequest {
 		if (urlOnRequest.contains(url)) throw new Exception(); // FIXME: yeah, I know, not pretty at all
 		account = _account;
 		setUrl(url);
+		run(url, nvps, method);
+	}
+
+	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
 		(new Thread() {
 			public void run() {
 				urlOnRequest.add(url);
@@ -99,10 +103,10 @@ public class TwitterRequest {
 					request = new HttpGet(full_url + queryString);
 				}
 
-			    final HttpParams params = new BasicHttpParams();
-			    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-			    HttpProtocolParams.setContentCharset(params, "UTF_8");
-			    HttpProtocolParams.setUseExpectContinue(params, false);
+				final HttpParams params = new BasicHttpParams();
+				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+				HttpProtocolParams.setContentCharset(params, "UTF_8");
+				HttpProtocolParams.setUseExpectContinue(params, false);
 				http.setParams(params);	
 
 				try {
@@ -110,7 +114,7 @@ public class TwitterRequest {
 					HttpResponse response = http.execute(request);
 					HttpEntity resEntity = response.getEntity();
 					setStatusCode(response.getStatusLine().getStatusCode());
-					
+
 					//if (resEntity != null && statusCode >= 200 && statusCode < 300)
 					{
 						ByteArrayOutputStream output = new ByteArrayOutputStream();

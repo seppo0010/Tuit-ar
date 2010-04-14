@@ -1,25 +1,18 @@
 package com.tuit.ar.activities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import oauth.signpost.AbstractOAuthConsumer;
-
 import org.apache.http.NameValuePair;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +30,6 @@ import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
-import com.tweetphoto.api.ConcreteTweetPhoto;
-import com.tweetphoto.api.ConcreteTweetPhotoResponse;
-import com.tweetphoto.api.Profile;
 
 public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
 	static private final int MENU_ADD_PHOTO = 0;
@@ -49,6 +39,8 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	private String replyToTweetId;
 	private EditText messageField;
 	private TextView charCount;
+
+	private File photo;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,10 +106,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 				fos.flush();
 				fos.close();
 
-				File photo = new File("/data/data/com.tuit.ar/files", "upload.jpg");
-
-				Twitter.getInstance().getDefaultAccount().upload(photo, message);
-				photo.delete();
+				photo = new File("/data/data/com.tuit.ar/files", "upload.jpg");
 			}
 		} catch (Exception e) {
 			Toast.makeText(this, getString(R.string.unableToUpload), Toast.LENGTH_LONG).show();
@@ -131,14 +120,18 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	@Override
 	public void onClick(View v) {
 		String message = messageField.getText().toString();
-		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("status", message));
-		if (replyToTweetId != null) params.add(new BasicNameValuePair("in_reply_to_status_id", replyToTweetId));
-		TwitterRequest.Method method = TwitterRequest.Method.POST;
-		try {
-			Twitter.getInstance().getDefaultAccount().requestUrl(Options.POST_TWEET, params, method);
-		} catch (Exception e) {
-			sendFailed();
+		if (photo != null) {
+			Twitter.getInstance().getDefaultAccount().upload(photo, message);
+		} else {
+			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("status", message));
+			if (replyToTweetId != null) params.add(new BasicNameValuePair("in_reply_to_status_id", replyToTweetId));
+			TwitterRequest.Method method = TwitterRequest.Method.POST;
+			try {
+				Twitter.getInstance().getDefaultAccount().requestUrl(Options.POST_TWEET, params, method);
+			} catch (Exception e) {
+				sendFailed();
+			}
 		}
 	}
 	public void sendFailed() {
@@ -166,5 +159,6 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	public void onDestroy() {
 		super.onDestroy();
 		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
+		photo.delete();
 	}
 }
