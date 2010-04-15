@@ -46,4 +46,7 @@
 <string name="shareChooserTitle">Elija aplicación</string>
 <string name="noURLFound">No se ha encontrado URL</string>
 <string name="selectURL">Seleccione URL</string>
+<string name="addPhoto">Agregar Foto</string>
+<string name="selectImageSource">Seleccione origen de la imagen</string>
+<string name="unableToUpload">No se pudo subir la imagen seleccionada</string>
 </resources>

@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
-import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountObserver;
@@ -74,7 +73,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		TwitterAccount account = accounts.get(position);
 		twitter.setDefaultAccount(account);
 
-		Intent intent = new Intent(this, Friends.class);
+		Intent intent = new Intent(this, com.tuit.ar.activities.timeline.Friends.class);
 		this.startActivity(intent);
 	}
 

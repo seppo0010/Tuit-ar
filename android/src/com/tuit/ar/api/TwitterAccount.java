@@ -18,7 +18,7 @@ import org.json.JSONTokener;
 import com.tuit.ar.api.request.Options;
 
 public class TwitterAccount implements TwitterAccountRequestsObserver {
-	static private String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
+	static private final String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
 	private oauth.signpost.AbstractOAuthConsumer consumer;
 	private String username;
 
@@ -42,8 +42,12 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	public void requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
 		startedRequest(new TwitterRequest(this, login, params, get));
-		
+
 	}
+	public void upload(File photo, String message) throws Exception {
+		startedRequest(new TwitterRequestWithPhoto(this, photo, message));
+	}
+
 	public String getUsername() { return username; }
 	private void setUsername(String username) { this.username = username; }
 
@@ -160,4 +164,24 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		}
 		return accounts;
 	}
+
+/*	protected ConcreteTweetPhoto getTweetPhotoProfile() {
+		if (tweetPhoto != null) return tweetPhoto;  
+		ConcreteTweetPhoto tweetPhoto = new ConcreteTweetPhoto();
+
+		AbstractOAuthConsumer consumer = getConsumer();
+		String key = consumer.getToken();
+		String secret = consumer.getTokenSecret();
+		tweetPhoto.signIn(TWEET_PHOTO_API_KEY , "Twitter", true, key, secret);
+		return tweetPhoto;
+	}
+
+	public ConcreteTweetPhotoResponse upload(File photo, String text) {
+		ConcreteTweetPhoto tweetPhoto = getTweetPhotoProfile();
+		if (tweetPhoto != null) {
+			String mime = MimeTypeMap.getFileExtensionFromUrl(photo.getAbsolutePath());
+			return tweetPhoto.concreteUploadPhoto(new FileEntity(photo, mime), text, null, 0.0,0.0, "image/" + mime);
+		}
+		return null;
+	}*/
 }
