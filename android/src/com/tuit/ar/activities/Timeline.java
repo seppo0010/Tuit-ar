@@ -8,6 +8,10 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -25,6 +29,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +61,9 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 3;
 	protected static final int MY_TWEET_MENU_OPEN_LINKS_IN_BAKGROUND = 4;
 
-	ArrayList<WebView> webs;
+	static private int notificationID = 1;
+
+	HashMap<String, WebView> webs = new HashMap<String, WebView>();
 	
 	ArrayList<Status> tweets;
 	TimelineAdapter timelineAdapter;
@@ -78,8 +85,18 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		this.startService(new Intent(this, Updater.class));
 	}
 
-    protected void onResume() {
+	protected void onNewIntent(Intent intent) {
+		String url = intent.getStringExtra("url");
+		if (url != null) {
+			if (webs.containsKey(url)) {
+				addContentView(webs.get(url), new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			}
+		}
+	}
+
+	protected void onResume() {
     	super.onResume();
+    	onNewIntent(getIntent());
     	isVisible = true;
     	timelineAdapter.notifyDataSetChanged();
     }
@@ -229,17 +246,43 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}
 	}
 
-	protected void loadURLInBackground(String url) {
-		if (webs == null) webs = new ArrayList<WebView>();
+	protected void loadURLInBackground(final String url) {
 		final WebView webview = new WebView(this);
-		webs.add(webview);
+		webs.put(url, webview);
 		webview.loadUrl(url);
 		webview.getSettings().setJavaScriptEnabled(true);
 
+		String ns = Context.NOTIFICATION_SERVICE;
+		final NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+		int icon = R.drawable.icon_web;
+		CharSequence tickerText = "Hello";
+		long when = System.currentTimeMillis();
+
+		final Notification notification = new Notification(icon, tickerText, when);
+		Context context = getApplicationContext();
+		CharSequence contentTitle = "My notification";
+		CharSequence contentText = "Hello World!";
+		final Intent notificationIntent = new Intent(this, this.getClass());
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		notification.contentIntent = contentIntent;
+		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+
+		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.background_url);
+		contentView.setImageViewResource(R.id.image, R.drawable.icon_web);
+		contentView.setTextViewText(R.id.text, "Hello, this message is in a custom expanded view");
+		notification.contentView = contentView;
+
+		final int _notificationID = ++notificationID;
+		mNotificationManager.notify(_notificationID, notification);
+
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
+				contentView.setProgressBar(R.id.progress, 100, progress, false);
+				mNotificationManager.notify(_notificationID, notification);
 				if (progress >= 100) {
-					Timeline.this.addContentView(webview, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+					mNotificationManager.cancel(_notificationID);
+					notifyFinished(url);
 				}
 			}
 		});
@@ -247,7 +290,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					webs.remove(webview);
+					webs.remove(url);
 					webview.setVisibility(View.INVISIBLE);
 					webview.destroy();
 					return true;
@@ -258,9 +301,33 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		webview.setWebViewClient(new WebViewClient() {
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				Toast.makeText(Timeline.this, "Oh no! " + description, Toast.LENGTH_SHORT).show();
-				webs.remove(webview);
+				webs.remove(url);
 			}
 		});
+	}
+
+	protected void notifyFinished(String url) {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+		int icon = R.drawable.icon_web;        // icon from resources
+		CharSequence tickerText = "Hello";              // ticker-text
+		long when = System.currentTimeMillis();         // notification time
+		Context context = getApplicationContext();      // application Context
+		CharSequence contentTitle = "My notification";  // expanded message title
+		CharSequence contentText = "Hello World!";      // expanded message text
+
+		Intent notificationIntent = new Intent(this, this.getClass());
+		notificationIntent.setAction(Intent.ACTION_VIEW);
+		notificationIntent.putExtra("url", url);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+		// the next two lines initialize the Notification, using the configurations above
+		Notification notification = new Notification(icon, tickerText, when);
+		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		notification.contentIntent = contentIntent;
+	
+		mNotificationManager.notify(++notificationID, notification);
 	}
 
 	protected void openLinksInBrowser(Status tweet) {
