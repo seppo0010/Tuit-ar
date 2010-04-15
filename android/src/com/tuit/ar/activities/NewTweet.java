@@ -94,9 +94,6 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		super.onActivityResult(requestCode, resultCode, data);
 		try {
 			if (resultCode == Activity.RESULT_OK) {
-				String message = messageField.getText().toString();
-				String path = data.getData().toString();
-
 				FileOutputStream fos;
 				// FIXME: not using temporary files?
 				fos = super.openFileOutput("upload.jpg", MODE_WORLD_READABLE);
@@ -120,18 +117,18 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	@Override
 	public void onClick(View v) {
 		String message = messageField.getText().toString();
-		if (photo != null) {
-			Twitter.getInstance().getDefaultAccount().upload(photo, message);
-		} else {
-			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("status", message));
-			if (replyToTweetId != null) params.add(new BasicNameValuePair("in_reply_to_status_id", replyToTweetId));
-			TwitterRequest.Method method = TwitterRequest.Method.POST;
-			try {
+		try {
+			if (photo != null) {
+				Twitter.getInstance().getDefaultAccount().upload(photo, message);
+			} else {
+				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+				params.add(new BasicNameValuePair("status", message));
+				if (replyToTweetId != null) params.add(new BasicNameValuePair("in_reply_to_status_id", replyToTweetId));
+				TwitterRequest.Method method = TwitterRequest.Method.POST;
 				Twitter.getInstance().getDefaultAccount().requestUrl(Options.POST_TWEET, params, method);
-			} catch (Exception e) {
-				sendFailed();
 			}
+		} catch (Exception e) {
+			sendFailed();
 		}
 	}
 	public void sendFailed() {
@@ -159,6 +156,6 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	public void onDestroy() {
 		super.onDestroy();
 		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
-		photo.delete();
+		if (photo != null) photo.delete();
 	}
 }

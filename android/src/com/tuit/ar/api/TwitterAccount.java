@@ -11,16 +11,11 @@ import java.util.ArrayList;
 import oauth.signpost.AbstractOAuthConsumer;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.entity.FileEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.webkit.MimeTypeMap;
-
 import com.tuit.ar.api.request.Options;
-import com.tweetphoto.api.ConcreteTweetPhoto;
-import com.tweetphoto.api.ConcreteTweetPhotoResponse;
 
 public class TwitterAccount implements TwitterAccountRequestsObserver {
 	static private final String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
@@ -29,8 +24,6 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	private ArrayList<TwitterAccountObserver> observers = new ArrayList<TwitterAccountObserver>(); 
 	private ArrayList<TwitterAccountRequestsObserver> requestsObservers = new ArrayList<TwitterAccountRequestsObserver>(); 
-
-	private ConcreteTweetPhoto tweetPhoto;
 
 	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer) throws Exception {
 		consumer = _consumer;
@@ -51,6 +44,10 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		startedRequest(new TwitterRequest(this, login, params, get));
 
 	}
+	public void upload(File photo, String message) throws Exception {
+		startedRequest(new TwitterRequestWithPhoto(this, photo, message));
+	}
+
 	public String getUsername() { return username; }
 	private void setUsername(String username) { this.username = username; }
 
@@ -168,7 +165,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		return accounts;
 	}
 
-	protected ConcreteTweetPhoto getTweetPhotoProfile() {
+/*	protected ConcreteTweetPhoto getTweetPhotoProfile() {
 		if (tweetPhoto != null) return tweetPhoto;  
 		ConcreteTweetPhoto tweetPhoto = new ConcreteTweetPhoto();
 
@@ -186,5 +183,5 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 			return tweetPhoto.concreteUploadPhoto(new FileEntity(photo, mime), text, null, 0.0,0.0, "image/" + mime);
 		}
 		return null;
-	}
+	}*/
 }

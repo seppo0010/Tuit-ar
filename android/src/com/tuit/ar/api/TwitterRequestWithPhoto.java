@@ -10,7 +10,6 @@ import org.apache.http.entity.FileEntity;
 
 import android.webkit.MimeTypeMap;
 
-import com.tuit.ar.api.TwitterRequest.Method;
 import com.tuit.ar.api.request.Options;
 import com.tweetphoto.api.ConcreteTweetPhoto;
 import com.tweetphoto.api.ConcreteTweetPhotoResponse;
@@ -23,19 +22,20 @@ public class TwitterRequestWithPhoto extends TwitterRequest {
 	private File photo;
 	private String message;
 
-	public TwitterRequestWithPhoto(TwitterAccount account, Options url,
-			String message, File photo) throws Exception {
-		super(account, url, null, Method.POST);
+	public TwitterRequestWithPhoto(TwitterAccount account, File photo, String message) throws Exception {
+		super(account, null, null, Method.POST);
 		consumer = account.getConsumer();
 		this.photo = photo;
 		this.message = message;
+		this.run(null, null, null);
 	}
 
 	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
 		if (consumer == null) return;
 		(new Thread() {
 			public void run() {
-				upload(photo, nvps.);
+				upload(photo, message);
+				handler.post(runnable);
 			}
 		}).start();
 	}

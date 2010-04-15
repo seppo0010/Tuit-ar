@@ -35,13 +35,13 @@ public class TwitterRequest {
 	static private int BUFFER_SIZE = 1024;
 	static public enum Method { GET, POST };
 	static private HashSet<Options> urlOnRequest = new HashSet<Options>();
-	private Runnable runnable = new Runnable() {
+	protected Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
 			finishedRequest();
 		}
 	};
-	private Handler handler = new Handler();
+	protected Handler handler = new Handler();
 	private Options url = null;
 	private int statusCode;
 	private String response;
