@@ -87,7 +87,17 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	public void requestHasFinished(TwitterRequest request) {
 		if (request.getUrl() == Options.LOGIN) {
+			// Unauthorized! I'm invalid!!!
+			if (request.getStatusCode() > 400 && request.getStatusCode() < 500) {
+				Twitter.getInstance().removeAccount(this);
+				return;
+			}
+
 			String response = request.getResponse();
+			if (response == null) {
+				return;
+			}
+
 			try {
 				JSONObject data = new JSONObject(new JSONTokener(response));
 				this.setUsername(data.getString("screen_name"));

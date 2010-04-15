@@ -34,7 +34,7 @@ import com.tuit.ar.api.request.Options;
 public class TwitterRequest {
 	static private int BUFFER_SIZE = 1024;
 	static public enum Method { GET, POST };
-	static private HashSet<Options> urlOnRequest = new HashSet<Options>();
+	private HashSet<Options> urlOnRequest = new HashSet<Options>();
 	protected Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
