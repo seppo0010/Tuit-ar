@@ -252,7 +252,9 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	}
 
 	public void timelineUpdateHasFailed(com.tuit.ar.models.Timeline timeline) {
-		Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
+		if (isVisible) {
+			Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	protected class TimelineAdapter extends ArrayAdapter<Tweet> 
