@@ -273,7 +273,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			Tweet tweet = tweets.get(position);
 			if (element.currentTweet == tweet) return element.getView();
 
-			element.getUsername().setText(tweet.getUsername());
+			element.getUsername().setText("@" + tweet.getUsername());
 			element.getMessage().setText(tweet.getMessage());
 			element.getDate().setText(Tweet.calculateElapsed(tweet.getDateMillis()));
 			element.currentTweet = tweet;
