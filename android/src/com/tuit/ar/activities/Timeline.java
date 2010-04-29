@@ -26,7 +26,8 @@ import com.tuit.ar.R;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.models.Tweet;
+import com.tuit.ar.databases.Cache;
+import com.tuit.ar.models.Status;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
 
@@ -48,7 +49,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MY_TWEET_MENU_SHARE = 2;
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 3;
 	
-	ArrayList<Tweet> tweets;
+	ArrayList<Status> tweets;
 	TimelineAdapter timelineAdapter;
 	protected boolean isVisible;
 	protected String newestTweet = "";
@@ -67,6 +68,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		getTimeline().addObserver(this);
 		getTimeline().refresh();
 		this.startService(new Intent(this, Updater.class));
+		new Cache(this);
 	}
 
     protected void onResume() {
@@ -122,7 +124,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	}
 
 	protected void onListItemClick (ListView l, View v, int position, long id) {
-		final Tweet tweet = tweets.get(position);
+		final Status tweet = tweets.get(position);
 		// FIXME: use user id instead of username!
 		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
 		new AlertDialog.Builder(this).
@@ -191,7 +193,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}).show();
 	}
 
-	protected void openLinksInBrowser(Tweet tweet) {
+	protected void openLinksInBrowser(Status tweet) {
 		final String[] urls = parseUrls(tweet.getMessage());
 		if (urls.length == 0) {
 			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
@@ -222,7 +224,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
         return (String[])foundURLs.toArray(new String[foundURLs.size()]);
 	}
 
-	protected void shareTweet(Tweet tweet) {
+	protected void shareTweet(Status tweet) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain"); 
 		// FIXME: no sprintf... this will do it, for now
@@ -257,7 +259,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}
 	}
 
-	protected class TimelineAdapter extends ArrayAdapter<Tweet> 
+	protected class TimelineAdapter extends ArrayAdapter<Status> 
 	{
 		Activity context;
 		HashMap<View, TimelineElement> elements = new HashMap<View, TimelineElement>();
@@ -272,12 +274,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		{
 			TimelineElement element = getTimelineElement(convertView);
 
-			Tweet tweet = tweets.get(position);
+			Status tweet = tweets.get(position);
 			if (element.currentTweet == tweet) return element.getView();
 
 			element.getUsername().setText("@" + tweet.getUsername());
 			element.getMessage().setText(tweet.getMessage());
-			element.getDate().setText(Tweet.calculateElapsed(tweet.getDateMillis()));
+			element.getDate().setText(Status.calculateElapsed(tweet.getDateMillis()));
 			element.currentTweet = tweet;
 
 			return element.getView();
@@ -301,7 +303,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		private TextView username;
 		private TextView message;
 		private TextView date;
-		public Tweet currentTweet; 
+		public Status currentTweet; 
 
 		public TimelineElement(View view) {
 			super();

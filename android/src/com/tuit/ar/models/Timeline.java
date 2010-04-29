@@ -16,8 +16,8 @@ import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.timeline.TimelineObserver;
 
 abstract public class Timeline implements TwitterAccountRequestsObserver {
-	protected ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-	protected String newestTweet = "";
+	protected ArrayList<Status> tweets = new ArrayList<Status>();
+	protected long newestTweet = 0;
 	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
 	static private int MAX_SIZE = 100;
 
@@ -29,7 +29,7 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 
 	public void refresh() {
 		ArrayList <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		if (newestTweet.equals("") == false) nvps.add(new BasicNameValuePair("since_id", newestTweet));
+		if (newestTweet > 0) nvps.add(new BasicNameValuePair("since_id", String.valueOf(newestTweet)));
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
 			Twitter.getInstance().getDefaultAccount().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
@@ -50,7 +50,8 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 			int c = tweets.length();
 			if (c > 0) {
 				for (int i = c-1; i >= 0; i--) {
-					Tweet tweet = new Tweet(tweets.getJSONObject(i));
+					Status tweet = new Status(tweets.getJSONObject(i));
+					tweet.insert();
 					if (i == 0)
 						newestTweet = tweet.getId();
 					this.tweets.add(0, tweet);
@@ -67,11 +68,11 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		finishedUpdate();
 	}
 
-	public ArrayList<Tweet> getTweets() {
+	public ArrayList<Status> getTweets() {
 		return tweets;
 	}
 
-	public Collection<Tweet> getTweetsNewerThan(Tweet tweet) {
+	public Collection<Status> getTweetsNewerThan(Status tweet) {
 		return tweets.subList(0, tweets.indexOf(tweet));
 	}
 
