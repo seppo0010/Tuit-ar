@@ -31,7 +31,7 @@ public class Status extends Model {
 	private User user;
 
 	public Status(Cursor query) {
-		super(null);
+		super();
 		setDateMillis(query.getLong(0) * 1000);
 		setFavorited(query.getInt(1) == 1);
 		setId(query.getLong(2));
@@ -44,7 +44,7 @@ public class Status extends Model {
 	}
 
 	public Status(JSONObject object) {
-		super(null);
+		super();
 		this.dataSourceJSON = object;
 	}
 

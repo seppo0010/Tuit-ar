@@ -31,7 +31,7 @@ public class User extends Model {
 	private boolean verified;
 	
 	public User(Cursor query) {
-		super(query);
+		super();
 		setDescription(query.getString(0));
 		setFollowersCount(query.getInt(1));
 		setFollowing(query.getInt(2) == 1);
@@ -48,7 +48,7 @@ public class User extends Model {
 	}
 
 	public User(JSONObject object) {
-		super(null);
+		super();
 		this.dataSourceJSON = object;
 	}
 

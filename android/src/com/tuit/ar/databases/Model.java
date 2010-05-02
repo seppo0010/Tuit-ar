@@ -11,6 +11,8 @@ public abstract class Model {
 	protected long id;
 	static public Database db;
 
+//	TODO: Is there any way to use reflection to call the setters?
+	/*
 	public Model(Cursor query) {
 		if (query == null) return;
 		int c = query.getColumnCount();
@@ -19,17 +21,14 @@ public abstract class Model {
 			try {
 				this.getClass().getMethod("set" + columnName.substring(0, 1).toUpperCase() + columnName.substring(1), this.getClass().getField(columnName).getType());
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
 	public void save() {
 		if (id > 0) update();
