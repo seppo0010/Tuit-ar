@@ -24,7 +24,9 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 	protected Timeline(TwitterAccount account) {
 		account.addRequestObserver(this);
 		tweets = Status.select(null, null, null, null, "id DESC", null);
-		newestTweet = tweets.get(0).getId();
+		if (tweets.size() > 0) {
+			newestTweet = tweets.get(0).getId();
+		}
 	}
 
 	abstract protected Options getTimeline();

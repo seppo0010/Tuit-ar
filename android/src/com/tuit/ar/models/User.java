@@ -1,5 +1,7 @@
 package com.tuit.ar.models;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -217,6 +219,11 @@ public class User extends Model {
 
 	public void setVerified(boolean verified) {
 		this.verified = verified;
+	}
+
+	@SuppressWarnings("unchecked")
+	static public ArrayList<User> select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+		return (ArrayList<User>)Model.select(User.class, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
 	}
 
 	@Override

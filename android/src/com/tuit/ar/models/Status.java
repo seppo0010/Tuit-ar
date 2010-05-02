@@ -50,11 +50,15 @@ public class Status extends Model {
 
 	public User getUser() {
 		if (user != null) return user;
-		try {
-			return user = new User(dataSourceJSON.getJSONObject("user"));
-		} catch (JSONException e) {
-			e.printStackTrace();
+		if (dataSourceJSON != null) { 
+			try {
+				return user = new User(dataSourceJSON.getJSONObject("user"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
+		ArrayList<User> searchUser = User.select("id = ?", new String[] { String.valueOf(getUserId()) }, null, null, null, "1");
+		if (searchUser.size() > 0) return user = searchUser.get(0);
 		return null;
 	}
 
@@ -126,7 +130,7 @@ public class Status extends Model {
 	public long getUserId() {
 		if (user_id != 0) return user_id;
 		try {
-			return user_id = dataSourceJSON.getLong("user_id");
+			return user_id = dataSourceJSON.getJSONObject("user").getLong("id");
 		} catch (Exception e) {
 			return 0;
 		}
