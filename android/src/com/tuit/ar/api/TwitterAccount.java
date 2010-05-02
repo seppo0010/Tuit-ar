@@ -34,7 +34,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer, String userId) throws Exception {
 		consumer = _consumer;
-		this.setUser(User.select("id = ?", new String[] { userId }, null, null, null, "1").get(0));
+		this.setUser(User.select("id = ? AND belongs_to_user = ?", new String[] { userId, userId }, null, null, null, "1").get(0));
 		this.addRequestObserver(this);
 		this.requestUrl(Options.LOGIN);
 	}
@@ -120,6 +120,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	private void setUser(User user) {
 		this.user = user;
+		user.setBelongsToUser(user.getId());
 		user.replace();
 	}
 

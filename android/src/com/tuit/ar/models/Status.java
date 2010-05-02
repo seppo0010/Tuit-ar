@@ -269,7 +269,9 @@ public class Status extends Model {
 	@Override
 	public long replace() {
 		try {
-			getUser().replace();
+			User user = getUser();
+			user.setBelongsToUser(getBelongsToUser());
+			user.replace();
 		} catch (SQLiteException e) {}
 
 		// TODO: some kind of factory to avoid having twice the same instance?

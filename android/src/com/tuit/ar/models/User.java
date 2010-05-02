@@ -12,7 +12,7 @@ import com.tuit.ar.databases.Model;
 
 public class User extends Model {
 	private static final String[] columns = new String[]{
-		"description", "followers_count", "following", "friends_count", "id", "location", "name", "profile_image_url", "is_protected", "screen_name", "statuses_count", "url", "verified"
+		"description", "followers_count", "following", "friends_count", "id", "location", "name", "profile_image_url", "is_protected", "screen_name", "statuses_count", "url", "verified", "belongs_to_user"
 	};
 	private JSONObject dataSourceJSON;
 
@@ -29,6 +29,7 @@ public class User extends Model {
 	private int statuses_count;
 	private String url;
 	private boolean verified;
+	private long belongs_to_user;
 	
 	public User(Cursor query) {
 		super();
@@ -45,6 +46,7 @@ public class User extends Model {
 		setStatusesCount(query.getInt(10));
 		setUrl(query.getString(11));
 		setVerified(query.getInt(12) == 1);
+		setBelongsToUser(query.getLong(13));
 	}
 
 	public User(JSONObject object) {
@@ -221,6 +223,14 @@ public class User extends Model {
 		this.verified = verified;
 	}
 
+	public long getBelongsToUser() {
+		return belongs_to_user;
+	}
+
+	public void setBelongsToUser(long belongsToUser) {
+		belongs_to_user = belongsToUser;
+	}
+
 	@SuppressWarnings("unchecked")
 	static public ArrayList<User> select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
 		return (ArrayList<User>)Model.select(User.class, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
@@ -242,6 +252,7 @@ public class User extends Model {
 		fields.put(columns[10], getStatusesCount());
 		fields.put(columns[11], getUrl());
 		fields.put(columns[12], isVerified() ? 1 : 0);
+		fields.put(columns[13], getBelongsToUser());
 		return fields;
 	}
 }
