@@ -21,5 +21,13 @@ public enum Options {
 		public String toString() {
 			return "statuses/update_with_photo";
 		}
+	}, FOLLOW {
+		public String toString() {
+			return "friendships/create";
+		}
+	}, UNFOLLOW {
+		public String toString() {
+			return "friendships/destroy";
+		}
 	}
 }

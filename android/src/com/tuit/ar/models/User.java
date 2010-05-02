@@ -2,15 +2,23 @@ package com.tuit.ar.models;
 
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.tuit.ar.api.Twitter;
+import com.tuit.ar.api.TwitterAccount;
+import com.tuit.ar.api.TwitterAccountRequestsObserver;
+import com.tuit.ar.api.TwitterRequest;
+import com.tuit.ar.api.TwitterRequest.Method;
+import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
 
-public class User extends Model {
+public class User extends Model implements TwitterAccountRequestsObserver {
 	private static final String[] columns = new String[]{
 		"description", "followers_count", "following", "friends_count", "id", "location", "name", "profile_image_url", "is_protected", "screen_name", "statuses_count", "url", "verified", "belongs_to_user"
 	};
@@ -30,6 +38,8 @@ public class User extends Model {
 	private String url;
 	private boolean verified;
 	private long belongs_to_user;
+
+	private TwitterRequest followRequest;
 	
 	public User(Cursor query) {
 		super();
@@ -254,5 +264,36 @@ public class User extends Model {
 		fields.put(columns[12], isVerified() ? 1 : 0);
 		fields.put(columns[13], getBelongsToUser());
 		return fields;
+	}
+
+	public void stopFollowing() throws Exception {
+		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+		account.addRequestObserver(this);
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("user_id", String.valueOf(getId())));
+		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.GET);
+	}
+
+	public void follow() throws Exception {
+		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+		account.addRequestObserver(this);
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("user_id", String.valueOf(getId())));
+		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.GET);
+	}
+
+	@Override
+	public void requestHasFinished(TwitterRequest request) {
+		if (request == followRequest) {
+			if (request.getUrl().equals(Options.FOLLOW)) {
+				setFollowing(true);
+			} else {
+				setFollowing(false);
+			}
+		}
+	}
+
+	@Override
+	public void requestHasStarted(TwitterRequest request) {
 	}
 }
