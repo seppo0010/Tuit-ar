@@ -12,7 +12,7 @@ public class Replies extends Timeline {
 
 	protected Replies(TwitterAccount account) {
 		super(account);
-		tweets = Status.select("is_reply = 1", null, null, null, "id DESC", null);
+		tweets = Status.select("is_reply = 1 AND belongs_to_user = ?", new String[] { String.valueOf(account.getUser().getId()) }, null, null, "id DESC", null);
 		if (tweets.size() > 0) {
 			newestTweet = tweets.get(0).getId();
 		}
