@@ -23,13 +23,15 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 
 	protected Timeline(TwitterAccount account) {
 		account.addRequestObserver(this);
+//		tweets = Status.select(null, null, null, null, "id DESC", null);
+//		newestTweet = tweets.get(0).getId();
 	}
 
 	abstract protected Options getTimeline();
 
 	public void refresh() {
 		ArrayList <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		if (newestTweet > 0) nvps.add(new BasicNameValuePair("since_id", String.valueOf(newestTweet)));
+//		if (newestTweet > 0) nvps.add(new BasicNameValuePair("since_id", String.valueOf(newestTweet)));
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
 			Twitter.getInstance().getDefaultAccount().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);

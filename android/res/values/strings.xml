@@ -48,6 +48,6 @@
 <string name="selectImageSource">Seleccione origen de la imagen</string>
 <string name="unableToUpload">No se pudo subir la imagen seleccionada</string>
 <string name="cache_onCreate">"CREATE TABLE status (date NUMERIC, favorited NUMERIC, id INTEGER PRIMARY KEY, in_reply_to_screen_name TEXT, in_reply_to_status_id NUMERIC, in_reply_to_user_id NUMERIC, message TEXT, source TEXT, user_id NUMERIC)
-CREATE TABLE user (description TEXT, followers_count NUMERIC, following NUMERIC, friends_count NUMERIC, id INTEGER PRIMARY KEY, location TEXT, name TEXT, profile_image_url TEXT, protected NUMERIC, screen_name TEXT, statuses_count NUMERIC, url TEXT, verified NUMERIC)
+CREATE TABLE user (description TEXT, followers_count NUMERIC, following NUMERIC, friends_count NUMERIC, id INTEGER PRIMARY KEY, location TEXT, name TEXT, profile_image_url TEXT, is_protected NUMERIC, screen_name TEXT, statuses_count NUMERIC, url TEXT, verified NUMERIC)
 "</string>
 </resources>

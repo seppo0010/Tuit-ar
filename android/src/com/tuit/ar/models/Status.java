@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
@@ -26,6 +27,7 @@ public class Status extends Model {
 	private String message;
 	private String source;
 	private long user_id = 0;
+	private User user;
 
 	public Status(Cursor query) {
 		super(null);
@@ -43,6 +45,16 @@ public class Status extends Model {
 	public Status(JSONObject object) {
 		super(null);
 		this.dataSourceJSON = object;
+	}
+
+	public User getUser() {
+		if (user != null) return user;
+		try {
+			return user = new User(dataSourceJSON.getJSONObject("user"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public boolean isFavorited() {
@@ -156,7 +168,7 @@ public class Status extends Model {
 
 	public String getUsername() {
 		try {
-			return dataSourceJSON.getJSONObject("user").getString("screen_name");
+			return getUser().getScreenName();
 		} catch (Exception e) {
 			return null;
 		}
@@ -217,6 +229,12 @@ public class Status extends Model {
 		    }
 		    int n = (int)Math.floor(ageInSeconds/60/60/24/365);
 		    return n + " year" + (n > 1 ? "s" : "") + " ago";
+	}
+
+	@Override
+	public long insert() {
+		getUser().insert();
+		return super.insert();
 	}
 
 	@Override

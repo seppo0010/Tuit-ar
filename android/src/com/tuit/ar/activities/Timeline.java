@@ -61,14 +61,14 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline);
 
-		tweets = getTimeline().getTweets(); 
-
+		Cache.getInstance(this);
+	
+		tweets = getTimeline().getTweets();
 		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
 
 		getTimeline().addObserver(this);
 		getTimeline().refresh();
 		this.startService(new Intent(this, Updater.class));
-		new Cache(this);
 	}
 
     protected void onResume() {

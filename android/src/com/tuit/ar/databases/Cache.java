@@ -7,11 +7,18 @@ import com.tuit.ar.R;
 
 public class Cache extends Database {
 	/** The name of the database file on the file system */
-	protected static final String DATABASE_NAME = "database";
+	protected static final String DATABASE_NAME = "cache";
 	/** The version of the database that this class understands. */
 	protected static final int DATABASE_VERSION = 1;
 
-	public Cache(Context context) {
+	private static Cache instance = null;
+
+	public static Cache getInstance(Context context) {
+		if (instance == null) instance = new Cache(context);
+		return instance;
+	}
+
+	protected Cache(Context context) {
 		super(context, DATABASE_NAME, DATABASE_VERSION);
 	}
 
