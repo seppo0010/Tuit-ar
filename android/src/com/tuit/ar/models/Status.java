@@ -40,6 +40,11 @@ public class Status extends Model {
 		setUserId(query.getLong(8));
 	}
 
+	public Status(JSONObject object) {
+		super(null);
+		this.dataSourceJSON = object;
+	}
+
 	public boolean isFavorited() {
 		if (favorited != false) return favorited;
 		try {
@@ -149,11 +154,6 @@ public class Status extends Model {
 		return (ArrayList<Status>)Model.select(Status.class, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
 	}
 
-	public Status(JSONObject object) {
-		super(null);
-		this.dataSourceJSON = object;
-	}
-
 	public String getUsername() {
 		try {
 			return dataSourceJSON.getJSONObject("user").getString("screen_name");
@@ -222,15 +222,15 @@ public class Status extends Model {
 	@Override
 	protected ContentValues getValues() {
 		ContentValues fields = new ContentValues();
-		fields.put("id", getId());
-		fields.put("message", getMessage());
-		fields.put("date", getDateMillis());
-		fields.put("favorited", isFavorited());
-		fields.put("in_reply_to_screen_name", getInReplyToScreenName());
-		fields.put("in_reply_to_status_id", getInReplyToStatusId());
-		fields.put("in_reply_to_user_id", getInReplyToUserId());
-		fields.put("source", getSource());
-		fields.put("user_id", getUserId());
+		fields.put(columns[0], getDateMillis());
+		fields.put(columns[1], isFavorited());
+		fields.put(columns[2], getId());
+		fields.put(columns[3], getInReplyToScreenName());
+		fields.put(columns[4], getInReplyToStatusId());
+		fields.put(columns[5], getInReplyToUserId());
+		fields.put(columns[6], getMessage());
+		fields.put(columns[7], getSource());
+		fields.put(columns[8], getUserId());
 		return fields;
 	}
 }
