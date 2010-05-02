@@ -292,7 +292,7 @@ public class Status extends Model {
 	@Override
 	protected ContentValues getValues() {
 		ContentValues fields = new ContentValues();
-		fields.put(columns[0], getDateMillis());
+		fields.put(columns[0], getDateMillis() / 1000);
 		fields.put(columns[1], isFavorited() ? 1 : 0);
 		fields.put(columns[2], getId());
 		fields.put(columns[3], getInReplyToScreenName());
