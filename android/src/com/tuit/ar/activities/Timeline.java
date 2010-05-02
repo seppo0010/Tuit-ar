@@ -89,6 +89,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	}
 
 	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
 		String url = intent.getStringExtra("url");
 		if (url != null) {
 			if (webs.containsKey(url)) {
@@ -103,14 +104,14 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 				}
 				webContainer.addView(activeWeb);
 				webs.remove(url);
-
-				int notificationID = intent.getIntExtra("notificationID", 0);
-				if (notificationID > 0) {
-					String ns = Context.NOTIFICATION_SERVICE;
-					final NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-					mNotificationManager.cancel(notificationID);
-				}
 			}
+		}
+
+		int notificationID = intent.getIntExtra("notificationID", 0);
+		if (notificationID > 0) {
+			String ns = Context.NOTIFICATION_SERVICE;
+			final NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+			mNotificationManager.cancel(notificationID);
 		}
 	}
 
@@ -350,15 +351,15 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		Intent notificationIntent = new Intent(this, this.getClass());
 		notificationIntent.setAction(Intent.ACTION_VIEW);
 		notificationIntent.putExtra("url", url);
-		int notificationID = ++Timeline.notificationID;
-		notificationIntent.putExtra("notificationID", notificationID);
+		final int _notificationID = ++notificationID;
+		notificationIntent.putExtra("notificationID", _notificationID);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
 		Notification notification = new Notification(icon, tickerText, when);
 		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 		notification.contentIntent = contentIntent;
 	
-		mNotificationManager.notify(notificationID, notification);
+		mNotificationManager.notify(_notificationID, notification);
 	}
 
 	protected void openLinksInBrowser(Status tweet) {
