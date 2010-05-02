@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 
 import com.tuit.ar.databases.Model;
 
@@ -233,7 +234,9 @@ public class Status extends Model {
 
 	@Override
 	public long insert() {
-		getUser().insert();
+		try {
+			getUser().insert();
+		} catch (SQLiteException e) {}
 		return super.insert();
 	}
 
