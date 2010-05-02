@@ -341,7 +341,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
 		int icon = R.drawable.icon_web;        // icon from resources
-		CharSequence tickerText = "Hello";              // ticker-text
+		CharSequence tickerText = "Finished loading!";              // ticker-text
 		long when = System.currentTimeMillis();         // notification time
 		Context context = getApplicationContext();      // application Context
 		CharSequence contentTitle = url;  // expanded message title
