@@ -15,7 +15,7 @@ import com.tuit.ar.databases.Model;
 
 public class Status extends Model {
 	private static final String[] columns = new String[]{
-			"date", "favorited", "id", "in_reply_to_screen_name", "in_reply_to_status_id", "in_reply_to_user_id", "message", "source", "user_id"
+			"date", "favorited", "id", "in_reply_to_screen_name", "in_reply_to_status_id", "in_reply_to_user_id", "message", "source", "user_id", "is_home", "is_reply", "belongs_to_user"
 		};
 	private JSONObject dataSourceJSON;
 	private Date createDate;
@@ -29,6 +29,9 @@ public class Status extends Model {
 	private String source;
 	private long user_id = 0;
 	private User user;
+	private boolean is_home;
+	private boolean is_reply;
+	private long belongs_to_user;
 
 	public Status(Cursor query) {
 		super();
@@ -41,6 +44,9 @@ public class Status extends Model {
 		setMessage(query.getString(6));
 		setSource(query.getString(7));
 		setUserId(query.getLong(8));
+		setHome(query.getInt(9) == 1);
+		setReply(query.getInt(10) == 1);
+		setBelongsToUser(query.getLong(11));
 	}
 
 	public Status(JSONObject object) {
@@ -166,6 +172,30 @@ public class Status extends Model {
 		this.message = message;
 	}
 
+	public boolean isHome() {
+		return is_home;
+	}
+
+	public void setHome(boolean isHome) {
+		is_home = isHome;
+	}
+
+	public boolean isReply() {
+		return is_reply;
+	}
+
+	public void setReply(boolean isReply) {
+		is_reply = isReply;
+	}
+
+	public long getBelongsToUser() {
+		return belongs_to_user;
+	}
+
+	public void setBelongsToUser(long belongsToUser) {
+		belongs_to_user = belongsToUser;
+	}
+
 	@SuppressWarnings("unchecked")
 	static public ArrayList<Status> select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
 		return (ArrayList<Status>)Model.select(Status.class, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
@@ -237,11 +267,11 @@ public class Status extends Model {
 	}
 
 	@Override
-	public long insert() {
+	public long replace() {
 		try {
-			getUser().insert();
+			getUser().replace();
 		} catch (SQLiteException e) {}
-		return super.insert();
+		return super.replace();
 	}
 
 	@Override

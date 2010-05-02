@@ -30,7 +30,7 @@ public abstract class Model {
 		}
 	}*/
 
-	public void save() {
+	public void save() {f
 		if (id > 0) update();
 		else insert();
 	}
@@ -75,6 +75,13 @@ public abstract class Model {
 		}
 		cursor.close();
 		return models;
+	}
+
+	public long replace() {
+		long result = db.replace(this.getClass().getSimpleName().toLowerCase(), "id", getValues());
+		if (result > 0)
+			id = result;
+		return result;
 	}
 
 	public long insert() {

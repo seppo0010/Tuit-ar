@@ -8,7 +8,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONTokener;
 
-import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
@@ -20,8 +19,10 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 	protected long newestTweet = 0;
 	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
 	static private int MAX_SIZE = 100;
+	final TwitterAccount account;
 
 	protected Timeline(TwitterAccount account) {
+		this.account = account;
 		account.addRequestObserver(this);
 		tweets = Status.select(null, null, null, null, "id DESC", null);
 		if (tweets.size() > 0) {
@@ -36,7 +37,7 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		if (newestTweet > 0) nvps.add(new BasicNameValuePair("since_id", String.valueOf(newestTweet)));
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
-			Twitter.getInstance().getDefaultAccount().requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
+			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
 		} catch (Exception e) {
 			failedToUpdate();
 		}
@@ -55,7 +56,9 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 			if (c > 0) {
 				for (int i = c-1; i >= 0; i--) {
 					Status tweet = new Status(tweets.getJSONObject(i));
-					tweet.insert();
+					//is_home INTEGER, is_reply INTEGER, belongs_to_user
+					tweet.setBelongsToUser(account.getUser().getId());
+					tweet.replace();
 					if (i == 0)
 						newestTweet = tweet.getId();
 					this.tweets.add(0, tweet);

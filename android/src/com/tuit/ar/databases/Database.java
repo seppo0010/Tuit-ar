@@ -65,6 +65,9 @@ public abstract class Database extends SQLiteOpenHelper {
 		return getReadableDatabase().rawQuery(sql, selectionArgs);
 	}
 
+	public long replace(String table, String nullColumnHack, ContentValues values) {
+		return getWritableDatabase().insert(table, nullColumnHack, values);
+	}
 	public long insert(String table, String nullColumnHack, ContentValues values) {
 		return getWritableDatabase().insert(table, nullColumnHack, values);
 	}
@@ -76,4 +79,5 @@ public abstract class Database extends SQLiteOpenHelper {
 	public int delete(String table, String whereClause, String[] whereArgs) {
 		return getWritableDatabase().delete(table, whereClause, whereArgs);
 	}
+
 }

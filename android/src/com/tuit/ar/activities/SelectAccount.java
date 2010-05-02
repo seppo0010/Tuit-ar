@@ -25,6 +25,7 @@ import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountObserver;
 import com.tuit.ar.api.TwitterObserver;
+import com.tuit.ar.databases.Cache;
 
 public class SelectAccount extends ListActivity implements TwitterObserver {
 	private static String CONSUMER_KEY = "wLR28XpgOKbmpaFFvtMVA";
@@ -44,6 +45,8 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.select_account);
 
+		Cache.getInstance(this);
+		
 		Twitter twitter = Twitter.getInstance();
 		accounts = (ArrayList<TwitterAccount>) twitter.getAccounts().clone();
 		this.setListAdapter(accountsAdapter = new AccountsAdapter(this));

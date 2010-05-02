@@ -26,7 +26,6 @@ import com.tuit.ar.R;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.databases.Cache;
 import com.tuit.ar.models.Status;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
@@ -61,8 +60,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline);
 
-		Cache.getInstance(this);
-	
 		tweets = getTimeline().getTweets();
 		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
 

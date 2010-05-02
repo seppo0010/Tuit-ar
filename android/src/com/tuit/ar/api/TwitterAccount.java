@@ -16,11 +16,12 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.tuit.ar.api.request.Options;
+import com.tuit.ar.models.User;
 
 public class TwitterAccount implements TwitterAccountRequestsObserver {
 	static private final String PERSISTENT_FOLDER = "/data/data/com.tuit.ar/accounts/";
 	private oauth.signpost.AbstractOAuthConsumer consumer;
-	private String username;
+	private User user;
 
 	private ArrayList<TwitterAccountObserver> observers = new ArrayList<TwitterAccountObserver>(); 
 	private ArrayList<TwitterAccountRequestsObserver> requestsObservers = new ArrayList<TwitterAccountRequestsObserver>(); 
@@ -31,9 +32,9 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		this.requestUrl(Options.LOGIN);
 	}
 
-	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer, String username) throws Exception {
+	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer, String userId) throws Exception {
 		consumer = _consumer;
-		this.setUsername(username);
+		this.setUser(User.select("id = ?", new String[] { userId }, null, null, null, "1").get(0));
 		this.addRequestObserver(this);
 		this.requestUrl(Options.LOGIN);
 	}
@@ -48,8 +49,13 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		startedRequest(new TwitterRequestWithPhoto(this, photo, message));
 	}
 
-	public String getUsername() { return username; }
-	private void setUsername(String username) { this.username = username; }
+	public String getUsername() {
+		try {
+			return getUser().getScreenName();
+		} catch (Exception e) {
+		}
+		return null;
+	}
 
 	public void addObserver(TwitterAccountObserver observer) {
 		observers.add(observer);
@@ -100,7 +106,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 			try {
 				JSONObject data = new JSONObject(new JSONTokener(response));
-				this.setUsername(data.getString("screen_name"));
+				this.setUser(new User(data));
 				accountChanged();
 
 				// checking this just in case the account was removed before the username was set... unexpected scenario, but possible 
@@ -112,6 +118,15 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		}
 	}
 
+	private void setUser(User user) {
+		this.user = user;
+		user.insert();
+	}
+
+	public User getUser() {
+		return user;
+	}
+
 	public void requestHasStarted(TwitterRequest request) {
 	}
 
@@ -120,12 +135,13 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 	}
 
 	public void serialize() {
-		if (username == null) return;
+		User user = getUser();
+		if (user == null) return;
 
 		File folder = new File(PERSISTENT_FOLDER);
 		if (folder.exists() == false) folder.mkdirs();
 
-		String filename = PERSISTENT_FOLDER + username;
+		String filename = PERSISTENT_FOLDER + user.getId();
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
 		try {
