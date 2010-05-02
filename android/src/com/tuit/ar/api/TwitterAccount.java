@@ -41,8 +41,10 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	public void requestUrl(Options login) throws Exception { requestUrl(login, null, TwitterRequest.Method.GET); }
 
-	public void requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
-		startedRequest(new TwitterRequest(this, login, params, get));
+	public TwitterRequest requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
+		TwitterRequest request = new TwitterRequest(this, login, params, get);
+		startedRequest(request);
+		return request;
 
 	}
 	public void upload(File photo, String message) throws Exception {

@@ -3,8 +3,15 @@
 	android:layout_width="wrap_content" android:layout_height="wrap_content">
 	<ImageView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_alignParentLeft="true"
-		android:layout_alignParentTop="true" android:layout_margin="4sp" android:id="@+id/avatar" />
+		android:layout_alignParentTop="true" android:layout_margin="4sp"
+		android:id="@+id/avatar" />
 	<TextView android:layout_toRightOf="@+id/avatar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentTop="true" android:id="@+id/nickname" />
+	<TextView android:layout_below="@+id/nickname"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_toRightOf="@+id/avatar" android:id="@+id/fullname" />
+	<Button android:id="@+id/follow" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/nickname" />
+
 </RelativeLayout>
