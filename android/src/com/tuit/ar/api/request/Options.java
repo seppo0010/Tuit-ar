@@ -17,5 +17,9 @@ public enum Options {
 		public String toString() {
 			return "statuses/update";
 		}
+	}, POST_TWEET_WITH_PHOTO {
+		public String toString() {
+			return "statuses/update_with_photo";
+		}
 	}
 }

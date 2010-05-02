@@ -141,7 +141,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 
 	public void requestHasFinished(TwitterRequest request) {
 		setProgressBarIndeterminateVisibility(false);
-    	if (request.getUrl().equals(Options.POST_TWEET)) {
+    	if (request.getUrl().equals(Options.POST_TWEET) || request.getUrl().equals(Options.POST_TWEET_WITH_PHOTO)) {
     		if (request.getStatusCode() >= 200 && request.getStatusCode() < 400) {
     			Toast.makeText(this, getString(R.string.messageSent), Toast.LENGTH_SHORT).show();
     			finish();

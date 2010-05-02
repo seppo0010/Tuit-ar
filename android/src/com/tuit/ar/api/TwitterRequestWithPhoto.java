@@ -32,6 +32,7 @@ public class TwitterRequestWithPhoto extends TwitterRequest {
 
 	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
 		if (consumer == null) return;
+		this.setUrl(Options.POST_TWEET_WITH_PHOTO);
 		(new Thread() {
 			public void run() {
 				upload(photo, message);
