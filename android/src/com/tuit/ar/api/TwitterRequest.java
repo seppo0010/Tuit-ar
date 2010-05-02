@@ -26,21 +26,21 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.os.Handler;
-
 import com.tuit.ar.api.request.Options;
 
 
-public class TwitterRequest {
+public class TwitterRequest extends Request {
 	static private int BUFFER_SIZE = 1024;
 	static public enum Method { GET, POST };
 	private HashSet<Options> urlOnRequest = new HashSet<Options>();
+
 	protected Runnable runnable = new Runnable() {
 		public void run() {
 			finishedRequest();
 		}
 	};
 	protected Handler handler = new Handler();
+
 	private Options url = null;
 	private int statusCode;
 	private String response;
@@ -53,7 +53,7 @@ public class TwitterRequest {
 	public String getResponse() { return response; }
 	public void setResponse(String response) { this.response = response; }
 
-	private void finishedRequest() {
+	protected void finishedRequest() {
 		account.finishedRequest(this);
 	}
 
