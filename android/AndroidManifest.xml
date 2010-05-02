@@ -21,6 +21,7 @@
     	<activity android:name=".activities.timeline.Replies"></activity>
     	<activity android:name=".activities.Preferences"></activity>
     	<activity android:name=".activities.NewTweet"></activity>
+    	<activity android:name=".activities.Profile"></activity>
 
     <service android:name="com.tuit.ar.services.Updater"></service>
 </application>

@@ -27,6 +27,7 @@ import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.api.Twitter;
 import com.tuit.ar.models.Status;
+import com.tuit.ar.models.User;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
 
@@ -41,12 +42,14 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int TWEET_MENU_REPLY = 0;
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
 	protected static final int TWEET_MENU_SHARE = 2;
-	protected static final int TWEET_MENU_OPEN_LINKS = 3;
+	protected static final int TWEET_MENU_SHOW_PROFILE = 3;
+	protected static final int TWEET_MENU_OPEN_LINKS = 4;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
 	protected static final int MY_TWEET_MENU_SHARE = 2;
-	protected static final int MY_TWEET_MENU_OPEN_LINKS = 3;
+	protected static final int MY_TWEET_MENU_SHOW_PROFILE = 3;
+	protected static final int MY_TWEET_MENU_OPEN_LINKS = 4;
 	
 	ArrayList<Status> tweets;
 	TimelineAdapter timelineAdapter;
@@ -145,6 +148,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 							shareTweet(tweet);
 							break;
 						}
+						case MY_TWEET_MENU_SHOW_PROFILE:
+						{
+							showProfile(tweet.getUser());
+							break;
+						}
 						case MY_TWEET_MENU_OPEN_LINKS:
 						{
 							openLinksInBrowser(tweet);
@@ -180,6 +188,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 					shareTweet(tweet);
 					break;
 				}
+				case TWEET_MENU_SHOW_PROFILE:
+				{
+					showProfile(tweet.getUser());
+					break;
+				}
 				case TWEET_MENU_OPEN_LINKS:
 				{
 					openLinksInBrowser(tweet);
@@ -188,6 +201,11 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 				}
 			}
 		}).show();
+	}
+
+	protected void showProfile(User user) {
+		Profile.setUserToDisplay(user);
+		startActivity(new Intent(getApplicationContext(), Profile.class));
 	}
 
 	protected void openLinksInBrowser(Status tweet) {
