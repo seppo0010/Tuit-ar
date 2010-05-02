@@ -120,7 +120,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	private void setUser(User user) {
 		this.user = user;
-		user.insert();
+		user.replace();
 	}
 
 	public User getUser() {

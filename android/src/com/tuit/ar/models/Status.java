@@ -271,14 +271,29 @@ public class Status extends Model {
 		try {
 			getUser().replace();
 		} catch (SQLiteException e) {}
-		return super.replace();
+
+		// TODO: some kind of factory to avoid having twice the same instance?
+		try {
+			Status status = Status.select("id = ?", new String [] { String.valueOf(getId()) }, null, null, null, "1").get(0);
+			boolean reply = status.isReply() || this.isReply();
+			status.setReply(reply);
+			this.setReply(reply);
+
+			boolean home = status.isHome() || this.isHome();
+			status.setHome(home);
+			this.setHome(home);
+
+			return status.replace();
+		} catch (Exception e) {
+			return super.replace();
+		}
 	}
 
 	@Override
 	protected ContentValues getValues() {
 		ContentValues fields = new ContentValues();
 		fields.put(columns[0], getDateMillis());
-		fields.put(columns[1], isFavorited());
+		fields.put(columns[1], isFavorited() ? 1 : 0);
 		fields.put(columns[2], getId());
 		fields.put(columns[3], getInReplyToScreenName());
 		fields.put(columns[4], getInReplyToStatusId());
@@ -286,6 +301,9 @@ public class Status extends Model {
 		fields.put(columns[6], getMessage());
 		fields.put(columns[7], getSource());
 		fields.put(columns[8], getUserId());
+		fields.put(columns[9], isHome() ? 1 : 0);
+		fields.put(columns[10], isReply() ? 1 : 0);
+		fields.put(columns[11], getUserId());
 		return fields;
 	}
 }

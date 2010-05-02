@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.request.Options;
+import com.tuit.ar.models.Status;
 import com.tuit.ar.models.Timeline;
 
 public class Friends extends Timeline {
@@ -11,6 +12,10 @@ public class Friends extends Timeline {
 
 	protected Friends(TwitterAccount account) {
 		super(account);
+		tweets = Status.select("is_home = 1", null, null, null, "id DESC", null);
+		if (tweets.size() > 0) {
+			newestTweet = tweets.get(0).getId();
+		}
 	}
 
 	@Override

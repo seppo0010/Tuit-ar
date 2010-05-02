@@ -30,7 +30,7 @@ public abstract class Model {
 		}
 	}*/
 
-	public void save() {f
+	public void save() {
 		if (id > 0) update();
 		else insert();
 	}

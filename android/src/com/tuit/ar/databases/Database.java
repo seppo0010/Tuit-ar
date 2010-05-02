@@ -66,7 +66,7 @@ public abstract class Database extends SQLiteOpenHelper {
 	}
 
 	public long replace(String table, String nullColumnHack, ContentValues values) {
-		return getWritableDatabase().insert(table, nullColumnHack, values);
+		return getWritableDatabase().replace(table, nullColumnHack, values);
 	}
 	public long insert(String table, String nullColumnHack, ContentValues values) {
 		return getWritableDatabase().insert(table, nullColumnHack, values);

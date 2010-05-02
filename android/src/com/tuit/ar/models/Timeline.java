@@ -24,10 +24,6 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 	protected Timeline(TwitterAccount account) {
 		this.account = account;
 		account.addRequestObserver(this);
-		tweets = Status.select(null, null, null, null, "id DESC", null);
-		if (tweets.size() > 0) {
-			newestTweet = tweets.get(0).getId();
-		}
 	}
 
 	abstract protected Options getTimeline();
@@ -58,6 +54,9 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 					Status tweet = new Status(tweets.getJSONObject(i));
 					//is_home INTEGER, is_reply INTEGER, belongs_to_user
 					tweet.setBelongsToUser(account.getUser().getId());
+					// FIXME: some kind of way to recognize this with more abstraction?
+					tweet.setHome(request.getUrl().equals(Options.FRIENDS_TIMELINE));
+					tweet.setReply(request.getUrl().equals(Options.REPLIES_TIMELINE));
 					tweet.replace();
 					if (i == 0)
 						newestTweet = tweet.getId();
