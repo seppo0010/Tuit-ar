@@ -282,11 +282,9 @@ public class Status extends Model {
 			boolean home = status.isHome() || this.isHome();
 			status.setHome(home);
 			this.setHome(home);
-
-			return status.replace();
 		} catch (Exception e) {
-			return super.replace();
 		}
+		return super.replace();
 	}
 
 	@Override
@@ -303,7 +301,7 @@ public class Status extends Model {
 		fields.put(columns[8], getUserId());
 		fields.put(columns[9], isHome() ? 1 : 0);
 		fields.put(columns[10], isReply() ? 1 : 0);
-		fields.put(columns[11], getUserId());
+		fields.put(columns[11], getBelongsToUser());
 		return fields;
 	}
 }
