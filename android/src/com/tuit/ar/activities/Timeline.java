@@ -28,6 +28,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -64,6 +65,8 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	static private int notificationID = 1;
 
 	HashMap<String, WebView> webs = new HashMap<String, WebView>();
+	WebView activeWeb = null;
+	FrameLayout webContainer = null;
 	
 	ArrayList<Tweet> tweets;
 	TimelineAdapter timelineAdapter;
@@ -90,9 +93,40 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		String url = intent.getStringExtra("url");
 		if (url != null) {
 			if (webs.containsKey(url)) {
-				addContentView(webs.get(url), new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+				if (activeWeb != null) {
+					removeActiveWeb();
+				}
+				activeWeb = webs.get(url);
+				if (webContainer == null)
+				{
+					webContainer = new FrameLayout(this);
+					addContentView(webContainer, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+				}
+				webContainer.addView(activeWeb);
+				webs.remove(url);
+
+				int notificationID = intent.getIntExtra("notificationID", 0);
+				if (notificationID > 0) {
+					String ns = Context.NOTIFICATION_SERVICE;
+					final NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+					mNotificationManager.cancel(notificationID);
+				}
 			}
 		}
+	}
+
+	private void removeActiveWeb() {
+		webContainer.removeView(activeWeb);
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (activeWeb != null) {
+				removeActiveWeb();
+	        	return true;
+			}
+        }
+        return false;
 	}
 
 	protected void onResume() {
@@ -257,21 +291,17 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		final NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
 		int icon = R.drawable.icon_web;
-		CharSequence tickerText = "Hello";
+		CharSequence tickerText = "Loading web...";
 		long when = System.currentTimeMillis();
 
 		final Notification notification = new Notification(icon, tickerText, when);
-		Context context = getApplicationContext();
-		CharSequence contentTitle = "My notification";
-		CharSequence contentText = "Hello World!";
 		final Intent notificationIntent = new Intent(this, this.getClass());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 		notification.contentIntent = contentIntent;
-		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 
 		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.background_url);
 		contentView.setImageViewResource(R.id.image, R.drawable.icon_web);
-		contentView.setTextViewText(R.id.text, "Hello, this message is in a custom expanded view");
+		contentView.setTextViewText(R.id.text, "Loading web: " + url);
 		notification.contentView = contentView;
 
 		final int _notificationID = ++notificationID;
@@ -315,20 +345,21 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		CharSequence tickerText = "Hello";              // ticker-text
 		long when = System.currentTimeMillis();         // notification time
 		Context context = getApplicationContext();      // application Context
-		CharSequence contentTitle = "My notification";  // expanded message title
-		CharSequence contentText = "Hello World!";      // expanded message text
+		CharSequence contentTitle = url;  // expanded message title
+		CharSequence contentText = "Tap to open";      // expanded message text
 
 		Intent notificationIntent = new Intent(this, this.getClass());
 		notificationIntent.setAction(Intent.ACTION_VIEW);
 		notificationIntent.putExtra("url", url);
+		int notificationID = ++Timeline.notificationID;
+		notificationIntent.putExtra("notificationID", notificationID);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-		// the next two lines initialize the Notification, using the configurations above
 		Notification notification = new Notification(icon, tickerText, when);
 		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 		notification.contentIntent = contentIntent;
 	
-		mNotificationManager.notify(++notificationID, notification);
+		mNotificationManager.notify(notificationID, notification);
 	}
 
 	protected void openLinksInBrowser(Tweet tweet) {
