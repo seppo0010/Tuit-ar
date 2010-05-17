@@ -55,6 +55,8 @@
 <string name="confirmUnfollow">¿Está seguro que quiere dejar de seguirlo?</string>
 <string name="yes">Sí</string>
 <string name="no">No</string>
+<string name="following_label">Siguiendo: </string>
+<string name="follower_label">Seguido: </string>
 <string name="unableToFollow">No se pudo seguir</string>
 <string name="cache_onCreate">"CREATE TABLE status (date INTEGER, favorited NUMERIC, id INTEGER, in_reply_to_screen_name TEXT, in_reply_to_status_id INTEGER, in_reply_to_user_id INTEGER, message TEXT, source TEXT, user_id INTEGER, is_home INTEGER, is_reply INTEGER, belongs_to_user INTEGER, PRIMARY KEY (id, belongs_to_user) )
 CREATE TABLE user (description TEXT, followers_count INTEGER, following INTEGER, friends_count INTEGER, id INTEGER, location TEXT, name TEXT, profile_image_url TEXT, is_protected INTEGER, screen_name TEXT, statuses_count INTEGER, url TEXT, verified INTEGER, belongs_to_user INTEGER, PRIMARY KEY (id, belongs_to_user) )
