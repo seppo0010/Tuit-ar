@@ -24,7 +24,10 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private ImageView avatar;
 	private TextView nickname;
 	private TextView fullname;
+	private TextView description;
 	private Button following;
+	private TextView followingNumber;
+	private TextView followerNumber;
 
 	private User user = null;
 	static private User userToDisplay = null;
@@ -52,7 +55,11 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 				following();
 			}
 		});
+		description = (TextView)findViewById(R.id.description);
+		followingNumber = (TextView)findViewById(R.id.following_number);
+		followerNumber = (TextView)findViewById(R.id.follower_number);
 		showFollowing();
+
 		if (user != null) {
 			Avatar avatar = new Avatar(user.getProfileImageUrl());
 			avatar.addRequestObserver(this);
@@ -60,6 +67,9 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			
 			nickname.setText(user.getScreenName());
 			fullname.setText(user.getName());
+			description.setText(user.getDescription());
+			followingNumber.setText(String.valueOf(user.getFollowersCount()));
+			followerNumber.setText(String.valueOf(user.getFriendsCount()));
 		}
 	}
 

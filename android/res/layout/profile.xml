@@ -13,5 +13,23 @@
 		android:layout_toRightOf="@+id/avatar" android:id="@+id/fullname" />
 	<Button android:id="@+id/follow" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_toRightOf="@+id/nickname" />
-
+	<TextView android:layout_below="@+id/avatar"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:id="@+id/description" />
+	<TextView android:layout_below="@+id/description"
+		android:text="@string/following_label" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/following_label"
+		android:layout_marginRight="4px" />
+	<TextView android:layout_below="@+id/description"
+		android:layout_toRightOf="@+id/following_label" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/following_number"
+		android:layout_marginRight="10px" />
+	<TextView android:layout_below="@+id/description"
+		android:layout_toRightOf="@+id/following_number" android:text="@string/follower_label"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:id="@+id/follower_label" android:layout_marginRight="4px" />
+	<TextView android:layout_below="@+id/description"
+		android:layout_toRightOf="@+id/follower_label" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/follower_number"
+		android:layout_marginRight="10px" />
 </RelativeLayout>
