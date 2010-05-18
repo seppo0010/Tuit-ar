@@ -3,6 +3,8 @@ package com.tuit.ar.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +30,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private Button following;
 	private TextView followingNumber;
 	private TextView followerNumber;
+	private Button seeInMap;
 
 	private User user = null;
 	static private User userToDisplay = null;
@@ -58,6 +61,21 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		description = (TextView)findViewById(R.id.description);
 		followingNumber = (TextView)findViewById(R.id.following_number);
 		followerNumber = (TextView)findViewById(R.id.follower_number);
+
+		seeInMap = (Button)findViewById(R.id.see_in_map);
+		seeInMap.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_VIEW , Uri.parse("geo:" + user.getLocation()));
+				try {
+					startActivity(intent);
+				} catch (Exception e) {
+					Toast.makeText(Profile.this, getString(R.string.unableToShowMap), Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
+			}
+		});
+
 		showFollowing();
 
 		if (user != null) {
@@ -70,6 +88,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			description.setText(user.getDescription());
 			followingNumber.setText(String.valueOf(user.getFollowersCount()));
 			followerNumber.setText(String.valueOf(user.getFriendsCount()));
+			seeInMap.setVisibility(user.getLocation() == null ? View.INVISIBLE : View.VISIBLE);
 		}
 	}
 
