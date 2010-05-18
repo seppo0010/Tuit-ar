@@ -32,4 +32,6 @@
 		android:layout_toRightOf="@+id/follower_label" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/follower_number"
 		android:layout_marginRight="10px" />
+	<Button android:id="@+id/see_in_map" android:layout_width="wrap_content" android:text="@+string/see_in_map"
+		android:layout_height="wrap_content" android:layout_below="@+id/following_label" />
 </RelativeLayout>
