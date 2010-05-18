@@ -67,7 +67,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getDescription() {
 		if (description != null || dataSourceJSON == null) return description;
 		try {
-			return description = dataSourceJSON.getString("description");
+			return description = dataSourceJSON.isNull("description") ? null : dataSourceJSON.getString("description");
 		} catch (JSONException e) {
 			return null;
 		}
@@ -132,7 +132,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getLocation() {
 		if (location != null || dataSourceJSON == null) return location;
 		try {
-			return location = dataSourceJSON.getString("location");
+			return location = dataSourceJSON.isNull("location") ? null : dataSourceJSON.getString("location");
 		} catch (JSONException e) {
 			return null;
 		}
@@ -145,7 +145,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getName() {
 		if (name != null || dataSourceJSON == null) return name;
 		try {
-			return name = dataSourceJSON.getString("name");
+			return name = dataSourceJSON.isNull("name") ? null : dataSourceJSON.getString("name");
 		} catch (JSONException e) {
 			return null;
 		}
@@ -158,7 +158,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getProfileImageUrl() {
 		if (profile_image_url != null || dataSourceJSON == null) return profile_image_url;
 		try {
-			return profile_image_url = dataSourceJSON.getString("profile_image_url");
+			return profile_image_url = dataSourceJSON.isNull("profile_image_url") ? null : dataSourceJSON.getString("profile_image_url");
 		} catch (JSONException e) {
 			return null;
 		}
@@ -184,7 +184,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getScreenName() {
 		if (screen_name != null || dataSourceJSON == null) return screen_name;
 		try {
-			return screen_name = dataSourceJSON.getString("screen_name");
+			return screen_name = dataSourceJSON.isNull("screen_name") ? null : dataSourceJSON.getString("screen_name");
 		} catch (JSONException e) {
 			return null;
 		}
@@ -210,7 +210,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getUrl() {
 		if (url != null || dataSourceJSON == null) return url;
 		try {
-			return url = dataSourceJSON.getString("url");
+			return url = dataSourceJSON.isNull("url") ? null : dataSourceJSON.getString("url");
 		} catch (JSONException e) {
 			return null;
 		}

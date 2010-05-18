@@ -31,6 +31,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private TextView followingNumber;
 	private TextView followerNumber;
 	private Button seeInMap;
+	private Button url;
 
 	private User user = null;
 	static private User userToDisplay = null;
@@ -62,6 +63,14 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		followingNumber = (TextView)findViewById(R.id.following_number);
 		followerNumber = (TextView)findViewById(R.id.follower_number);
 
+		url = (Button)findViewById(R.id.url);
+		url.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(Intent.ACTION_VIEW , Uri.parse(user.getUrl())));
+			}
+		});
+
 		seeInMap = (Button)findViewById(R.id.see_in_map);
 		seeInMap.setOnClickListener(new OnClickListener() {
 			@Override
@@ -89,6 +98,10 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			followingNumber.setText(String.valueOf(user.getFollowersCount()));
 			followerNumber.setText(String.valueOf(user.getFriendsCount()));
 			seeInMap.setVisibility(user.getLocation() == null ? View.INVISIBLE : View.VISIBLE);
+			String _url = user.getUrl();
+			boolean hasUrl = _url != null && _url.length() > 0;
+			url.setVisibility(hasUrl ? View.VISIBLE : View.INVISIBLE);
+			if (hasUrl) url.setText(_url);
 		}
 	}
 
