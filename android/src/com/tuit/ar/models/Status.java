@@ -84,7 +84,7 @@ public class Status extends Model {
 	public String getInReplyToScreenName() {
 		if (in_reply_to_screen_name != null) return in_reply_to_screen_name;
 		try {
-			return in_reply_to_screen_name = dataSourceJSON.getString("in_reply_to_screen_name");
+			return in_reply_to_screen_name = dataSourceJSON.isNull("in_reply_to_screen_name") ? null : dataSourceJSON.getString("in_reply_to_screen_name");
 		} catch (Exception e) {
 			return null;
 		}
@@ -123,7 +123,7 @@ public class Status extends Model {
 	public String getSource() {
 		if (source != null) return source;
 		try {
-			return source = dataSourceJSON.getString("source");
+			return source = dataSourceJSON.isNull("source") ? null : dataSourceJSON.getString("source");
 		} catch (Exception e) {
 			return null;
 		}
@@ -162,7 +162,7 @@ public class Status extends Model {
 	public String getMessage() {
 		if (message != null) return message;
 		try {
-			return message = dataSourceJSON.getString("text");
+			return message = dataSourceJSON.isNull("text") ? null : dataSourceJSON.getString("text");
 		} catch (Exception e) {
 			return null;
 		}
