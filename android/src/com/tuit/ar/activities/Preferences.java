@@ -24,7 +24,6 @@ public class Preferences extends PreferenceActivity {
 		automaticUpdate.setPersistent(true);
 		automaticUpdate.setDefaultValue(Settings.AUTOMATIC_UPDATE_DEFAULT);
 		automaticUpdate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				updateInterval.setEnabled(automaticUpdate.isChecked());
 				updateSettings();
@@ -35,7 +34,6 @@ public class Preferences extends PreferenceActivity {
 		updateInterval.setPersistent(true);
 		updateInterval.setDefaultValue(Settings.UPDATE_INTERVAL_DEFAULT);
 		updateInterval.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				updateSettings();
 				return false;

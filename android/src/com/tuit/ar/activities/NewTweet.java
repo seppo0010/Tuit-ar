@@ -66,7 +66,6 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		}
 
 		messageField.setOnKeyListener(new OnKeyListener() {
-			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				updateCharCount();
 				return false;
@@ -114,7 +113,6 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		charCount.setText(String.valueOf(MAX_CHARS - messageField.getText().toString().length()));
 	}
 
-	@Override
 	public void onClick(View v) {
 		String message = messageField.getText().toString();
 		try {

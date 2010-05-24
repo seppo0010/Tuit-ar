@@ -54,7 +54,6 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		twitter.addObserver(this);
 	}
 
-	@Override
 	public void accountListHasChanged(Twitter twitter) {
 		accounts.clear();
 		accounts.addAll(Twitter.getInstance().getAccounts());
@@ -188,7 +187,6 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 
 		public View getView() { return view; }
 
-		@Override
 		public void accountHasChanged(TwitterAccount account) {
 			String username = account.getUsername();
 			this.getUsername().setText(username != null ? username : "Loading...");

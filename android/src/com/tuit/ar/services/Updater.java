@@ -22,7 +22,6 @@ public class Updater extends Service implements SettingsObserver {
 	private Timer timer;
 	private Handler handler = new Handler();
 	private Runnable runnable = new Runnable() {
-		@Override
 		public void run() {
 			try {
 				TwitterAccount account = Twitter.getInstance().getDefaultAccount();

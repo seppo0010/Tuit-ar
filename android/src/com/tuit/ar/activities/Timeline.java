@@ -128,7 +128,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		setTitle(getString(R.string.executeAction)).
 		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, mine ?
 				new OnClickListener() {
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case MY_TWEET_MENU_REPLY:
@@ -154,7 +153,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 					}
 				} :
 			new OnClickListener() {
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case TWEET_MENU_REPLY:
@@ -201,7 +199,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			setTitle(getString(R.string.selectURL)).
 			setItems(urls,
 					new OnClickListener() {
-						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls[which])));
 						}
