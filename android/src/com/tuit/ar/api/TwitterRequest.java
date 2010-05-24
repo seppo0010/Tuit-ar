@@ -26,8 +26,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.os.Handler;
-
 import com.tuit.ar.api.request.Options;
 
 
