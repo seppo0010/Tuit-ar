@@ -29,6 +29,7 @@ import org.apache.http.protocol.HTTP;
 import android.os.Handler;
 
 import com.tuit.ar.api.request.Options;
+import com.tuit.ar.api.request.UniqueRequestException;
 
 
 public class TwitterRequest extends Request {
@@ -62,7 +63,7 @@ public class TwitterRequest extends Request {
 	public TwitterRequest(TwitterAccount _account, final Options url, final ArrayList <NameValuePair> nvps,
 			final Method method) throws Exception {
 		// this avoid having 2 request of the same kind at a time
-		if (urlOnRequest.contains(url)) throw new Exception(); // FIXME: yeah, I know, not pretty at all
+		if (url.mustBeUnique() && _account.hasUrlOnRequest(url)) throw new UniqueRequestException();
 		account = _account;
 		setUrl(url);
 		run(url, nvps, method);
@@ -71,7 +72,7 @@ public class TwitterRequest extends Request {
 	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
 		(new Thread() {
 			public void run() {
-				urlOnRequest.add(url);
+				account.addUrlOnRequest(url);
 				DefaultHttpClient http = new DefaultHttpClient();
 
 				String full_url = "http" + (Twitter.isSecure ? "s" :"") + "://" + Twitter.BASE_URL + url.toString() + ".json";
@@ -135,7 +136,7 @@ public class TwitterRequest extends Request {
 					e.printStackTrace();
 				}
 				handler.post(runnable);
-				urlOnRequest.remove(url);
+				account.removeUrlOnRequest(url);
 			}
 		}).start();
 	}
