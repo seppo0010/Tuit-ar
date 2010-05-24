@@ -56,7 +56,7 @@
 <string name="yes">Sí</string>
 <string name="no">No</string>
 <string name="following_label">Siguiendo: </string>
-<string name="follower_label">Seguido: </string>
+<string name="follower_label">Seguidores: </string>
 <string name="see_in_map">Ver en Mapa</string>
 <string name="unableToShowMap">No se ha podido mostrar en mapa</string>
 <string name="unableToFollow">No se pudo seguir</string>
