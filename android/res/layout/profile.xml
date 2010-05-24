@@ -34,7 +34,15 @@
 		android:layout_toRightOf="@+id/follower_label" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/follower_number"
 		android:layout_marginTop="4px" />
+	<TextView android:layout_below="@+id/follower_label" android:text="@string/tweets_label"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:id="@+id/tweets_label" android:layout_marginTop="4px"
+		android:layout_marginRight="10px" />
+	<TextView android:layout_below="@+id/follower_number"
+		android:layout_toRightOf="@+id/tweets_label" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/tweets_number"
+		android:layout_marginTop="4px" />
 	<Button android:id="@+id/see_in_map" android:layout_width="wrap_content"
 		android:text="@+string/see_in_map" android:layout_height="wrap_content"
-		android:layout_below="@+id/follower_label" />
+		android:layout_below="@+id/tweets_label" />
 </RelativeLayout>

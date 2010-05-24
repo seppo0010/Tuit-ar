@@ -30,6 +30,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private Button following;
 	private TextView followingNumber;
 	private TextView followerNumber;
+	private TextView tweetsNumber;
 	private Button seeInMap;
 	private Button url;
 
@@ -61,6 +62,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		description = (TextView)findViewById(R.id.description);
 		followingNumber = (TextView)findViewById(R.id.following_number);
 		followerNumber = (TextView)findViewById(R.id.follower_number);
+		tweetsNumber = (TextView)findViewById(R.id.tweets_number);
 
 		url = (Button)findViewById(R.id.url);
 		url.setOnClickListener(new OnClickListener() {
@@ -94,6 +96,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			description.setText(user.getDescription());
 			followingNumber.setText(String.valueOf(user.getFriendsCount()));
 			followerNumber.setText(String.valueOf(user.getFollowersCount()));
+			tweetsNumber.setText(String.valueOf(user.getStatusesCount()));
 			seeInMap.setVisibility(user.getLocation() == null ? View.INVISIBLE : View.VISIBLE);
 			String _url = user.getUrl();
 			boolean hasUrl = _url != null && _url.length() > 0;
