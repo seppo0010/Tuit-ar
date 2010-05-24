@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.tuit.ar.api.request.Options;
+import com.tuit.ar.models.Status;
 import com.tuit.ar.models.User;
 
 public class TwitterAccount implements TwitterAccountRequestsObserver {
@@ -97,7 +98,11 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		if (request.getUrl() == Options.LOGIN) {
 			// Unauthorized! I'm invalid!!!
 			if (request.getStatusCode() > 400 && request.getStatusCode() < 500) {
-				Twitter.getInstance().removeAccount(this);
+				try {
+					Twitter.getInstance().removeAccount(this);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				return;
 			}
 
@@ -188,10 +193,31 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		ArrayList<TwitterAccount> accounts = new ArrayList<TwitterAccount>();
 		if (nicknames != null) {
 			for (int i = 0; i < nicknames.length; i++) {
-				accounts.add(unserialize(nicknames[i]));
+				TwitterAccount account = unserialize(nicknames[i]);
+				if (account != null) {
+					accounts.add(account);
+				}
 			}
 		}
 		return accounts;
+	}
+
+	public boolean delete() {
+		User user = getUser();
+		if (user == null) return false;
+
+		File folder = new File(PERSISTENT_FOLDER);
+		if (folder.exists() == false) folder.mkdirs();
+
+		String id = String.valueOf(user.getId());
+		String filename = PERSISTENT_FOLDER + id;
+		File file = new File(filename);
+		if (file.exists() == false || file.delete() == true) {
+			Status.deleteBelongsToUser(id);
+			User.deleteBelongsToUser(id);
+			return true;
+		}
+		return false;
 	}
 
 /*	protected ConcreteTweetPhoto getTweetPhotoProfile() {

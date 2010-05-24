@@ -99,9 +99,12 @@ public abstract class Model {
 		return db.delete(this.getClass().getSimpleName().toLowerCase(), "id = ?", new String[] {String.valueOf(id)});
 	}
 
+	static protected int delete(Class<? extends Model> modelClass, String where, String[] args) {
+		return db.delete(modelClass.getSimpleName().toLowerCase(), where, args);
+	}
+
 	static protected String sanitize(String str) {
 		if (str == null) return null;
 		return str.replaceAll("\r", "").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
 	}
-
 }

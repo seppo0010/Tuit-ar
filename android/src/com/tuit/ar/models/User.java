@@ -300,4 +300,8 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 
 	public void requestHasStarted(TwitterRequest request) {
 	}
+
+	static public int deleteBelongsToUser(String user) {
+		return Model.delete(User.class, "belongs_to_user = ?", new String[]{user});
+	}
 }

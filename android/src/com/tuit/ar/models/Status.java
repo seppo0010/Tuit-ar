@@ -307,4 +307,8 @@ public class Status extends Model {
 		fields.put(columns[11], getBelongsToUser());
 		return fields;
 	}
+
+	static public int deleteBelongsToUser(String user) {
+		return Model.delete(Status.class, "belongs_to_user = ?", new String[]{user});
+	}
 }

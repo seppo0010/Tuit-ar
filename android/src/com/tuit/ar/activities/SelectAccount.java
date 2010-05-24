@@ -7,18 +7,23 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.tuit.ar.R;
 import com.tuit.ar.api.Twitter;
@@ -27,7 +32,9 @@ import com.tuit.ar.api.TwitterAccountObserver;
 import com.tuit.ar.api.TwitterObserver;
 import com.tuit.ar.databases.Cache;
 
-public class SelectAccount extends ListActivity implements TwitterObserver {
+public class SelectAccount extends ListActivity implements TwitterObserver, OnItemLongClickListener {
+	protected static final int ACCOUNT_MENU_DELETE = 0;
+
 	private static String CONSUMER_KEY = "wLR28XpgOKbmpaFFvtMVA";
 	private static String CONSUMER_SECRET = "WOMQjlVaeuTs0eVQfTqXRxfLD58gbGCQrZdDIrQUSU";
 	private static String CALLBACK_URL = "tuitar://login";
@@ -50,6 +57,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 		Twitter twitter = Twitter.getInstance();
 		accounts = (ArrayList<TwitterAccount>) twitter.getAccounts().clone();
 		this.setListAdapter(accountsAdapter = new AccountsAdapter(this));
+		getListView().setOnItemLongClickListener(this);
 
 		twitter.addObserver(this);
 	}
@@ -77,6 +85,26 @@ public class SelectAccount extends ListActivity implements TwitterObserver {
 
 		Intent intent = new Intent(this, com.tuit.ar.activities.timeline.Friends.class);
 		this.startActivity(intent);
+	}
+
+
+	public boolean onItemLongClick(AdapterView<?> l, View v, int position, long id) {
+		new AlertDialog.Builder(this).
+		setTitle(getString(R.string.executeAction)).
+		setItems(R.array.selectAccountOptions, new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case ACCOUNT_MENU_DELETE:
+					try {
+						Twitter.getInstance().removeAccount(accounts.get(which));
+					} catch (Exception e) {
+						Toast.makeText(SelectAccount.this, getString(R.string.unableToDeleteAccount), Toast.LENGTH_SHORT).show();
+					}
+					break;
+				}
+			}
+		}).show();
+		return true;
 	}
 
 	private void createConsumerAndProvider() {

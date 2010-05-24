@@ -18,6 +18,10 @@
 <string name="messageSent">Mensaje Enviado</string>
 <string name="unableToPost">No se pudo enviar</string>
 <string name="unableToAddAccount">No se pudo agregar cuenta</string>
+<string name="unableToDeleteAccount">No se pudo eliminar cuenta</string>
+<string-array name="selectAccountOptions">
+<item>Borrar</item>
+</string-array>
 <string-array name="tweetOptions">
 <item>Responder</item>
 <item>Retweet manual</item>
