@@ -162,14 +162,15 @@ public class Status extends Model {
 	public String getMessage() {
 		if (message != null) return message;
 		try {
-			return message = dataSourceJSON.isNull("text") ? null : dataSourceJSON.getString("text");
+			setMessage(dataSourceJSON.isNull("text") ? null : dataSourceJSON.getString("text"));
+			return message;
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
 	public void setMessage(String message) {
-		this.message = message;
+		this.message = message.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&");
 	}
 
 	public boolean isHome() {
