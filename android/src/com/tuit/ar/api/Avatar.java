@@ -58,7 +58,7 @@ public class Avatar extends Request {
 						setResponse(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 					}
 				} catch (Exception e) {
-
+					e.printStackTrace();
 				}
 				handler.post(runnable);
 			}
