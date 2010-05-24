@@ -92,8 +92,8 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			nickname.setText(user.getScreenName());
 			fullname.setText(user.getName());
 			description.setText(user.getDescription());
-			followingNumber.setText(String.valueOf(user.getFollowersCount()));
-			followerNumber.setText(String.valueOf(user.getFriendsCount()));
+			followingNumber.setText(String.valueOf(user.getFriendsCount()));
+			followerNumber.setText(String.valueOf(user.getFollowersCount()));
 			seeInMap.setVisibility(user.getLocation() == null ? View.INVISIBLE : View.VISIBLE);
 			String _url = user.getUrl();
 			boolean hasUrl = _url != null && _url.length() > 0;
