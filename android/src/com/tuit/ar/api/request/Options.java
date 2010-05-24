@@ -47,5 +47,5 @@ public enum Options {
 			return false;
 		}
 	};
-	abstract boolean mustBeUnique();
+	public abstract boolean mustBeUnique();
 }

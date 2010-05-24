@@ -12,6 +12,7 @@ import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
+import com.tuit.ar.api.request.UniqueRequestException;
 import com.tuit.ar.models.timeline.TimelineObserver;
 
 abstract public class Timeline implements TwitterAccountRequestsObserver {
@@ -34,6 +35,8 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
 			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
+		} catch (UniqueRequestException e) {
+			// I wanna ignore this exceptions
 		} catch (Exception e) {
 			failedToUpdate();
 		}

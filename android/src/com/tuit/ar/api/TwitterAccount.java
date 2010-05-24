@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import oauth.signpost.AbstractOAuthConsumer;
 
@@ -26,6 +27,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 
 	private ArrayList<TwitterAccountObserver> observers = new ArrayList<TwitterAccountObserver>(); 
 	private ArrayList<TwitterAccountRequestsObserver> requestsObservers = new ArrayList<TwitterAccountRequestsObserver>(); 
+	private HashSet<Options> urlOnRequest = new HashSet<Options>();
 
 	public TwitterAccount(oauth.signpost.AbstractOAuthConsumer _consumer) throws Exception {
 		consumer = _consumer;
@@ -217,7 +219,19 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		}
 		return false;
 	}
+	
+	public void addUrlOnRequest(Options options) {
+		urlOnRequest.add(options);
+	}
 
+	public void removeUrlOnRequest(Options options) {
+		urlOnRequest.remove(options);
+	}
+	
+	public boolean hasUrlOnRequest(Options options) {
+		return urlOnRequest.contains(options);
+	}
+	
 /*	protected ConcreteTweetPhoto getTweetPhotoProfile() {
 		if (tweetPhoto != null) return tweetPhoto;  
 		ConcreteTweetPhoto tweetPhoto = new ConcreteTweetPhoto();
