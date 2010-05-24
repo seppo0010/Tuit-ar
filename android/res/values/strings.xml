@@ -58,6 +58,7 @@
 <string name="following_label">Siguiendo: </string>
 <string name="follower_label">Seguidores: </string>
 <string name="tweets_label">Tweets: </string>
+<string name="location_label">Ubicación: </string>
 <string name="see_in_map">Ver en Mapa</string>
 <string name="unableToShowMap">No se ha podido mostrar en mapa</string>
 <string name="unableToFollow">No se pudo seguir</string>

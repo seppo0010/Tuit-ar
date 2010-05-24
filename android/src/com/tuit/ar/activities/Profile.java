@@ -31,6 +31,8 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private TextView followingNumber;
 	private TextView followerNumber;
 	private TextView tweetsNumber;
+	private TextView location;
+	private TextView locationLabel;
 	private Button seeInMap;
 	private Button url;
 
@@ -63,6 +65,8 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		followingNumber = (TextView)findViewById(R.id.following_number);
 		followerNumber = (TextView)findViewById(R.id.follower_number);
 		tweetsNumber = (TextView)findViewById(R.id.tweets_number);
+		locationLabel = (TextView)findViewById(R.id.location_label);
+		location = (TextView)findViewById(R.id.location);
 
 		url = (Button)findViewById(R.id.url);
 		url.setOnClickListener(new OnClickListener() {
@@ -97,6 +101,17 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			followingNumber.setText(String.valueOf(user.getFriendsCount()));
 			followerNumber.setText(String.valueOf(user.getFollowersCount()));
 			tweetsNumber.setText(String.valueOf(user.getStatusesCount()));
+			String _location = user.getLocation();
+			if (_location == null || _location.length() == 0) {
+				// FIXME: it's ugly and makes the layout not-reausable... View.GONE breaks everything
+				// View.INVISIBLE lefts the space empty
+				location.setHeight(0);
+				locationLabel.setHeight(0);
+			} else {
+				location.setText(_location);
+				location.setVisibility(View.VISIBLE);
+				locationLabel.setVisibility(View.VISIBLE);
+			}
 			seeInMap.setVisibility(user.getLocation() == null ? View.INVISIBLE : View.VISIBLE);
 			String _url = user.getUrl();
 			boolean hasUrl = _url != null && _url.length() > 0;
