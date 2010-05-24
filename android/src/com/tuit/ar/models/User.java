@@ -255,4 +255,8 @@ public class User extends Model {
 		fields.put(columns[13], getBelongsToUser());
 		return fields;
 	}
+
+	static public int deleteBelongsToUser(String user) {
+		return Model.delete(User.class, "belongs_to_user = ?", new String[]{user});
+	}
 }

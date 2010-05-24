@@ -42,9 +42,14 @@ public class Twitter {
 		notifyChanges();
 	}
 
-	public void removeAccount(TwitterAccount account) {
-		this.accounts.remove(account);
-		notifyChanges();
+	public void removeAccount(TwitterAccount account) throws Exception {
+		if (account.delete()) {
+			this.accounts.remove(account);
+			notifyChanges();
+		} else {
+			//FIXME: Subclassing exception seems to be Java standard
+			throw new Exception("Unable to delete account");
+		}
 	}
 
 	public ArrayList<TwitterAccount> getAccounts() {

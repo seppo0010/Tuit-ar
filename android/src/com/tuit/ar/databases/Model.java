@@ -98,4 +98,8 @@ public abstract class Model {
 	public int delete() {
 		return db.delete(this.getClass().getSimpleName().toLowerCase(), "id = ?", new String[] {String.valueOf(id)});
 	}
+
+	static protected int delete(Class<? extends Model> modelClass, String where, String[] args) {
+		return db.delete(modelClass.getSimpleName().toLowerCase(), where, args);
+	}
 }
