@@ -277,7 +277,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		account.addRequestObserver(this);
 		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("user_id", String.valueOf(getId())));
-		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.GET);
+		followRequest = account.requestUrl(Options.UNFOLLOW, nvps, Method.POST);
 	}
 
 	public void follow() throws Exception {
@@ -285,7 +285,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		account.addRequestObserver(this);
 		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("user_id", String.valueOf(getId())));
-		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.GET);
+		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.POST);
 	}
 
 	public void requestHasFinished(TwitterRequest request) {
