@@ -54,7 +54,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		fullname = (TextView)findViewById(R.id.fullname);
 		following = (Button)findViewById(R.id.follow);
 		following.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				following();
 			}
@@ -65,7 +64,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 
 		url = (Button)findViewById(R.id.url);
 		url.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(Intent.ACTION_VIEW , Uri.parse(user.getUrl())));
 			}
@@ -73,7 +71,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 
 		seeInMap = (Button)findViewById(R.id.see_in_map);
 		seeInMap.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(Intent.ACTION_VIEW , Uri.parse("geo:" + user.getLocation()));
 				try {
@@ -105,12 +102,10 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		}
 	}
 
-	@Override
 	public void avatarHasFailed(Avatar avatar) {
 		this.avatar.setVisibility(View.INVISIBLE);
 	}
 
-	@Override
 	public void avatarHasFinished(Avatar avatar) {
 		this.avatar.setImageBitmap(avatar.getResponse());
 		this.avatar.setVisibility(View.VISIBLE);
@@ -121,7 +116,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setMessage(user.isFollowing() ? R.string.confirmUnfollow : R.string.confirmFollow)
         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
             public void onClick(DialogInterface dialog, int which) {
             	try {
             		if (user.isFollowing()) user.stopFollowing();
@@ -135,7 +129,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
         .show();
 	}
 
-	@Override
 	public void requestHasFinished(TwitterRequest request) {
 		if ((!request.getUrl().equals(Options.FOLLOW)) && (!request.getUrl().equals(Options.UNFOLLOW))) return;
 		user.requestHasFinished(request);
@@ -146,7 +139,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		following.setText(getString(user.isFollowing() ? R.string.following : R.string.notFollowing));
 	}
 
-	@Override
 	public void requestHasStarted(TwitterRequest request) {
 	}
 }

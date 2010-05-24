@@ -4,7 +4,6 @@ import android.os.Handler;
 
 public abstract class Request {
 	protected Runnable runnable = new Runnable() {
-		@Override
 		public void run() {
 			finishedRequest();
 		}

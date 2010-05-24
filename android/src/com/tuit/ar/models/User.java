@@ -282,7 +282,6 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.GET);
 	}
 
-	@Override
 	public void requestHasFinished(TwitterRequest request) {
 		if (request == followRequest) {
 			if (request.getUrl().equals(Options.FOLLOW)) {
@@ -293,7 +292,6 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		}
 	}
 
-	@Override
 	public void requestHasStarted(TwitterRequest request) {
 	}
 }
