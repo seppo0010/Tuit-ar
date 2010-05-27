@@ -170,7 +170,7 @@ public class Status extends Model {
 	}
 
 	public void setMessage(String message) {
-		this.message = message.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&");
+		this.message = sanitize(message);
 	}
 
 	public boolean isHome() {

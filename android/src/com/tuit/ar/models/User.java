@@ -67,14 +67,15 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getDescription() {
 		if (description != null || dataSourceJSON == null) return description;
 		try {
-			return description = dataSourceJSON.isNull("description") ? null : dataSourceJSON.getString("description");
+			setDescription(dataSourceJSON.isNull("description") ? null : dataSourceJSON.getString("description"));
+			return description;
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = sanitize(description);
 	}
 
 	public int getFollowersCount() {
@@ -132,40 +133,43 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getLocation() {
 		if (location != null || dataSourceJSON == null) return location;
 		try {
-			return location = dataSourceJSON.isNull("location") ? null : dataSourceJSON.getString("location");
+			setLocation(dataSourceJSON.isNull("location") ? null : dataSourceJSON.getString("location"));
+			return location;
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 
 	public void setLocation(String location) {
-		this.location = location;
+		this.location = sanitize(location);
 	}
 
 	public String getName() {
 		if (name != null || dataSourceJSON == null) return name;
 		try {
-			return name = dataSourceJSON.isNull("name") ? null : dataSourceJSON.getString("name");
+			setName(dataSourceJSON.isNull("name") ? null : dataSourceJSON.getString("name"));
+			return name;
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = sanitize(name);
 	}
 
 	public String getProfileImageUrl() {
 		if (profile_image_url != null || dataSourceJSON == null) return profile_image_url;
 		try {
-			return profile_image_url = dataSourceJSON.isNull("profile_image_url") ? null : dataSourceJSON.getString("profile_image_url");
+			setProfileImageUrl(dataSourceJSON.isNull("profile_image_url") ? null : dataSourceJSON.getString("profile_image_url"));
+			return profile_image_url;
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 
 	public void setProfileImageUrl(String profileImageUrl) {
-		profile_image_url = profileImageUrl;
+		profile_image_url = sanitize(profileImageUrl);
 	}
 
 	public boolean isProtected() {
@@ -184,14 +188,15 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getScreenName() {
 		if (screen_name != null || dataSourceJSON == null) return screen_name;
 		try {
-			return screen_name = dataSourceJSON.isNull("screen_name") ? null : dataSourceJSON.getString("screen_name");
+			setScreenName(dataSourceJSON.isNull("screen_name") ? null : dataSourceJSON.getString("screen_name"));
+			return screen_name;
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 
 	public void setScreenName(String screenName) {
-		screen_name = screenName;
+		screen_name = sanitize(screenName);
 	}
 
 	public int getStatusesCount() {
@@ -210,14 +215,15 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public String getUrl() {
 		if (url != null || dataSourceJSON == null) return url;
 		try {
-			return url = dataSourceJSON.isNull("url") ? null : dataSourceJSON.getString("url");
+			setUrl(dataSourceJSON.isNull("url") ? null : dataSourceJSON.getString("url"));
+			return url;
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 
 	public void setUrl(String url) {
-		this.url = url;
+		this.url = sanitize(url);
 	}
 
 	public boolean isVerified() {
