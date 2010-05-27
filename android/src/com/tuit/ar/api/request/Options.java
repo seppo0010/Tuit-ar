@@ -28,6 +28,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return true;
 		}
+	}, DIRECT_MESSAGES {
+		public String toString() {
+			return "direct_messages";
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
 	}, POST_TWEET {
 		public String toString() {
 			return "statuses/update";

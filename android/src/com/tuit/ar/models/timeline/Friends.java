@@ -1,5 +1,6 @@
 package com.tuit.ar.models.timeline;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.tuit.ar.api.TwitterAccount;
@@ -8,7 +9,8 @@ import com.tuit.ar.models.Status;
 import com.tuit.ar.models.Timeline;
 
 public class Friends extends Timeline {
-	static private HashMap<TwitterAccount, Friends> instances = new HashMap<TwitterAccount, Friends>(); 
+	static private HashMap<TwitterAccount, Friends> instances = new HashMap<TwitterAccount, Friends>();
+	protected ArrayList<Status> tweets = new ArrayList<Status>(); 
 
 	protected Friends(TwitterAccount account) {
 		super(account);

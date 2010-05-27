@@ -34,7 +34,6 @@ import com.tuit.ar.api.request.UniqueRequestException;
 public class TwitterRequest extends Request {
 	static private int BUFFER_SIZE = 1024;
 	static public enum Method { GET, POST };
-	private HashSet<Options> urlOnRequest = new HashSet<Options>();
 
 	protected Runnable runnable = new Runnable() {
 		public void run() {

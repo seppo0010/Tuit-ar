@@ -26,6 +26,7 @@ import com.tuit.ar.R;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.api.Twitter;
+import com.tuit.ar.models.ListElement;
 import com.tuit.ar.models.Status;
 import com.tuit.ar.models.User;
 import com.tuit.ar.models.timeline.TimelineObserver;
@@ -51,7 +52,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MY_TWEET_MENU_SHOW_PROFILE = 3;
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 4;
 	
-	ArrayList<Status> tweets;
+	ArrayList<ListElement> tweets;
 	TimelineAdapter timelineAdapter;
 	protected boolean isVisible;
 	protected String newestTweet = "";
@@ -124,7 +125,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	}
 
 	protected void onListItemClick (ListView l, View v, int position, long id) {
-		final Status tweet = tweets.get(position);
+		final Status tweet = (Status) tweets.get(position);
 		// FIXME: use user id instead of username!
 		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
 		new AlertDialog.Builder(this).
@@ -271,14 +272,14 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}
 	}
 
-	protected class TimelineAdapter extends ArrayAdapter<Status> 
+	protected class TimelineAdapter extends ArrayAdapter<ListElement> 
 	{
 		Activity context;
 		HashMap<View, TimelineElement> elements = new HashMap<View, TimelineElement>();
 
 		public TimelineAdapter(Activity context)
 		{
-			super(context, R.layout.timeline_element, tweets);
+			super(context, R.layout.timeline_element, (ArrayList<ListElement>)tweets);
 			this.context = context;
 		}
 
@@ -286,12 +287,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		{
 			TimelineElement element = getTimelineElement(convertView);
 
-			Status tweet = tweets.get(position);
+			ListElement tweet = tweets.get(position);
 			if (element.currentTweet == tweet) return element.getView();
 
 			element.getUsername().setText("@" + tweet.getUsername());
-			element.getMessage().setText(tweet.getMessage());
-			element.getDate().setText(Status.calculateElapsed(tweet.getDateMillis()));
+			element.getMessage().setText(tweet.getText());
+			element.getDate().setText(tweet.getDisplayDate());
 			element.currentTweet = tweet;
 
 			return element.getView();
@@ -315,7 +316,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		private TextView username;
 		private TextView message;
 		private TextView date;
-		public Status currentTweet; 
+		public ListElement currentTweet; 
 
 		public TimelineElement(View view) {
 			super();

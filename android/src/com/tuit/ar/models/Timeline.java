@@ -16,11 +16,11 @@ import com.tuit.ar.api.request.UniqueRequestException;
 import com.tuit.ar.models.timeline.TimelineObserver;
 
 abstract public class Timeline implements TwitterAccountRequestsObserver {
-	protected ArrayList<Status> tweets = new ArrayList<Status>();
+	protected ArrayList<ListElement> tweets = new ArrayList<ListElement>();
 	protected long newestTweet = 0;
 	protected ArrayList<TimelineObserver> observers = new ArrayList<TimelineObserver>();
-	static private int MAX_SIZE = 100;
-	final TwitterAccount account;
+	protected static int MAX_SIZE = 100;
+	protected final TwitterAccount account;
 
 	protected Timeline(TwitterAccount account) {
 		this.account = account;
@@ -77,12 +77,12 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		finishedUpdate();
 	}
 
-	public ArrayList<Status> getTweets() {
+	public ArrayList<ListElement> getTweets() {
 		return tweets;
 	}
 
-	public Collection<Status> getTweetsNewerThan(Status tweet) {
-		return tweets.subList(0, tweets.indexOf(tweet));
+	public Collection<ListElement> getTweetsNewerThan(ListElement listElement) {
+		return tweets.subList(0, tweets.indexOf(listElement));
 	}
 
 	protected void startedUpdate() {

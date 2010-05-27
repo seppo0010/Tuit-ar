@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteException;
 
 import com.tuit.ar.databases.Model;
 
-public class Status extends Model {
+public class Status extends ListElement {
 	private static final String[] columns = new String[]{
 			"date", "favorited", "id", "in_reply_to_screen_name", "in_reply_to_status_id", "in_reply_to_user_id", "message", "source", "user_id", "is_home", "is_reply", "belongs_to_user"
 		};
@@ -233,40 +233,6 @@ public class Status extends Model {
 		return dateMillis;
 	}
 
-	static public String calculateElapsed(long millis) {
-		    int ageInSeconds = (int)((System.currentTimeMillis() - millis) / 1000);
-		    
-		    if (ageInSeconds < 0) {
-		        return "just now";
-		    }
-		    if (ageInSeconds < 60) {
-		        int n = ageInSeconds;
-		        return "about " + n + " second" + (n > 1 ? "s" : "") + " ago";
-		    }
-		    if (ageInSeconds < 60 * 60) {
-		        int n = (int) Math.floor(ageInSeconds/60);
-		        return "about " + n + " minute" + (n > 1 ? "s" : "") + " ago";
-		    }
-		    if (ageInSeconds < 60 * 60 * 24) {
-		        int n = (int) Math.floor(ageInSeconds/60/60);
-		        return "about " + n + " hour" + (n > 1 ? "s" : "") + " ago";
-		    }
-		    if (ageInSeconds < 60 * 60 * 24 * 7) {
-		        int n = (int) Math.floor(ageInSeconds/60/60/24);
-		        return "about " + n + " day" + (n > 1 ? "s" : "") + " ago";
-		    }
-		    if (ageInSeconds < 60 * 60 * 24 * 31) {
-		        int n = (int) Math.floor(ageInSeconds/60/60/24/7);
-		        return "about " + n + " week" + (n > 1 ? "s" : "") + " ago";
-		    }
-		    if (ageInSeconds < 60 * 60 * 24 * 365) {
-		        int n = (int) Math.floor(ageInSeconds/60/60/24/31);
-		        return "about " + n + " month" + (n > 1 ? "s" : "") + " ago";
-		    }
-		    int n = (int)Math.floor(ageInSeconds/60/60/24/365);
-		    return n + " year" + (n > 1 ? "s" : "") + " ago";
-	}
-
 	@Override
 	public long replace() {
 		try {
@@ -310,5 +276,15 @@ public class Status extends Model {
 
 	static public int deleteBelongsToUser(String user) {
 		return Model.delete(Status.class, "belongs_to_user = ?", new String[]{user});
+	}
+
+	@Override
+	public String getText() {
+		return getMessage();
+	}
+
+	@Override
+	public String getDisplayDate() {
+		return calculateElapsed(getDateMillis());
 	}
 }
