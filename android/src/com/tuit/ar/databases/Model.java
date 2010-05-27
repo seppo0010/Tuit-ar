@@ -101,8 +101,7 @@ public abstract class Model {
 
 	static protected String sanitize(String str) {
 		if (str == null) return null;
-		return str.replaceAll("\r", "").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;")
-		.replaceAll("á", "&aacute;").replaceAll("é", "&eacute;").replaceAll("í", "&iacute;").replaceAll("ó", "&oacute;").replaceAll("ú", "&uacute;");
+		return str.replaceAll("", "\r").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
 	}
 
 }
