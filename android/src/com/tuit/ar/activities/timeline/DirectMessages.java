@@ -14,6 +14,9 @@ public class DirectMessages extends Timeline {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(getString(R.string.directMessages));
+
+		tweets = getTimeline().getTweets();
+		this.setListAdapter(timelineAdapter = new TimelineAdapter<com.tuit.ar.models.DirectMessage>(this, tweets));
 	}
 
 	protected com.tuit.ar.models.timeline.DirectMessages getTimeline() {

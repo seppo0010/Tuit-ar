@@ -18,7 +18,6 @@ import com.tuit.ar.activities.Timeline;
 import com.tuit.ar.api.Twitter;
 
 abstract public class Status extends Timeline {
-
 	protected static final int TWEET_MENU_REPLY = 0;
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
 	protected static final int TWEET_MENU_SHARE = 2;

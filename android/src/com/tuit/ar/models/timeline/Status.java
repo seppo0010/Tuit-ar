@@ -50,12 +50,10 @@ abstract public class Status extends Timeline {
 	}
 
 	public ArrayList<com.tuit.ar.models.Status> getTweets() {
-		// TODO Auto-generated method stub
-		return null;
+		return tweets;
 	}
 
 	public Collection<com.tuit.ar.models.Status> getTweetsNewerThan(com.tuit.ar.models.Status status) {
-		// TODO Auto-generated method stub
-		return null;
+		return tweets.subList(0, tweets.indexOf(status));
 	}
 }

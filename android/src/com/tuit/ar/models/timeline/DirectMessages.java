@@ -59,14 +59,11 @@ public class DirectMessages extends Timeline {
 		finishedUpdate();
 	}
 
-	public Collection<DirectMessage> getTweets() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<DirectMessage> getTweets() {
+		return tweets;
 	}
 
-	public Collection<DirectMessage> getTweetsNewerThan(
-			DirectMessage directMessage) {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<DirectMessage> getTweetsNewerThan(DirectMessage directMessage) {
+		return tweets.subList(0, tweets.indexOf(directMessage));
 	}
 }
