@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -21,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
+import com.tuit.ar.activities.timeline.DirectMessages;
+import com.tuit.ar.activities.timeline.Friends;
+import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.models.ListElement;
 import com.tuit.ar.models.Status;
 import com.tuit.ar.models.User;
@@ -66,6 +70,47 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	public void onDestroy() {
 		super.onDestroy();
 		getTimeline().removeObserver(this);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {  
+	    switch (item.getItemId()) {  
+	    case MENU_REFRESH:
+	    {
+	        refresh();
+	        return true;
+	    }
+	    case MENU_FRIENDS:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), Friends.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_DIRECT:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), DirectMessages.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_NEW_TWEET:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), NewTweet.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_REPLIES:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), Replies.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_PREFERENCES:
+	    {
+			Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
+			this.startActivity(intent);		
+	        return true;
+	    }
+	    }
+	    return false;
 	}
 
 	protected void showProfile(User user) {

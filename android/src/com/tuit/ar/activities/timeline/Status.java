@@ -49,41 +49,6 @@ abstract public class Status extends Timeline {
 			timelineAdapter.notifyDataSetChanged();
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {  
-	    switch (item.getItemId()) {  
-	    case MENU_REFRESH:
-	    {
-	        refresh();
-	        return true;
-	    }
-	    case MENU_FRIENDS:
-	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), Friends.class);
-	    	this.startActivity(intent);		
-	    	return true;
-	    }
-	    case MENU_NEW_TWEET:
-	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), NewTweet.class);
-	    	this.startActivity(intent);		
-	    	return true;
-	    }
-	    case MENU_REPLIES:
-	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), Replies.class);
-	    	this.startActivity(intent);		
-	    	return true;
-	    }
-	    case MENU_PREFERENCES:
-	    {
-			Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
-			this.startActivity(intent);		
-	        return true;
-	    }
-	    }
-	    return false;
-	}
-
 	protected void onListItemClick (ListView l, View v, int position, long id) {
 		final com.tuit.ar.models.Status tweet = (com.tuit.ar.models.Status) tweets.get(position);
 		// FIXME: use user id instead of username!

@@ -18,7 +18,7 @@ public class Replies extends com.tuit.ar.activities.timeline.Status {
 		menu.add(0, MENU_NEW_TWEET, 0, R.string.newTweet);  
 		menu.add(0, MENU_REFRESH, 0, R.string.refresh);  
 		menu.add(0, MENU_FRIENDS, 0, R.string.friends);  
-//		menu.add(0, MENU_DIRECT, 0, R.string.directMessages);  
+		menu.add(0, MENU_DIRECT, 0, R.string.directMessages);  
 		menu.add(0, MENU_PREFERENCES, 0, R.string.preferences);  
 		return true;  
 	}  
