@@ -1,5 +1,7 @@
 package com.tuit.ar.models.timeline;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -12,14 +14,15 @@ import com.tuit.ar.models.DirectMessage;
 import com.tuit.ar.models.Timeline;
 
 public class DirectMessages extends Timeline {
-	static private HashMap<TwitterAccount, DirectMessages> instances = new HashMap<TwitterAccount, DirectMessages>(); 
+	static private HashMap<TwitterAccount, DirectMessages> instances = new HashMap<TwitterAccount, DirectMessages>();
+	private ArrayList<DirectMessage> tweets; 
 
 	protected DirectMessages(TwitterAccount account) {
 		super(account);
-/*		tweets = Status.select("is_home = 1 AND belongs_to_user = ?", new String[] { String.valueOf(account.getUser().getId()) }, null, null, "id DESC", null);
+		tweets = com.tuit.ar.models.DirectMessage.select("belongs_to_user = ?", new String[] { String.valueOf(account.getUser().getId()) }, null, null, "id DESC", null);
 		if (tweets.size() > 0) {
 			newestTweet = tweets.get(0).getId();
-		}*/
+		}
 	}
 
 	@Override
@@ -27,7 +30,7 @@ public class DirectMessages extends Timeline {
 		return Options.DIRECT_MESSAGES;
 	}
 
-	public static Timeline getInstance(TwitterAccount account) {
+	public static com.tuit.ar.models.timeline.DirectMessages getInstance(TwitterAccount account) {
 		if (instances.containsKey(account) == false) instances.put(account, new DirectMessages(account));
 		return instances.get(account);
 	}
@@ -40,9 +43,8 @@ public class DirectMessages extends Timeline {
 			if (c > 0) {
 				for (int i = c-1; i >= 0; i--) {
 					DirectMessage tweet = new DirectMessage(tweets.getJSONObject(i));
-					//is_home INTEGER, is_reply INTEGER, belongs_to_user
 					tweet.setBelongsToUser(account.getUser().getId());
-//					tweet.replace();
+					tweet.replace();
 					this.tweets.add(0, tweet);
 				}
 
@@ -55,5 +57,16 @@ public class DirectMessages extends Timeline {
 			failedToUpdate();
 		}
 		finishedUpdate();
+	}
+
+	public Collection<DirectMessage> getTweets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Collection<DirectMessage> getTweetsNewerThan(
+			DirectMessage directMessage) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -13,19 +13,14 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
-import com.tuit.ar.activities.timeline.Friends;
-import com.tuit.ar.activities.timeline.Replies;
-import com.tuit.ar.api.Twitter;
 import com.tuit.ar.models.ListElement;
 import com.tuit.ar.models.Status;
 import com.tuit.ar.models.User;
@@ -39,23 +34,10 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MENU_REPLIES = 3;
 	protected static final int MENU_DIRECT = 4;
 	protected static final int MENU_PREFERENCES = 5;
-
-	protected static final int TWEET_MENU_REPLY = 0;
-	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
-	protected static final int TWEET_MENU_SHARE = 2;
-	protected static final int TWEET_MENU_SHOW_PROFILE = 3;
-	protected static final int TWEET_MENU_OPEN_LINKS = 4;
-
-	protected static final int MY_TWEET_MENU_REPLY = 0;
-	protected static final int MY_TWEET_MENU_DELETE = 1;
-	protected static final int MY_TWEET_MENU_SHARE = 2;
-	protected static final int MY_TWEET_MENU_SHOW_PROFILE = 3;
-	protected static final int MY_TWEET_MENU_OPEN_LINKS = 4;
 	
-	ArrayList<ListElement> tweets;
-	TimelineAdapter timelineAdapter;
+	protected TimelineAdapter<? extends ListElement> timelineAdapter;
 	protected boolean isVisible;
-	protected String newestTweet = "";
+	protected long newestTweet = 0;
 
 	abstract protected com.tuit.ar.models.Timeline getTimeline();
 
@@ -63,9 +45,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline);
-
-		tweets = getTimeline().getTweets();
-		this.setListAdapter(timelineAdapter = new TimelineAdapter(this));
 
 		getTimeline().addObserver(this);
 		getTimeline().refresh();
@@ -87,119 +66,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	public void onDestroy() {
 		super.onDestroy();
 		getTimeline().removeObserver(this);
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {  
-	    switch (item.getItemId()) {  
-	    case MENU_REFRESH:
-	    {
-	        refresh();
-	        return true;
-	    }
-	    case MENU_FRIENDS:
-	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), Friends.class);
-	    	this.startActivity(intent);		
-	    	return true;
-	    }
-	    case MENU_NEW_TWEET:
-	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), NewTweet.class);
-	    	this.startActivity(intent);		
-	    	return true;
-	    }
-	    case MENU_REPLIES:
-	    {
-	    	Intent intent = new Intent(this.getApplicationContext(), Replies.class);
-	    	this.startActivity(intent);		
-	    	return true;
-	    }
-	    case MENU_PREFERENCES:
-	    {
-			Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
-			this.startActivity(intent);		
-	        return true;
-	    }
-	    }
-	    return false;
-	}
-
-	protected void onListItemClick (ListView l, View v, int position, long id) {
-		final Status tweet = (Status) tweets.get(position);
-		// FIXME: use user id instead of username!
-		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
-		new AlertDialog.Builder(this).
-		setTitle(getString(R.string.executeAction)).
-		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, mine ?
-				new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-						case MY_TWEET_MENU_REPLY:
-						{
-							Intent intent = new Intent(getApplicationContext(), NewTweet.class);
-							intent.putExtra("reply_to_id", tweet.getId());
-							intent.putExtra("reply_to_username", tweet.getUsername());
-							intent.putExtra("default_text", "@" + tweet.getUsername() + " ");
-							startActivity(intent);
-							break;
-						}
-						case MY_TWEET_MENU_SHARE:
-						{
-							shareTweet(tweet);
-							break;
-						}
-						case MY_TWEET_MENU_SHOW_PROFILE:
-						{
-							showProfile(tweet.getUser());
-							break;
-						}
-						case MY_TWEET_MENU_OPEN_LINKS:
-						{
-							openLinksInBrowser(tweet);
-							break;
-						}
-						}
-					}
-				} :
-			new OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				switch (which) {
-				case TWEET_MENU_REPLY:
-				{
-					Intent intent = new Intent(getApplicationContext(), NewTweet.class);
-					intent.putExtra("reply_to_id", tweet.getId());
-					intent.putExtra("reply_to_username", tweet.getUsername());
-					intent.putExtra("default_text", "@" + tweet.getUsername() + " ");
-					startActivity(intent);
-					break;
-				}
-				case TWEET_MENU_RETWEET_MANUAL:
-				{
-					Intent intent = new Intent(getApplicationContext(), NewTweet.class);
-					intent.putExtra("reply_to_id", tweet.getId());
-					intent.putExtra("reply_to_username", tweet.getUsername());
-					intent.putExtra("default_text", "RT @" + tweet.getUsername() + ": " + tweet.getMessage());
-					startActivity(intent);
-					break;
-				}
-				case TWEET_MENU_SHARE:
-				{
-					shareTweet(tweet);
-					break;
-				}
-				case TWEET_MENU_SHOW_PROFILE:
-				{
-					showProfile(tweet.getUser());
-					break;
-				}
-				case TWEET_MENU_OPEN_LINKS:
-				{
-					openLinksInBrowser(tweet);
-					break;
-				}
-				}
-			}
-		}).show();
 	}
 
 	protected void showProfile(User user) {
@@ -225,7 +91,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}
 	}
 
-	static private String[] parseUrls(String message) {
+	static protected String[] parseUrls(String message) {
         String [] parts = message.split("\\s");
 
         ArrayList<String> foundURLs = new ArrayList<String>();
@@ -235,15 +101,6 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
         }
 
         return (String[])foundURLs.toArray(new String[foundURLs.size()]);
-	}
-
-	protected void shareTweet(Status tweet) {
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("text/plain"); 
-		// FIXME: no sprintf... this will do it, for now
-		intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.shareSubject).replace("%s", tweet.getUsername()));
-		intent.putExtra(Intent.EXTRA_TEXT, tweet.getMessage());
-		startActivity(Intent.createChooser(intent, getString(R.string.shareChooserTitle)));
 	}
 
 	protected void refresh() {
@@ -257,37 +114,30 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		this.setProgressBarIndeterminateVisibility(false);
 	}
 
-	public void timelineHasChanged(com.tuit.ar.models.Timeline timeline) {
-		if (tweets.size() == 0)
-			tweets.addAll(getTimeline().getTweets());
-		else
-			tweets.addAll(0, getTimeline().getTweetsNewerThan(tweets.get(0)));
-		if (isVisible)
-			timelineAdapter.notifyDataSetChanged();
-	}
-
 	public void timelineUpdateHasFailed(com.tuit.ar.models.Timeline timeline) {
 		if (isVisible) {
 			Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	protected class TimelineAdapter extends ArrayAdapter<ListElement> 
+	protected class TimelineAdapter<T> extends ArrayAdapter<T> 
 	{
-		Activity context;
-		HashMap<View, TimelineElement> elements = new HashMap<View, TimelineElement>();
+		protected Activity context;
+		protected HashMap<View, TimelineElement> elements = new HashMap<View, TimelineElement>();
+		protected ArrayList<T> tweets;
 
-		public TimelineAdapter(Activity context)
+		public TimelineAdapter(Activity context, ArrayList<T> tweets)
 		{
-			super(context, R.layout.timeline_element, (ArrayList<ListElement>)tweets);
+			super(context, R.layout.timeline_element, tweets);
 			this.context = context;
+			this.tweets = tweets;
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			TimelineElement element = getTimelineElement(convertView);
 
-			ListElement tweet = tweets.get(position);
+			ListElement tweet = (ListElement) tweets.get(position);
 			if (element.currentTweet == tweet) return element.getView();
 
 			element.getUsername().setText("@" + tweet.getUsername());

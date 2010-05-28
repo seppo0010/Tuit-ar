@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.tuit.ar.R;
-import com.tuit.ar.activities.Timeline;
 import com.tuit.ar.api.Twitter;
 
-public class Replies extends Timeline {
+public class Replies extends com.tuit.ar.activities.timeline.Status {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,7 +23,7 @@ public class Replies extends Timeline {
 		return true;  
 	}  
 
-	protected com.tuit.ar.models.Timeline getTimeline() {
+	protected com.tuit.ar.models.timeline.Status getTimeline() {
 		return com.tuit.ar.models.timeline.Replies.getInstance(Twitter.getInstance().getDefaultAccount());
 	}
 }

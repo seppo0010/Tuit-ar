@@ -6,9 +6,8 @@ import java.util.HashMap;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.Status;
-import com.tuit.ar.models.Timeline;
 
-public class Friends extends Timeline {
+public class Friends extends com.tuit.ar.models.timeline.Status {
 	static private HashMap<TwitterAccount, Friends> instances = new HashMap<TwitterAccount, Friends>();
 	protected ArrayList<Status> tweets = new ArrayList<Status>(); 
 
@@ -25,7 +24,7 @@ public class Friends extends Timeline {
 		return Options.FRIENDS_TIMELINE;
 	}
 
-	public static Timeline getInstance(TwitterAccount account) {
+	public static com.tuit.ar.models.timeline.Status getInstance(TwitterAccount account) {
 		if (instances.containsKey(account) == false) instances.put(account, new Friends(account));
 		return instances.get(account);
 	}

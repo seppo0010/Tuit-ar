@@ -1,16 +1,19 @@
 package com.tuit.ar.models;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.tuit.ar.databases.Model;
+
 import android.content.ContentValues;
 
 public class DirectMessage extends ListElement {
 	private static final String[] columns = new String[]{
-		"sender_id", "date", "text", "belongs_to_user"
+		"id", "sender_id", "date", "text", "belongs_to_user"
 	};
 
 	private JSONObject dataSourceJSON;
@@ -19,6 +22,7 @@ public class DirectMessage extends ListElement {
 	private long dateMillis = 0;
 	private String text = null;
 	private long belongs_to_user;
+	private long id;
 
 	public DirectMessage(JSONObject jsonObject) {
 		super();
@@ -36,6 +40,19 @@ public class DirectMessage extends ListElement {
 
 	public void setSender(User sender) {
 		this.sender = sender;
+	}
+
+	public long getId() {
+		if (id != 0) return id;
+		try {
+			return id = dataSourceJSON.getLong("id");
+		} catch (JSONException e) {
+			return 0;
+		}
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getText() {
@@ -82,10 +99,11 @@ public class DirectMessage extends ListElement {
 	@Override
 	protected ContentValues getValues() {
 		ContentValues fields = new ContentValues();
-		fields.put(columns[0], getSender().getId());
-		fields.put(columns[1], getDateMillis() / 1000);
-		fields.put(columns[2], getText());
-		fields.put(columns[3], getBelongsToUser());
+		fields.put(columns[0], getId());
+		fields.put(columns[1], getSender().getId());
+		fields.put(columns[2], getDateMillis() / 1000);
+		fields.put(columns[3], getText());
+		fields.put(columns[4], getBelongsToUser());
 		return fields;
 	}
 
@@ -97,5 +115,10 @@ public class DirectMessage extends ListElement {
 	@Override
 	public String getDisplayDate() {
 		return calculateElapsed(getDateMillis());
+	}
+
+	@SuppressWarnings("unchecked")
+	static public ArrayList<DirectMessage> select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+		return (ArrayList<DirectMessage>)Model.select(DirectMessage.class, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
 	}
 }
