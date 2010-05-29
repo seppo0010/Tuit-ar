@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:orientation="vertical">
+	<TextView android:id="@+id/toUser"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" />
+	<EditText android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:hint="@+string/newDirectMessage"
+		android:id="@+id/tweetMessage" android:lines="2" android:layout_below="@+id/toUser"></EditText>
+	<Button android:text="@+string/send" android:id="@+id/send"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_below="@+id/tweetMessage"></Button>
+	<TextView android:id="@+id/charCount" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@+id/tweetMessage"
+		android:layout_alignParentRight="true" android:paddingRight="10sp" android:text="140" />
+</RelativeLayout>

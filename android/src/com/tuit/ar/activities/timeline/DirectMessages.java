@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
+import com.tuit.ar.activities.NewDirectMessage;
 import com.tuit.ar.activities.Timeline;
 import com.tuit.ar.api.Twitter;
 
@@ -64,13 +66,9 @@ public class DirectMessages extends Timeline {
 						switch (which) {
 						case DM_MENU_NEW_DIRECT_MESSAGE:
 						{
-							// TODO: implement me
-							/*
-							Intent intent = new Intent(getApplicationContext(), NewTweet.class);
-							intent.putExtra("reply_to_id", tweet.getId());
-							intent.putExtra("reply_to_username", tweet.getUsername());
-							intent.putExtra("default_text", "@" + tweet.getUsername() + " ");
-							startActivity(intent);*/
+							Intent intent = new Intent(getApplicationContext(), NewDirectMessage.class);
+							intent.putExtra("to_user", tweet.getUsername());
+							startActivity(intent);
 							break;
 						}
 						case DM_MENU_DELETE:

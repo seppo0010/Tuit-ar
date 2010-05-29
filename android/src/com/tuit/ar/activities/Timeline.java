@@ -37,6 +37,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MENU_REPLIES = 3;
 	protected static final int MENU_DIRECT = 4;
 	protected static final int MENU_PREFERENCES = 5;
+	protected static final int MENU_NEW_DIRECT_MESSAGE = 6;
 	
 	protected TimelineAdapter<? extends ListElement> timelineAdapter;
 	protected boolean isVisible;
@@ -105,6 +106,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	    case MENU_PREFERENCES:
 	    {
 			Intent intent = new Intent(this.getApplicationContext(), Preferences.class);
+			this.startActivity(intent);		
+	        return true;
+	    }
+	    case MENU_NEW_DIRECT_MESSAGE:
+	    {
+			Intent intent = new Intent(this.getApplicationContext(), NewDirectMessage.class);
 			this.startActivity(intent);		
 	        return true;
 	    }

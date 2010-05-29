@@ -37,6 +37,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return true;
 		}
+	}, SEND_DIRECT_MESSAGE {
+		public String toString() {
+			return "direct_messages/new";
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
 	}, DELETE_DIRECT_MESSAGE {
 		public String toString() {
 			return "direct_messages/destroy";
