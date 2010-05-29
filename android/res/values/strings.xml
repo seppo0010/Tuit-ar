@@ -8,6 +8,7 @@
 <string name="password">Contraseña</string>
 <string name="unableToFetchTimeline">No se pudieron leer los mensajes</string>
 <string name="newAccount">Nueva Cuenta</string>
+<string name="newDirectMessage">Nuevo Mensaje Directo</string>
 <string name="newTweet">Nuevo Mensaje</string>
 <string name="refresh">Actualizar</string>
 <string name="friends">Amigos</string>

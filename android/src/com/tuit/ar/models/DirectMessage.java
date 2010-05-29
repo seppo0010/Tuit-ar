@@ -173,6 +173,10 @@ public class DirectMessage extends ListElement implements TwitterAccountRequests
 		}
 	}
 
+	public int delete() {
+		return db.delete("directmessage", "id = ? AND belongs_to_user = ?", new String[] {String.valueOf(getId()), String.valueOf(getBelongsToUser())});
+	}
+
 	public void requestHasStarted(TwitterRequest request) {
 	}
 

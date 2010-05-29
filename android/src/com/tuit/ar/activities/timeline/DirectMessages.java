@@ -12,15 +12,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tuit.ar.R;
-import com.tuit.ar.activities.Profile;
 import com.tuit.ar.activities.Timeline;
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.models.User;
 
 public class DirectMessages extends Timeline {
 	ArrayList<com.tuit.ar.models.DirectMessage> tweets;
 
-	protected static final int DM_MENU_REPLY = 0;
+	protected static final int DM_MENU_NEW_DIRECT_MESSAGE = 0;
 	protected static final int DM_MENU_DELETE = 1;
 	protected static final int DM_MENU_SHOW_PROFILE = 2;
 	protected static final int DM_MENU_OPEN_LINKS = 3;
@@ -35,7 +33,7 @@ public class DirectMessages extends Timeline {
 
 	@Override  
 	public boolean onCreateOptionsMenu(Menu menu) {  
-		menu.add(0, MENU_NEW_TWEET, 0, R.string.newTweet);  
+		menu.add(0, MENU_NEW_DIRECT_MESSAGE, 0, R.string.newDirectMessage);  
 		menu.add(0, MENU_REFRESH, 0, R.string.refresh);  
 		menu.add(0, MENU_FRIENDS, 0, R.string.friends);  
 		menu.add(0, MENU_REPLIES, 0, R.string.replies);  
@@ -58,14 +56,13 @@ public class DirectMessages extends Timeline {
 
 	protected void onListItemClick (ListView l, View v, int position, long id) {
 		final com.tuit.ar.models.DirectMessage tweet = (com.tuit.ar.models.DirectMessage) tweets.get(position);
-		// FIXME: use user id instead of username!
 		new AlertDialog.Builder(this).
 		setTitle(getString(R.string.executeAction)).
 		setItems(R.array.dmOptions,
 				new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
-						case DM_MENU_REPLY:
+						case DM_MENU_NEW_DIRECT_MESSAGE:
 						{
 							// TODO: implement me
 							/*
@@ -78,8 +75,7 @@ public class DirectMessages extends Timeline {
 						}
 						case DM_MENU_DELETE:
 						{
-							final User user = tweet.getSender();
-					        new AlertDialog.Builder(DirectMessages.this)
+							new AlertDialog.Builder(DirectMessages.this)
 					        .setMessage(R.string.confirmDeleteDm)
 					        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 					            public void onClick(DialogInterface dialog, int which) {
