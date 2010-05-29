@@ -131,7 +131,6 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 
 	protected void following() {
         new AlertDialog.Builder(this)
-        .setIcon(android.R.drawable.ic_dialog_alert)
         .setMessage(user.isFollowing() ? R.string.confirmUnfollow : R.string.confirmFollow)
         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
