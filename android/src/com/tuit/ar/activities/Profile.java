@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -23,6 +25,8 @@ import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.User;
 
 public class Profile extends Activity implements AvatarObserver, TwitterAccountRequestsObserver {
+	protected static final int MENU_VIEW_TIMELINE = 0;
+
 	private ImageView avatar;
 	private TextView nickname;
 	private TextView fullname;
@@ -166,5 +170,23 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	}
 
 	public void requestHasStarted(TwitterRequest request) {
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, MENU_VIEW_TIMELINE, 0, R.string.viewTimeline);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {  
+	    switch (item.getItemId()) {  
+	    case MENU_VIEW_TIMELINE:
+	    {
+	    	com.tuit.ar.activities.timeline.User.setUser(user);
+	        Intent intent = new Intent(this.getApplicationContext(), com.tuit.ar.activities.timeline.User.class);
+	        this.startActivity(intent);
+	        return true;
+	    }
+	    }
+	    return false;
 	}
 }

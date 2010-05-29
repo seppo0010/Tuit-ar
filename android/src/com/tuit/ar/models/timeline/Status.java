@@ -30,9 +30,12 @@ abstract public class Status extends Timeline {
 					//is_home INTEGER, is_reply INTEGER, belongs_to_user
 					tweet.setBelongsToUser(account.getUser().getId());
 					// FIXME: some kind of way to recognize this with more abstraction?
-					tweet.setHome(request.getUrl().equals(Options.FRIENDS_TIMELINE));
-					tweet.setReply(request.getUrl().equals(Options.REPLIES_TIMELINE));
-					tweet.replace();
+					if (request.getUrl().equals(Options.FRIENDS_TIMELINE) || request.getUrl().equals(Options.REPLIES_TIMELINE)) {
+						tweet.setHome(request.getUrl().equals(Options.FRIENDS_TIMELINE));
+						tweet.setReply(request.getUrl().equals(Options.REPLIES_TIMELINE));
+						tweet.replace();
+					}
+
 					if (i == 0)
 						newestTweet = tweet.getId();
 					this.tweets.add(0, tweet);

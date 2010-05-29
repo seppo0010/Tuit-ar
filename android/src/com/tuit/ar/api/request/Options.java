@@ -28,6 +28,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return true;
 		}
+	}, USER_TIMELINE {
+		public String toString() {
+			return "statuses/user_timeline";
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return true;
+		}
 	}, DIRECT_MESSAGES {
 		public String toString() {
 			return "direct_messages";

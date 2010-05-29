@@ -84,13 +84,17 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		requestsObservers.remove(observer);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void startedRequest(TwitterRequest twitterRequest) {
+		ArrayList<TwitterAccountRequestsObserver> requestsObservers = (ArrayList<TwitterAccountRequestsObserver>) this.requestsObservers.clone();
 		for (TwitterAccountRequestsObserver observer : requestsObservers) {
 			observer.requestHasStarted(twitterRequest);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void finishedRequest(TwitterRequest twitterRequest) {
+		ArrayList<TwitterAccountRequestsObserver> requestsObservers = (ArrayList<TwitterAccountRequestsObserver>)this.requestsObservers.clone();
 		for (TwitterAccountRequestsObserver  observer : requestsObservers) {
 			observer.requestHasFinished(twitterRequest);
 		}
