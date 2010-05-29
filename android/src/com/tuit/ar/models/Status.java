@@ -19,6 +19,7 @@ import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
+import com.tuit.ar.models.timeline.Favorites;
 
 public class Status extends ListElement implements TwitterAccountRequestsObserver {
 	private static final String[] columns = new String[]{
@@ -323,6 +324,7 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 		account.addRequestObserver(this);
 		if (this.isHome()) com.tuit.ar.models.timeline.Friends.getInstance(account).startedUpdate();
 		if (this.isReply()) com.tuit.ar.models.timeline.Replies.getInstance(account).startedUpdate();
+		com.tuit.ar.models.timeline.Favorites.getInstance(account).startedUpdate();
 
 		try {
 			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
@@ -333,13 +335,20 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 
 	public void requestHasFinished(TwitterRequest request) {
 		if (request.getUrl().equals(Options.ADD_TO_FAVORITES) || request.getUrl().equals(Options.REMOVE_FROM_FAVORITES)) {
-			if (request.getUrl().equals(Options.ADD_TO_FAVORITES)) this.setFavorited(true);
-			else this.setFavorited(false);
-			this.replace();
 			TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+			com.tuit.ar.models.timeline.Favorites f = (com.tuit.ar.models.timeline.Favorites) com.tuit.ar.models.timeline.Favorites.getInstance(account);
+			if (request.getUrl().equals(Options.ADD_TO_FAVORITES)) {
+				this.setFavorited(true);
+				f.getTweets().add(this);
+			} else {
+				this.setFavorited(false);
+				f.getTweets().remove(this);
+			}
+			this.replace();
 			account.removeRequestObserver(this);
 			if (this.isHome()) com.tuit.ar.models.timeline.Friends.getInstance(account).finishedUpdate();
 			if (this.isReply()) com.tuit.ar.models.timeline.Replies.getInstance(account).finishedUpdate();
+			com.tuit.ar.models.timeline.Favorites.getInstance(account).finishedUpdate();
 		}
 	}
 

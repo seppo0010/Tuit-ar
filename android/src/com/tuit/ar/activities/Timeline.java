@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.tuit.ar.R;
 import com.tuit.ar.activities.timeline.DirectMessages;
+import com.tuit.ar.activities.timeline.Favorites;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.models.ListElement;
@@ -38,6 +39,8 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MENU_DIRECT = 4;
 	protected static final int MENU_PREFERENCES = 5;
 	protected static final int MENU_NEW_DIRECT_MESSAGE = 6;
+	protected static final int MENU_FAVORITES = 7;
+
 	
 	protected TimelineAdapter<? extends ListElement> timelineAdapter;
 	protected boolean isVisible;
@@ -94,6 +97,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	    case MENU_NEW_TWEET:
 	    {
 	    	Intent intent = new Intent(this.getApplicationContext(), NewTweet.class);
+	    	this.startActivity(intent);		
+	    	return true;
+	    }
+	    case MENU_FAVORITES:
+	    {
+	    	Intent intent = new Intent(this.getApplicationContext(), Favorites.class);
 	    	this.startActivity(intent);		
 	    	return true;
 	    }

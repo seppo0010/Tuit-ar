@@ -28,6 +28,7 @@ abstract public class Status extends Timeline {
 	protected static final int MY_TWEET_MENU_SHARE = 2;
 	protected static final int MY_TWEET_MENU_SHOW_PROFILE = 3;
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 4;
+	protected static final int MY_TWEET_MENU_ADD_TO_FAVORITES = 5;
 
 	ArrayList<com.tuit.ar.models.Status> tweets;
 
@@ -91,6 +92,11 @@ abstract public class Status extends Timeline {
 						{
 							openLinksInBrowser(tweet);
 							break;
+						}
+						case MY_TWEET_MENU_ADD_TO_FAVORITES:
+						{
+							if (tweet.isFavorited()) tweet.removeFromFavorites();
+							else tweet.addToFavorites();
 						}
 						}
 					}

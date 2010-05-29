@@ -14,6 +14,7 @@
 <string name="friends">Amigos</string>
 <string name="replies">Respuestas</string>
 <string name="directMessages">Mensajes Directos</string>
+<string name="favorites">Favoritos</string>
 <string name="preferences">Preferencias</string>
 <string name="send">Enviar</string>
 <string name="messageSent">Mensaje Enviado</string>

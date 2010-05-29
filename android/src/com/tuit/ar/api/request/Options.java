@@ -42,6 +42,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return true;
 		}
+	}, FAVORITES_TIMELINE {
+		public String toString() {
+			return "favorites";
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return true;
+		}
 	}, DIRECT_MESSAGES {
 		public String toString() {
 			return "direct_messages";
