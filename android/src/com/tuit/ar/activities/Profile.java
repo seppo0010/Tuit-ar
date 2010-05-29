@@ -34,6 +34,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private TextView location;
 	private TextView locationLabel;
 	private Button seeInMap;
+	private Button sendDm;
 	private Button url;
 
 	private User user = null;
@@ -75,6 +76,14 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			}
 		});
 
+		sendDm = (Button)findViewById(R.id.send_dm);
+		sendDm.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				Intent intent = new Intent(getApplicationContext(), NewDirectMessage.class);
+				intent.putExtra("to_user", user.getScreenName());
+				startActivity(intent);
+			}
+		});
 		seeInMap = (Button)findViewById(R.id.see_in_map);
 		seeInMap.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

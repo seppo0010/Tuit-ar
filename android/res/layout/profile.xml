@@ -52,7 +52,10 @@
 		android:layout_toRightOf="@+id/location_label" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/location"
 		android:layout_marginTop="4px" />
+	<Button android:id="@+id/send_dm" android:layout_width="wrap_content"
+		android:text="@+string/send_dm" android:layout_height="wrap_content"
+		android:layout_below="@+id/location_label" />
 	<Button android:id="@+id/see_in_map" android:layout_width="wrap_content"
 		android:text="@+string/see_in_map" android:layout_height="wrap_content"
-		android:layout_below="@+id/location_label" />
+		android:layout_below="@+id/location_label" android:layout_toRightOf="@+id/send_dm" />
 </RelativeLayout>

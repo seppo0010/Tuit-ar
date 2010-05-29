@@ -52,6 +52,8 @@
 <string-array name="updateIntervalsValues"><item>1</item>
 <item>5</item>
 </string-array>
+<string name="toUserSelect">Seleccione destinatario</string>
+<string name="send_dm">Enviar mensaje directo</string>
 <string name="shareSubject">Tweet de %s</string>
 <string name="shareChooserTitle">Elija aplicación</string>
 <string name="noURLFound">No se ha encontrado URL</string>

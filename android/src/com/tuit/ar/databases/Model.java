@@ -40,7 +40,14 @@ public abstract class Model {
 	@SuppressWarnings("unchecked")
 	static protected ArrayList<? extends Model> select(Class<? extends Model> modelClass, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
 		ArrayList<Model> models = new ArrayList<Model>();
-		Cursor cursor = db.query(modelClass.getSimpleName().toLowerCase(), columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+		Cursor cursor = null;
+		try {
+			cursor = db.query(modelClass.getSimpleName().toLowerCase(), columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 		try {
 			for (int i = 0; i < cursor.getCount(); i++) {
 				cursor.moveToPosition(i);
