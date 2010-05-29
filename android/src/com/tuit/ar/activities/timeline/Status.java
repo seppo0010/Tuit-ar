@@ -21,6 +21,7 @@ abstract public class Status extends Timeline {
 	protected static final int TWEET_MENU_SHARE = 2;
 	protected static final int TWEET_MENU_SHOW_PROFILE = 3;
 	protected static final int TWEET_MENU_OPEN_LINKS = 4;
+	protected static final int TWEET_MENU_ADD_TO_FAVORITES = 5;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
@@ -51,14 +52,24 @@ abstract public class Status extends Timeline {
 		final com.tuit.ar.models.Status tweet = (com.tuit.ar.models.Status) tweets.get(position);
 		// FIXME: use user id instead of username!
 		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
+	
+		CharSequence[] options = getResources().getTextArray(mine ? R.array.myTweetOptions : R.array.tweetOptions);
+		ArrayList<CharSequence> opts = new ArrayList<CharSequence>(options.length);
+		for (int i = 0; i < options.length; i++) {
+			if (i == TWEET_MENU_ADD_TO_FAVORITES && tweet.isFavorited())
+				opts.add(getString(R.string.removeFromFavorites));
+			else
+				opts.add(options[i]);
+		}
+
 		new AlertDialog.Builder(this).
 		setTitle(getString(R.string.executeAction)).
-		setItems(mine ? R.array.myTweetOptions : R.array.tweetOptions, mine ?
+		setItems(opts.toArray(new CharSequence[]{}), mine ?
 				new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case MY_TWEET_MENU_REPLY:
-						{
+						{	
 							Intent intent = new Intent(getApplicationContext(), NewTweet.class);
 							intent.putExtra("reply_to_id", tweet.getId());
 							intent.putExtra("reply_to_username", tweet.getUsername());
@@ -119,6 +130,11 @@ abstract public class Status extends Timeline {
 				{
 					openLinksInBrowser(tweet);
 					break;
+				}
+				case TWEET_MENU_ADD_TO_FAVORITES:
+				{
+					if (tweet.isFavorited()) tweet.removeFromFavorites();
+					else tweet.addToFavorites();
 				}
 				}
 			}

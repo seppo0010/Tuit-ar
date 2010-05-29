@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,9 +13,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 
+import com.tuit.ar.api.Twitter;
+import com.tuit.ar.api.TwitterAccount;
+import com.tuit.ar.api.TwitterAccountRequestsObserver;
+import com.tuit.ar.api.TwitterRequest;
+import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
 
-public class Status extends ListElement {
+public class Status extends ListElement implements TwitterAccountRequestsObserver {
 	private static final String[] columns = new String[]{
 			"date", "favorited", "id", "in_reply_to_screen_name", "in_reply_to_status_id", "in_reply_to_user_id", "message", "source", "user_id", "is_home", "is_reply", "belongs_to_user"
 		};
@@ -71,7 +78,7 @@ public class Status extends ListElement {
 	public boolean isFavorited() {
 		if (favorited != false) return favorited;
 		try {
-			return favorited = dataSourceJSON.getBoolean("text");
+			return favorited = dataSourceJSON.getBoolean("favorited");
 		} catch (Exception e) {
 			return false;
 		}
@@ -286,5 +293,56 @@ public class Status extends ListElement {
 	@Override
 	public String getDisplayDate() {
 		return calculateElapsed(getDateMillis());
+	}
+
+	public void addToFavorites() {
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair> ();
+		nvps.add(new BasicNameValuePair("id", String.valueOf(getId())));
+		Options option = Options.ADD_TO_FAVORITES;
+		option.setParameters(nvps);
+
+		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+		account.addRequestObserver(this);
+		if (this.isHome()) com.tuit.ar.models.timeline.Friends.getInstance(account).startedUpdate();
+		if (this.isReply()) com.tuit.ar.models.timeline.Replies.getInstance(account).startedUpdate();
+		
+		try {
+			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeFromFavorites() {
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair> ();
+		nvps.add(new BasicNameValuePair("id", String.valueOf(getId())));
+		Options option = Options.REMOVE_FROM_FAVORITES;
+		option.setParameters(nvps);
+
+		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+		account.addRequestObserver(this);
+		if (this.isHome()) com.tuit.ar.models.timeline.Friends.getInstance(account).startedUpdate();
+		if (this.isReply()) com.tuit.ar.models.timeline.Replies.getInstance(account).startedUpdate();
+
+		try {
+			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void requestHasFinished(TwitterRequest request) {
+		if (request.getUrl().equals(Options.ADD_TO_FAVORITES) || request.getUrl().equals(Options.REMOVE_FROM_FAVORITES)) {
+			if (request.getUrl().equals(Options.ADD_TO_FAVORITES)) this.setFavorited(true);
+			else this.setFavorited(false);
+			this.replace();
+			TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+			account.removeRequestObserver(this);
+			if (this.isHome()) com.tuit.ar.models.timeline.Friends.getInstance(account).finishedUpdate();
+			if (this.isReply()) com.tuit.ar.models.timeline.Replies.getInstance(account).finishedUpdate();
+		}
+	}
+
+	public void requestHasStarted(TwitterRequest request) {
 	}
 }

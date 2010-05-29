@@ -1,5 +1,10 @@
 package com.tuit.ar.api.request;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.apache.http.NameValuePair;
+
 public enum Options {
 	LOGIN {
 		public String toString() {
@@ -82,6 +87,24 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return false;
 		}
+	}, ADD_TO_FAVORITES {
+		public String toString() {
+			return "favorites/create/" + parameters.get("id");
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
+	}, REMOVE_FROM_FAVORITES {
+		public String toString() {
+			return "favorites/destroy/" + parameters.get("id");
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
 	}, FOLLOW {
 		public String toString() {
 			return "friendships/create";
@@ -101,5 +124,13 @@ public enum Options {
 			return false;
 		}
 	};
+	protected HashMap<String, String> parameters = null;
+
 	public abstract boolean mustBeUnique();
+	public void setParameters(ArrayList<NameValuePair> nvps) {
+		parameters = new HashMap<String, String>();
+		for (NameValuePair nvp : nvps) {
+			parameters.put(nvp.getName(), nvp.getValue());
+		}
+	}
 }

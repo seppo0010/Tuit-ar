@@ -29,7 +29,9 @@
 <item>Compartir</item>
 <item>Ver perfil</item>
 <item>Abrir páginas web</item>
+<item>Agregar a favoritos</item>
 </string-array>
+<string name="removeFromFavorites">Eliminar de Favoritos</string>
 <string-array name="myTweetOptions"><item>Responder</item>
 <item>Borrar</item>
 <item>Compartir</item>
