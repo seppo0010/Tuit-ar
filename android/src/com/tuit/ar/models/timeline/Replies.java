@@ -1,6 +1,5 @@
 package com.tuit.ar.models.timeline;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.tuit.ar.api.TwitterAccount;
@@ -9,7 +8,6 @@ import com.tuit.ar.models.Status;
 
 public class Replies extends com.tuit.ar.models.timeline.Status {
 	static private HashMap<TwitterAccount, Replies> instances = new HashMap<TwitterAccount, Replies>(); 
-	protected ArrayList<Status> tweets = new ArrayList<Status>(); 
 
 	protected Replies(TwitterAccount account) {
 		super(account);
