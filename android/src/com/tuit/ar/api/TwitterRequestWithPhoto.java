@@ -23,7 +23,7 @@ public class TwitterRequestWithPhoto extends TwitterRequest {
 	private String message;
 
 	public TwitterRequestWithPhoto(TwitterAccount account, File photo, String message) throws Exception {
-		super(account, null, null, Method.POST);
+		super(account, Options.POST_TWEET_WITH_PHOTO, null, Method.POST);
 		consumer = account.getConsumer();
 		this.photo = photo;
 		this.message = message;
@@ -32,10 +32,10 @@ public class TwitterRequestWithPhoto extends TwitterRequest {
 
 	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
 		if (consumer == null) return;
-		this.setUrl(Options.POST_TWEET_WITH_PHOTO);
 		(new Thread() {
 			public void run() {
-				upload(photo, message);
+				ConcreteTweetPhotoResponse response = upload(photo, message);
+				setStatusCode(response.m_status.equals("OK") ? 200 : 400);
 				handler.post(runnable);
 			}
 		}).start();

@@ -11,7 +11,7 @@ public class ConcreteTweetPhotoResponse {
 	long	m_photoId;
 	String	m_sessionKeyResponse;
 	String	m_thumbnail;
-	String	m_status;
+	public String	m_status;
 	long	m_userId;
 
 	public String describe()
