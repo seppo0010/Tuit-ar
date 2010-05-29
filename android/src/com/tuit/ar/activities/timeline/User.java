@@ -7,8 +7,6 @@ import android.view.MenuItem;
 
 import com.tuit.ar.R;
 import com.tuit.ar.activities.NewDirectMessage;
-import com.tuit.ar.activities.NewTweet;
-import com.tuit.ar.activities.Preferences;
 import com.tuit.ar.api.Twitter;
 
 public class User extends Status {
