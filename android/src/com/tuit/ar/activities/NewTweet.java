@@ -22,8 +22,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.tuit.ar.R;
 import com.tuit.ar.api.Twitter;
@@ -39,8 +42,20 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	private String replyToTweetId;
 	private EditText messageField;
 	private TextView charCount;
+	private SeekBar imageSize;
 
 	private File photo;
+
+	private Bitmap bm = null;
+
+	private ImageView preview = null;
+	private int imageWidth = 0;
+	private int imageHeight = 0;
+	private float scale = 1.0F;
+	private TextView imageSizeWidth;
+	private TextView imageSizeHeight;
+	private TextView imageSizeMb;
+	static private final int MAX_PROGRESS = 10000;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,7 +70,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		String replyToUser = intent.getStringExtra("reply_to_username");
 		if (replyToUser != null) {
 			TextView username = (TextView)findViewById(R.id.replyToUsername);
-			username.setText("In reply to: @" + replyToUser);
+			username.setText(getString(R.string.inReplyTo).replace(replyToUser, "%s"));
 		}
 		String defaultMessage = intent.getStringExtra("default_text"); 
 		messageField = (EditText) findViewById(R.id.tweetMessage);
@@ -71,6 +86,43 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 				return false;
 			}
 		});
+
+		imageSize = (SeekBar) findViewById(R.id.imageSize);
+		imageSize.setMax(MAX_PROGRESS);
+		imageSize.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			public void onStopTrackingTouch(SeekBar arg0) {
+				updateImageSizeKb();
+			}
+			
+			public void onStartTrackingTouch(SeekBar arg0) {
+			}
+			
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				scale = (float)progress / MAX_PROGRESS;
+				imageSizeWidth.setText(getString(R.string.width) + " " + String.valueOf(Math.round(scale * imageWidth)) + "px");
+				imageSizeHeight.setText(getString(R.string.height) + " " + String.valueOf(Math.round(scale * imageHeight)) + "px");
+				imageSizeMb.setText(getString(R.string.loading));
+			}
+		});
+		imageSizeHeight = (TextView) findViewById(R.id.imageSizeHeight);
+		imageSizeWidth = (TextView) findViewById(R.id.imageSizeWidth);
+		imageSizeMb = (TextView) findViewById(R.id.imageSizeMb);
+		preview = (ImageView)findViewById(R.id.preview);
+		imageSizeMb.setText("");
+
+		imageSize.setVisibility(View.INVISIBLE);
+		imageSizeHeight.setVisibility(View.INVISIBLE);
+		imageSizeWidth.setVisibility(View.INVISIBLE);
+	}
+
+	protected void updateImageSizeKb() {
+		imageSizeMb.setText(getString(R.string.loading));
+		try {
+			createImage();
+			imageSizeMb.setText((photo.length() / 1024) + "KB");
+		} catch (Exception e) {
+			
+		}
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,16 +145,15 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		super.onActivityResult(requestCode, resultCode, data);
 		try {
 			if (resultCode == Activity.RESULT_OK) {
-				FileOutputStream fos;
-				// FIXME: not using temporary files?
-				fos = super.openFileOutput("upload.jpg", MODE_WORLD_READABLE);
-				Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-				bm.compress(CompressFormat.JPEG, 75, fos);
-
-				fos.flush();
-				fos.close();
-
-				photo = new File("/data/data/com.tuit.ar/files", "upload.jpg");
+				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+				preview.setImageBitmap(bm);
+				imageWidth = bm.getWidth();
+				imageHeight = bm.getHeight();
+				imageSize.setVisibility(View.VISIBLE);
+				imageSizeHeight.setVisibility(View.VISIBLE);
+				imageSizeWidth.setVisibility(View.VISIBLE);
+				imageSize.setProgress(MAX_PROGRESS);
+				updateImageSizeKb();
 			}
 		} catch (Exception e) {
 			Toast.makeText(this, getString(R.string.unableToUpload), Toast.LENGTH_LONG).show();
@@ -113,10 +164,28 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		charCount.setText(String.valueOf(MAX_CHARS - messageField.getText().toString().length()));
 	}
 
+	protected void createImage() throws Exception {
+		FileOutputStream fos;
+		// FIXME: not using temporary files?
+		fos = super.openFileOutput("upload.jpg", MODE_WORLD_READABLE);
+		Bitmap bm;
+		if (scale < 1.0)
+			bm = Bitmap.createScaledBitmap(this.bm, Math.round(scale * imageWidth), Math.round(scale * imageHeight), true);
+		else
+			bm = this.bm;
+		bm.compress(CompressFormat.JPEG, 75, fos);
+
+		fos.flush();
+		fos.close();
+
+		photo = new File("/data/data/com.tuit.ar/files", "upload.jpg");
+	}
+
 	public void onClick(View v) {
 		String message = messageField.getText().toString();
 		try {
-			if (photo != null) {
+			if (this.bm != null) {
+				createImage();
 				Twitter.getInstance().getDefaultAccount().upload(photo, message);
 			} else {
 				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();

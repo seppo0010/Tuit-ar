@@ -14,4 +14,19 @@
 	<TextView android:id="@+id/charCount" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_below="@+id/tweetMessage"
 		android:layout_alignParentRight="true" android:paddingRight="10sp" android:text="140" />
+	<SeekBar android:id="@+id/imageSize" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_below="@+id/send" 
+		android:layout_marginRight="3sp" android:layout_marginLeft="3sp" />
+	<ImageView android:id="@+id/preview" android:layout_below="@+id/imageSize"
+		android:layout_width="48sp" android:layout_height="48sp"
+		android:layout_marginRight="6sp" android:layout_marginLeft="3sp" />
+	<TextView android:id="@+id/imageSizeWidth"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@+id/imageSize" android:layout_toRightOf="@+id/preview" />
+	<TextView android:id="@+id/imageSizeHeight"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@+id/imageSizeWidth" android:layout_toRightOf="@+id/preview" />
+	<TextView android:id="@+id/imageSizeMb"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@+id/imageSizeHeight" android:layout_toRightOf="@+id/preview" />
 </RelativeLayout>
