@@ -19,7 +19,6 @@ import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
-import com.tuit.ar.models.timeline.Favorites;
 
 public class Status extends ListElement implements TwitterAccountRequestsObserver {
 	private static final String[] columns = new String[]{
