@@ -1,8 +1,14 @@
 package com.tuit.ar.activities.timeline;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tuit.ar.R;
+import com.tuit.ar.activities.NewDirectMessage;
+import com.tuit.ar.activities.NewTweet;
+import com.tuit.ar.activities.Preferences;
 import com.tuit.ar.api.Twitter;
 
 public class User extends Status {
@@ -23,14 +29,20 @@ public class User extends Status {
 		return new com.tuit.ar.models.timeline.User(Twitter.getInstance().getDefaultAccount(), user);
 	}
 
+	@Override  
+	public boolean onCreateOptionsMenu(Menu menu) {  
+		menu.add(0, MENU_REFRESH, 0, R.string.refresh);  
+		menu.add(0, MENU_NEW_DIRECT_MESSAGE, 0, R.string.newDirectMessage);
+		return true;  
+	}  
+
 	public boolean onOptionsItemSelected(MenuItem item) {  
-	    switch (item.getItemId()) {  
-	    case MENU_REFRESH:
-	    {
-	        refresh();
+	    if (item.getItemId() == MENU_NEW_DIRECT_MESSAGE) {
+			Intent intent = new Intent(this.getApplicationContext(), NewDirectMessage.class);
+			intent.putExtra("to_user", user.getScreenName());
+			this.startActivity(intent);		
 	        return true;
 	    }
-	    }
-	    return false;
+	    return super.onOptionsItemSelected(item);
 	}
 }
