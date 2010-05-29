@@ -35,7 +35,7 @@ public enum Options {
 
 		@Override
 		public boolean mustBeUnique() {
-			return false;
+			return true;
 		}
 	}, POST_TWEET {
 		public String toString() {

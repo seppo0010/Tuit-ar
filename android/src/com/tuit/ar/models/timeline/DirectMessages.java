@@ -45,6 +45,8 @@ public class DirectMessages extends Timeline {
 					DirectMessage tweet = new DirectMessage(tweets.getJSONObject(i));
 					tweet.setBelongsToUser(account.getUser().getId());
 					tweet.replace();
+					if (i == 0)
+						newestTweet = tweet.getId();
 					this.tweets.add(0, tweet);
 				}
 
