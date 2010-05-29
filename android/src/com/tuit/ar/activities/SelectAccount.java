@@ -83,7 +83,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 		TwitterAccount account = accounts.get(position);
 		twitter.setDefaultAccount(account);
 
-		Intent intent = new Intent(this, com.tuit.ar.activities.timeline.DirectMessages.class);
+		Intent intent = new Intent(this, com.tuit.ar.activities.timeline.Friends.class);
 		this.startActivity(intent);
 	}
 
