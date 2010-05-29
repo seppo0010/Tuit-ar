@@ -26,7 +26,6 @@ import com.tuit.ar.activities.timeline.DirectMessages;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.models.ListElement;
-import com.tuit.ar.models.Status;
 import com.tuit.ar.models.User;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
@@ -118,8 +117,8 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		startActivity(new Intent(getApplicationContext(), Profile.class));
 	}
 
-	protected void openLinksInBrowser(Status tweet) {
-		final String[] urls = parseUrls(tweet.getMessage());
+	protected void openLinksInBrowser(ListElement tweet) {
+		final String[] urls = parseUrls(tweet.getText());
 		if (urls.length == 0) {
 			Toast.makeText(this, getString(R.string.noURLFound), Toast.LENGTH_SHORT).show();
 		} else if (urls.length == 1) {

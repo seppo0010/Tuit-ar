@@ -7,13 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
 import com.tuit.ar.R;
 import com.tuit.ar.activities.NewTweet;
-import com.tuit.ar.activities.Preferences;
 import com.tuit.ar.activities.Timeline;
 import com.tuit.ar.api.Twitter;
 

@@ -35,6 +35,11 @@
 <item>Ver perfil</item>
 <item>Abrir páginas web</item>
 </string-array>
+<string-array name="dmOptions"><item>Responder</item>
+<item>Borrar</item>
+<item>Ver perfil</item>
+<item>Abrir páginas web</item>
+</string-array>
 <string-array name="updateIntervals"><item>1 minuto</item>
 <item>5 minutos</item>
 </string-array>
@@ -57,6 +62,7 @@
 <string name="notFollowing">No Siguiendo</string>
 <string name="confirmFollow">¿Está seguro que quiere seguirlo?</string>
 <string name="confirmUnfollow">¿Está seguro que quiere dejar de seguirlo?</string>
+<string name="confirmDeleteDm">¿Está seguro que desea eliminar este mensaje directo?</string>
 <string name="yes">Sí</string>
 <string name="no">No</string>
 <string name="following_label">Siguiendo: </string>
@@ -66,6 +72,7 @@
 <string name="see_in_map">Ver en Mapa</string>
 <string name="unableToShowMap">No se ha podido mostrar en mapa</string>
 <string name="unableToFollow">No se pudo seguir</string>
+<string name="unableToDeleteDm">No se pudo borrar mensaje directo</string>
 <string name="cache_onCreate">"CREATE TABLE status (date INTEGER, favorited NUMERIC, id INTEGER, in_reply_to_screen_name TEXT, in_reply_to_status_id INTEGER, in_reply_to_user_id INTEGER, message TEXT, source TEXT, user_id INTEGER, is_home INTEGER, is_reply INTEGER, belongs_to_user INTEGER, PRIMARY KEY (id, belongs_to_user) )
 CREATE TABLE user (description TEXT, followers_count INTEGER, following INTEGER, friends_count INTEGER, id INTEGER, location TEXT, name TEXT, profile_image_url TEXT, is_protected INTEGER, screen_name TEXT, statuses_count INTEGER, url TEXT, verified INTEGER, belongs_to_user INTEGER, PRIMARY KEY (id, belongs_to_user) )
 CREATE TABLE directmessage ( id INTEGER, sender_id INTEGER, date INTEGER, text TEXT, belongs_to_user INTEGER , PRIMARY KEY (id, belongs_to_user) )

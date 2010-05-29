@@ -4,14 +4,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.tuit.ar.api.Twitter;
+import com.tuit.ar.api.TwitterAccount;
+import com.tuit.ar.api.TwitterAccountRequestsObserver;
+import com.tuit.ar.api.TwitterRequest;
+import com.tuit.ar.api.TwitterRequest.Method;
+import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 
-public class DirectMessage extends ListElement {
+public class DirectMessage extends ListElement implements TwitterAccountRequestsObserver {
 	private static final String[] columns = new String[]{
 		"id", "sender_id", "date", "text", "belongs_to_user"
 	};
@@ -23,6 +33,22 @@ public class DirectMessage extends ListElement {
 	private String text = null;
 	private long belongs_to_user;
 	private long id;
+
+	protected TwitterRequest deleteRequest;
+
+	public DirectMessage(Cursor query) {
+		super();
+		setId(query.getLong(0));
+		setSenderId(query.getLong(1));
+		setDateMillis(query.getLong(2) * 1000);
+		setText(query.getString(3));
+		setBelongsToUser(query.getLong(4));
+	}
+
+	protected void setSenderId(long sender_id) {
+		ArrayList<User> searchUser = User.select("id = ?", new String[] { String.valueOf(sender_id) }, null, null, null, "1");
+		if (searchUser.size() > 0) sender = searchUser.get(0);
+	}
 
 	public DirectMessage(JSONObject jsonObject) {
 		super();
@@ -87,6 +113,10 @@ public class DirectMessage extends ListElement {
 		}
 	}
 
+	public void setDateMillis(long date) {
+		dateMillis = date;
+	}
+
 	public long getDateMillis() {
 		if (dateMillis == 0) {
 			Date date = this.getDate();
@@ -120,5 +150,39 @@ public class DirectMessage extends ListElement {
 	@SuppressWarnings("unchecked")
 	static public ArrayList<DirectMessage> select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
 		return (ArrayList<DirectMessage>)Model.select(DirectMessage.class, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+	}
+
+	public void deleteFromServer() throws Exception {
+		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+		account.addRequestObserver(this);
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("id", String.valueOf(getId())));
+		deleteRequest = account.requestUrl(Options.DELETE_DIRECT_MESSAGE, nvps, Method.POST);
+		com.tuit.ar.models.timeline.DirectMessages timeline = com.tuit.ar.models.timeline.DirectMessages.getInstance(Twitter.getInstance().getDefaultAccount());
+		timeline.startedUpdate();
+	}
+
+	public void requestHasFinished(TwitterRequest request) {
+		if (request == deleteRequest) {
+			com.tuit.ar.models.timeline.DirectMessages timeline = com.tuit.ar.models.timeline.DirectMessages.getInstance(Twitter.getInstance().getDefaultAccount());
+			timeline.deleteTweet(this);
+			timeline.finishedUpdate();
+			this.delete();
+			TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+			account.removeRequestObserver(this);
+		}
+	}
+
+	public void requestHasStarted(TwitterRequest request) {
+	}
+
+	public long replace() {
+		try {
+			User user = getSender();
+			user.setBelongsToUser(getBelongsToUser());
+			user.replace();
+		} catch (SQLiteException e) {}
+
+		return super.replace();
 	}
 }

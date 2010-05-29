@@ -68,4 +68,9 @@ public class DirectMessages extends Timeline {
 	public Collection<DirectMessage> getTweetsNewerThan(DirectMessage directMessage) {
 		return tweets.subList(0, tweets.indexOf(directMessage));
 	}
+
+	public void deleteTweet(DirectMessage directMessage) {
+		tweets.remove(directMessage);
+		timelineChanged();
+	}
 }

@@ -295,6 +295,8 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 			} else {
 				setFollowing(false);
 			}
+			TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+			account.removeRequestObserver(this);
 		}
 	}
 

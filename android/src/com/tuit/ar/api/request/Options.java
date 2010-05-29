@@ -37,6 +37,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return true;
 		}
+	}, DELETE_DIRECT_MESSAGE {
+		public String toString() {
+			return "direct_messages/destroy";
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
 	}, POST_TWEET {
 		public String toString() {
 			return "statuses/update";
