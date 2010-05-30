@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,10 @@ import com.tuit.ar.activities.timeline.DirectMessages;
 import com.tuit.ar.activities.timeline.Favorites;
 import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
+import com.tuit.ar.api.Avatar;
+import com.tuit.ar.api.AvatarObserver;
 import com.tuit.ar.models.ListElement;
+import com.tuit.ar.models.Settings;
 import com.tuit.ar.models.User;
 import com.tuit.ar.models.timeline.TimelineObserver;
 import com.tuit.ar.services.Updater;
@@ -203,6 +207,16 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			element.getUsername().setText("@" + tweet.getUsername());
 			element.getMessage().setText(tweet.getText());
 			element.getDate().setText(tweet.getDisplayDate());
+			if (Settings.getInstance().getSharedPreferences(Timeline.this).getBoolean(Settings.SHOW_AVATAR, Settings.SHOW_AVATAR_DEFAULT)) {
+				element.getAvatar().setVisibility(View.INVISIBLE);
+
+				Avatar avatar = new Avatar(tweet.getAvatarUrl());
+				avatar.addRequestObserver(element);
+				avatar.download();
+			} else {
+				element.getAvatar().setVisibility(View.GONE);
+			}
+
 			element.currentTweet = tweet;
 
 			return element.getView();
@@ -221,11 +235,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		}
 	}
 
-	protected class TimelineElement {
+	protected class TimelineElement implements AvatarObserver {
 		private View view;
 		private TextView username;
 		private TextView message;
 		private TextView date;
+		private ImageView avatar;
 		public ListElement currentTweet; 
 
 		public TimelineElement(View view) {
@@ -248,6 +263,22 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			else return date = (TextView)view.findViewById(R.id.date);
 		}
 
+		public ImageView getAvatar() {
+			if (avatar != null) return avatar;
+			else return avatar = (ImageView)view.findViewById(R.id.avatar);
+		}
+
 		public View getView() { return view; }
+
+		public void avatarHasFailed(Avatar avatar) {
+			getAvatar().setVisibility(View.GONE);
+			avatar.removeRequestObserver(this);
+		}
+
+		public void avatarHasFinished(Avatar avatar) {
+			getAvatar().setVisibility(View.VISIBLE);
+			getAvatar().setImageBitmap(avatar.getResponse());
+			avatar.removeRequestObserver(this);
+		}
 	}
 }

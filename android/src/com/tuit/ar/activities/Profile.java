@@ -135,11 +135,13 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 
 	public void avatarHasFailed(Avatar avatar) {
 		this.avatar.setVisibility(View.INVISIBLE);
+		avatar.removeRequestObserver(this);
 	}
 
 	public void avatarHasFinished(Avatar avatar) {
 		this.avatar.setImageBitmap(avatar.getResponse());
 		this.avatar.setVisibility(View.VISIBLE);
+		avatar.removeRequestObserver(this);
 	}
 
 	protected void following() {

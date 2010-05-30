@@ -8,6 +8,8 @@
 			android:entryValues="@array/updateIntervalsValues" />
 	</PreferenceCategory>
 	<PreferenceCategory>
+		<CheckBoxPreference android:title="@+string/showAvatar"
+			android:defaultValue="false" android:key="showAvatar" />
 		<com.tuit.ar.preferences.EditTextPreference
 			android:dialogTitle="@+string/filter" android:title="@+string/filter"
 			android:key="filter" android:summary="@+string/filterSummary"

@@ -19,6 +19,7 @@ public class Preferences extends PreferenceActivity {
 	CheckBoxPreference automaticUpdate;
 	EditTextPreference filter;
 	DialogPreference filterDelete;
+	CheckBoxPreference showAvatar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,10 @@ public class Preferences extends PreferenceActivity {
 				}
 			}
 		});
+
+		showAvatar = (CheckBoxPreference) findPreference(Settings.SHOW_AVATAR);
+		showAvatar.setPersistent(true);
+		showAvatar.setDefaultValue(Settings.SHOW_AVATAR_DEFAULT);
 	}
 
 	protected void updateSettings() {

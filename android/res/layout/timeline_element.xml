@@ -5,6 +5,11 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
 	android:paddingBottom="10sp">
+	<ImageView
+		android:id="@+id/avatar"
+		android:layout_height="48sp"
+		android:layout_width="48sp"
+		android:layout_margin="2sp" />
 	<TextView 
 		android:id="@+id/username"
 		android:text="username"
@@ -12,19 +17,22 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"
 		android:textColor="#fff"
-		android:textStyle="bold" />
+		android:textStyle="bold"
+		android:layout_toRightOf="@+id/avatar" />
 	<TextView 
 		android:id="@+id/message" 
 		android:text="text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/username"
-		android:textColor="#fff" />
+		android:textColor="#fff"
+		android:layout_toRightOf="@+id/avatar" />
 	<TextView 
 		android:id="@+id/date" 
 		android:text="date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/message"
-		android:textColor="#fff" />
+		android:textColor="#fff"
+		android:layout_toRightOf="@+id/avatar" />
 </RelativeLayout>

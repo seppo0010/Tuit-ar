@@ -7,6 +7,7 @@ abstract public class ListElement extends Model {
 	abstract public String getText();
 	abstract public String getDisplayDate();
 	abstract public long getId();
+	abstract public String getAvatarUrl();
 
 	static public String calculateElapsed(long millis) {
 		    int ageInSeconds = (int)((System.currentTimeMillis() - millis) / 1000);

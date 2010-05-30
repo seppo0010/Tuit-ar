@@ -189,4 +189,13 @@ public class DirectMessage extends ListElement implements TwitterAccountRequests
 
 		return super.replace();
 	}
+
+	@Override
+	public String getAvatarUrl() {
+		try {
+			return getSender().getProfileImageUrl();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

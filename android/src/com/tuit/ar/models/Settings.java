@@ -13,9 +13,11 @@ public class Settings {
 	final static public String AUTOMATIC_UPDATE = "automaticUpdate";
 	final static public String FILTER = "filter";
 	final static public String FILTER_DELETE = "deleteFilter";
+	public static final String SHOW_AVATAR = "showAvatar";
 	
 	final static public String UPDATE_INTERVAL_DEFAULT = "5";
 	final static public Boolean AUTOMATIC_UPDATE_DEFAULT = Boolean.TRUE;
+	final static public Boolean SHOW_AVATAR_DEFAULT = Boolean.FALSE;
 
 	private ArrayList<SettingsObserver> observers = new ArrayList<SettingsObserver>(); 
 	static private Settings instance;

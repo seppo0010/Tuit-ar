@@ -367,4 +367,13 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public String getAvatarUrl() {
+		try {
+			return getUser().getProfileImageUrl();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }
