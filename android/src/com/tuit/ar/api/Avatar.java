@@ -19,6 +19,7 @@ import android.graphics.BitmapFactory;
 
 public class Avatar extends Request {
 	static private HashMap<String, Avatar> cache = new HashMap<String, Avatar>();
+	static final private int MAX_CACHE_SIZE = 20;
 
 	protected String url;
 	protected Bitmap response = null;
@@ -31,6 +32,13 @@ public class Avatar extends Request {
 	}
 	
 	protected Avatar(String url) {
+		int cacheToPurge = cache.size() - MAX_CACHE_SIZE + 1; // Not adding the current one yet.
+		if (cacheToPurge > 0) {
+			for (String _url : cache.keySet()) {
+				cache.remove(_url);
+				if (--cacheToPurge <= 0) break;
+			}
+		}
 		cache.put(url, this);
 		this.url = url;
 	}
