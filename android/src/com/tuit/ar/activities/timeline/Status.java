@@ -1,6 +1,7 @@
 package com.tuit.ar.activities.timeline;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,8 +15,10 @@ import com.tuit.ar.R;
 import com.tuit.ar.activities.NewTweet;
 import com.tuit.ar.activities.Timeline;
 import com.tuit.ar.api.Twitter;
+import com.tuit.ar.models.Settings;
+import com.tuit.ar.models.SettingsObserver;
 
-abstract public class Status extends Timeline {
+abstract public class Status extends Timeline implements SettingsObserver {
 	protected static final int TWEET_MENU_REPLY = 0;
 	protected static final int TWEET_MENU_RETWEET = 1;
 	protected static final int TWEET_MENU_RETWEET_MANUAL = 2;
@@ -31,27 +34,82 @@ abstract public class Status extends Timeline {
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 4;
 	protected static final int MY_TWEET_MENU_ADD_TO_FAVORITES = 5;
 
-	ArrayList<com.tuit.ar.models.Status> tweets;
+	private ArrayList<com.tuit.ar.models.Status> tweets = new ArrayList<com.tuit.ar.models.Status>();
+	private ArrayList<com.tuit.ar.models.Status> filteredTweets = new ArrayList<com.tuit.ar.models.Status>();
+	protected String[] filters = null;
 
 	abstract protected com.tuit.ar.models.timeline.Status getTimeline();
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		tweets = getTimeline().getTweets();
-		this.setListAdapter(timelineAdapter = new TimelineAdapter<com.tuit.ar.models.Status>(this, tweets));
+		Settings.getInstance().addObserver(this);
+		setFilters();
+		addTweets(getTimeline().getTweets());
+		
+		this.setListAdapter(timelineAdapter = new TimelineAdapter<com.tuit.ar.models.Status>(this, filteredTweets));
+	}
+
+	public void settingsHasChanged(Settings settings) {
+		setFilters();
+		timelineAdapter.notifyDataSetChanged();
+	}
+
+	protected void setFilters() {
+		Settings settings = Settings.getInstance();
+		String filters = settings.getSharedPreferences(this).getString(Settings.FILTER, "");
+		String[] newFilters;
+		if (filters.equals("")) newFilters = new String[]{};
+		else newFilters = filters.split("\n");
+		if (newFilters.equals(this.filters)) return;
+		this.filters = newFilters;
+		filteredTweets.clear();
+		addTweets(this.tweets);
+	}
+
+	protected void addTweet(com.tuit.ar.models.Status tweet) {
+		// Not sure why this happen.
+		if (tweet == null) return;
+		if (this.tweets.contains(tweet) == false) this.tweets.add(0, tweet);
+		if (tweetShouldDisplay(tweet)) {
+			filteredTweets.add(0, tweet);
+		}
+	}
+
+	protected void addTweets(ArrayList<com.tuit.ar.models.Status> tweets) {
+		if (this.tweets.contains(tweets) == false) this.tweets.addAll(0, tweets);
+		for (int i = tweets.size() - 1; i >= 0; i--) {
+			addTweet(tweets.get(i));
+		}
+	}
+
+	protected void addTweets(Collection<com.tuit.ar.models.Status> tweets) {
+		if (this.tweets.contains(tweets) == false) this.tweets.addAll(0, tweets);
+		com.tuit.ar.models.Status[] tweetsToIterate = tweets.toArray(new com.tuit.ar.models.Status[]{});
+		for (int i = tweetsToIterate.length - 1; i >= 0; i--) {
+			addTweet(tweetsToIterate[i]);
+		}
+	}
+
+	protected boolean tweetShouldDisplay(com.tuit.ar.models.Status tweet) {
+		String text = tweet.getText();
+		for (int i = 0; i < filters.length; i++) {
+			if (text.contains(filters[i])) return false;
+		}
+		return true;
 	}
 
 	public void timelineHasChanged(com.tuit.ar.models.Timeline timeline) {
-		if (tweets.size() == 0)
-			tweets.addAll(getTimeline().getTweets());
+		if (filteredTweets.size() == 0)
+			addTweets(getTimeline().getTweets());
 		else
-			tweets.addAll(0, getTimeline().getTweetsNewerThan(tweets.get(0)));
+			addTweets(getTimeline().getTweetsNewerThan(tweets.get(0)));
+
 		if (isVisible)
 			timelineAdapter.notifyDataSetChanged();
 	}
 
 	protected void onListItemClick (ListView l, View v, int position, long id) {
-		final com.tuit.ar.models.Status tweet = (com.tuit.ar.models.Status) tweets.get(position);
+		final com.tuit.ar.models.Status tweet = (com.tuit.ar.models.Status) filteredTweets.get(position);
 		// FIXME: use user id instead of username!
 		final boolean mine = tweet.getUsername().equals(Twitter.getInstance().getDefaultAccount().getUsername());
 	

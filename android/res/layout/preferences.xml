@@ -7,4 +7,14 @@
 			android:key="updateInterval" android:entries="@array/updateIntervals"
 			android:entryValues="@array/updateIntervalsValues" />
 	</PreferenceCategory>
+	<PreferenceCategory>
+		<com.tuit.ar.preferences.EditTextPreference
+			android:dialogTitle="@+string/filter" android:title="@+string/filter"
+			android:key="filter" android:summary="@+string/filterSummary"
+			android:positiveButtonText="@+string/ok" />
+		<com.tuit.ar.preferences.DialogPreference
+			android:dialogTitle="@+string/deleteFilter" android:title="@+string/deleteFilter"
+			android:key="deleteFilter" android:dialogMessage="@+string/deleteFilterSummary"
+			android:negativeButtonText="@+string/no" android:positiveButtonText="@+string/yes" />
+	</PreferenceCategory>
 </PreferenceScreen>

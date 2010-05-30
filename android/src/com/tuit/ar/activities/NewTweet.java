@@ -70,7 +70,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		String replyToUser = intent.getStringExtra("reply_to_username");
 		if (replyToUser != null) {
 			TextView username = (TextView)findViewById(R.id.replyToUsername);
-			username.setText(getString(R.string.inReplyTo).replace(replyToUser, "%s"));
+			username.setText(getString(R.string.inReplyTo).replace("%s", "@" + replyToUser));
 		}
 		String defaultMessage = intent.getStringExtra("default_text"); 
 		messageField = (EditText) findViewById(R.id.tweetMessage);

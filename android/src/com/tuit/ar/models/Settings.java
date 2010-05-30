@@ -11,6 +11,9 @@ import android.preference.PreferenceManager;
 public class Settings {
 	final static public String UPDATE_INTERVAL = "updateInterval";
 	final static public String AUTOMATIC_UPDATE = "automaticUpdate";
+	final static public String FILTER = "filter";
+	final static public String FILTER_DELETE = "deleteFilter";
+	
 	final static public String UPDATE_INTERVAL_DEFAULT = "5";
 	final static public Boolean AUTOMATIC_UPDATE_DEFAULT = Boolean.TRUE;
 
