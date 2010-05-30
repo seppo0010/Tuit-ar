@@ -26,6 +26,7 @@ abstract public class Status extends Timeline implements SettingsObserver {
 	protected static final int TWEET_MENU_SHOW_PROFILE = 4;
 	protected static final int TWEET_MENU_OPEN_LINKS = 5;
 	protected static final int TWEET_MENU_ADD_TO_FAVORITES = 6;
+	protected static final int TWEET_MENU_VIEW_CONVERSATION = 7;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
@@ -33,9 +34,10 @@ abstract public class Status extends Timeline implements SettingsObserver {
 	protected static final int MY_TWEET_MENU_SHOW_PROFILE = 3;
 	protected static final int MY_TWEET_MENU_OPEN_LINKS = 4;
 	protected static final int MY_TWEET_MENU_ADD_TO_FAVORITES = 5;
+	protected static final int MY_TWEET_MENU_VIEW_CONVERSATION = 6;
 
-	private ArrayList<com.tuit.ar.models.Status> tweets = new ArrayList<com.tuit.ar.models.Status>();
-	private ArrayList<com.tuit.ar.models.Status> filteredTweets = new ArrayList<com.tuit.ar.models.Status>();
+	protected ArrayList<com.tuit.ar.models.Status> tweets = new ArrayList<com.tuit.ar.models.Status>();
+	protected ArrayList<com.tuit.ar.models.Status> filteredTweets = new ArrayList<com.tuit.ar.models.Status>();
 	protected String[] filters = null;
 
 	abstract protected com.tuit.ar.models.timeline.Status getTimeline();
@@ -121,6 +123,9 @@ abstract public class Status extends Timeline implements SettingsObserver {
 			else
 				opts.add(options[i]);
 		}
+		if (tweet.getInReplyToStatusId() > 0) {
+			opts.add(getString(R.string.viewConversation));
+		}
 
 		new AlertDialog.Builder(this).
 		setTitle(getString(R.string.executeAction)).
@@ -156,6 +161,14 @@ abstract public class Status extends Timeline implements SettingsObserver {
 						{
 							if (tweet.isFavorited()) tweet.removeFromFavorites();
 							else tweet.addToFavorites();
+							break;
+						}
+						case MY_TWEET_MENU_VIEW_CONVERSATION:
+						{
+							ViewConversation.status = tweet;
+							Intent intent = new Intent(Status.this, ViewConversation.class);
+							startActivity(intent);
+							break;
 						}
 						}
 					}
@@ -216,6 +229,14 @@ abstract public class Status extends Timeline implements SettingsObserver {
 				{
 					if (tweet.isFavorited()) tweet.removeFromFavorites();
 					else tweet.addToFavorites();
+					break;
+				}
+				case TWEET_MENU_VIEW_CONVERSATION:
+				{
+					ViewConversation.status = tweet;
+					Intent intent = new Intent(Status.this, ViewConversation.class);
+					startActivity(intent);
+					break;
 				}
 				}
 			}

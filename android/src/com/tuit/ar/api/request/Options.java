@@ -114,6 +114,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return false;
 		}
+	}, GET_TWEET {
+		public String toString() {
+			return "statuses/show/" + parameters.get("id");
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
 	}, FOLLOW {
 		public String toString() {
 			return "friendships/create";

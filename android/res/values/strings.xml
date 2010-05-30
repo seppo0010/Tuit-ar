@@ -97,4 +97,5 @@ CREATE TABLE directmessage ( id INTEGER, sender_id INTEGER, date INTEGER, text T
 <string name="filterSummary">Cada línea es un filtro distinto. Todos los tweets que contengan el filtro serán bloqueados.</string>
 <string name="deleteFilter">Borrar filtros</string>
 <string name="deleteFilterSummary">¿Está seguro que desea eliminar todos los filtros?</string>
+<string name="viewConversation">Ver conversación</string>
 </resources>
