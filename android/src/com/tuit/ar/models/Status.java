@@ -353,4 +353,18 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 
 	public void requestHasStarted(TwitterRequest request) {
 	}
+
+	public void retweet() {
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair> ();
+		nvps.add(new BasicNameValuePair("id", String.valueOf(getId())));
+		Options option = Options.RETWEET;
+		option.setParameters(nvps);
+
+		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+		try {
+			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

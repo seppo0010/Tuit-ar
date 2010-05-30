@@ -21,11 +21,13 @@
 <string name="unableToPost">No se pudo enviar</string>
 <string name="unableToAddAccount">No se pudo agregar cuenta</string>
 <string name="unableToDeleteAccount">No se pudo eliminar cuenta</string>
+<string name="confirmRetweet">¿Está seguro que quiere retweetear este mensaje?</string>
 <string-array name="selectAccountOptions">
 <item>Borrar</item>
 </string-array>
 <string-array name="tweetOptions">
 <item>Responder</item>
+<item>Retweet</item>
 <item>Retweet manual</item>
 <item>Compartir</item>
 <item>Ver perfil</item>
@@ -38,6 +40,7 @@
 <item>Compartir</item>
 <item>Ver perfil</item>
 <item>Abrir páginas web</item>
+<item>Agregar a favoritos</item>
 </string-array>
 <string-array name="dmOptions"><item>Responder</item>
 <item>Borrar</item>

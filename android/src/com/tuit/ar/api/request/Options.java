@@ -132,6 +132,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return false;
 		}
+	}, RETWEET {
+		public String toString() {
+			return "statuses/retweet/" + parameters.get("id");
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return false;
+		}
 	};
 	protected HashMap<String, String> parameters = null;
 

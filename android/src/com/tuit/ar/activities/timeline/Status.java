@@ -17,11 +17,12 @@ import com.tuit.ar.api.Twitter;
 
 abstract public class Status extends Timeline {
 	protected static final int TWEET_MENU_REPLY = 0;
-	protected static final int TWEET_MENU_RETWEET_MANUAL = 1;
-	protected static final int TWEET_MENU_SHARE = 2;
-	protected static final int TWEET_MENU_SHOW_PROFILE = 3;
-	protected static final int TWEET_MENU_OPEN_LINKS = 4;
-	protected static final int TWEET_MENU_ADD_TO_FAVORITES = 5;
+	protected static final int TWEET_MENU_RETWEET = 1;
+	protected static final int TWEET_MENU_RETWEET_MANUAL = 2;
+	protected static final int TWEET_MENU_SHARE = 3;
+	protected static final int TWEET_MENU_SHOW_PROFILE = 4;
+	protected static final int TWEET_MENU_OPEN_LINKS = 5;
+	protected static final int TWEET_MENU_ADD_TO_FAVORITES = 6;
 
 	protected static final int MY_TWEET_MENU_REPLY = 0;
 	protected static final int MY_TWEET_MENU_DELETE = 1;
@@ -57,7 +58,7 @@ abstract public class Status extends Timeline {
 		CharSequence[] options = getResources().getTextArray(mine ? R.array.myTweetOptions : R.array.tweetOptions);
 		ArrayList<CharSequence> opts = new ArrayList<CharSequence>(options.length);
 		for (int i = 0; i < options.length; i++) {
-			if (i == TWEET_MENU_ADD_TO_FAVORITES && tweet.isFavorited())
+			if (((mine && i == MY_TWEET_MENU_ADD_TO_FAVORITES) || (!mine && i == TWEET_MENU_ADD_TO_FAVORITES)) && tweet.isFavorited())
 				opts.add(getString(R.string.removeFromFavorites));
 			else
 				opts.add(options[i]);
@@ -111,6 +112,22 @@ abstract public class Status extends Timeline {
 					intent.putExtra("reply_to_username", tweet.getUsername());
 					intent.putExtra("default_text", "@" + tweet.getUsername() + " ");
 					startActivity(intent);
+					break;
+				}
+				case TWEET_MENU_RETWEET:
+				{
+			        new AlertDialog.Builder(Status.this)
+			        .setMessage(R.string.confirmRetweet)
+			        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int which) {
+			            	try {
+			            		tweet.retweet();
+			            	} catch (Exception e) {
+			            	}
+			            }
+			        })
+			        .setNegativeButton(R.string.no, null)
+			        .show();
 					break;
 				}
 				case TWEET_MENU_RETWEET_MANUAL:
