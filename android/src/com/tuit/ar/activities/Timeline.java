@@ -210,7 +210,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			if (Settings.getInstance().getSharedPreferences(Timeline.this).getBoolean(Settings.SHOW_AVATAR, Settings.SHOW_AVATAR_DEFAULT)) {
 				element.getAvatar().setVisibility(View.INVISIBLE);
 
-				Avatar avatar = new Avatar(tweet.getAvatarUrl());
+				Avatar avatar = Avatar.get(tweet.getAvatarUrl());
 				avatar.addRequestObserver(element);
 				avatar.download();
 			} else {

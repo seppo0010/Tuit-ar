@@ -2,6 +2,7 @@ package com.tuit.ar.api;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,12 +18,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class Avatar extends Request {
-	private String url;
-	Bitmap response = null;
+	static private HashMap<String, Avatar> cache = new HashMap<String, Avatar>();
+
+	protected String url;
+	protected Bitmap response = null;
 
 	private ArrayList<AvatarObserver> observers = new ArrayList<AvatarObserver>(); 
 
-	public Avatar(String url) {
+	static public Avatar get(String url) {
+		if (cache.containsKey(url)) return cache.get(url);
+		return new Avatar(url);
+	}
+	
+	protected Avatar(String url) {
+		cache.put(url, this);
 		this.url = url;
 	}
 
@@ -35,6 +44,10 @@ public class Avatar extends Request {
 	}
 
 	public void download() {
+		if (response != null) {
+			finishedRequest();
+			return;
+		}
 		(new Thread() {
 			public void run() {
 				DefaultHttpClient http = new DefaultHttpClient();
@@ -73,18 +86,22 @@ public class Avatar extends Request {
 		return this.response;		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void finishedRequest() {
 		if (response == null) {
 			requestFailed();
 			return;
 		}
+		ArrayList<AvatarObserver> observers = (ArrayList<AvatarObserver>) this.observers.clone();
 		for (AvatarObserver observer : observers) {
 			observer.avatarHasFinished(this);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void requestFailed() {
+		ArrayList<AvatarObserver> observers = (ArrayList<AvatarObserver>) this.observers.clone();
 		for (AvatarObserver observer : observers) {
 			observer.avatarHasFailed(this);
 		}

@@ -104,7 +104,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		showFollowing();
 
 		if (user != null) {
-			Avatar avatar = new Avatar(user.getProfileImageUrl());
+			Avatar avatar = Avatar.get(user.getProfileImageUrl());
 			avatar.addRequestObserver(this);
 			avatar.download();
 			
