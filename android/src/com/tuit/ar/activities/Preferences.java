@@ -27,10 +27,8 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Settings settings = Settings.getInstance();
-		settings.addObserver(this);
+		Settings.getInstance().addObserver(this);
 
-		setTitle(getString(R.string.preferencesType).replaceAll("%s", settings.getSettingsName(this)));
 		addPreferencesFromResource(R.layout.preferences);
 
 		automaticUpdate = (CheckBoxPreference) findPreference(Settings.AUTOMATIC_UPDATE);
@@ -71,6 +69,12 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 		});
 
 		showAvatar = (CheckBoxPreference) findPreference(Settings.SHOW_AVATAR);
+		showAvatar.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				updateSettings();
+				return false;
+			}
+		});
 		setValues();
 	}
 
@@ -91,7 +95,9 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 	}
 
 	public void setValues() {
-		SharedPreferences preferences = Settings.getInstance().getSharedPreferences(this);
+		Settings settings = Settings.getInstance();
+		setTitle(getString(R.string.preferencesType).replaceAll("%s", settings.getSettingsName(this)));
+		SharedPreferences preferences = settings.getSharedPreferences(this);
 		updateInterval.setEnabled(automaticUpdate.isChecked());
 		automaticUpdate.setChecked(preferences.getBoolean(Settings.AUTOMATIC_UPDATE, Settings.AUTOMATIC_UPDATE_DEFAULT));
 		updateInterval.setValue(preferences.getString(Settings.UPDATE_INTERVAL, Settings.UPDATE_INTERVAL_DEFAULT));
