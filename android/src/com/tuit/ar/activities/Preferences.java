@@ -1,5 +1,6 @@
 package com.tuit.ar.activities;
 
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -10,11 +11,12 @@ import android.preference.Preference.OnPreferenceClickListener;
 
 import com.tuit.ar.R;
 import com.tuit.ar.models.Settings;
+import com.tuit.ar.models.SettingsObserver;
 import com.tuit.ar.preferences.DialogPreference;
 import com.tuit.ar.preferences.DialogPreferenceListener;
 import com.tuit.ar.preferences.EditTextPreference;
 
-public class Preferences extends PreferenceActivity {
+public class Preferences extends PreferenceActivity implements SettingsObserver {
 	ListPreference updateInterval;
 	CheckBoxPreference automaticUpdate;
 	EditTextPreference filter;
@@ -24,12 +26,14 @@ public class Preferences extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(getString(R.string.preferences));
+
+		Settings settings = Settings.getInstance();
+		settings.addObserver(this);
+
+		setTitle(getString(R.string.preferencesType).replaceAll("%s", settings.getSettingsName(this)));
 		addPreferencesFromResource(R.layout.preferences);
 
 		automaticUpdate = (CheckBoxPreference) findPreference(Settings.AUTOMATIC_UPDATE);
-		automaticUpdate.setPersistent(true);
-		automaticUpdate.setDefaultValue(Settings.AUTOMATIC_UPDATE_DEFAULT);
 		automaticUpdate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				updateInterval.setEnabled(automaticUpdate.isChecked());
@@ -37,9 +41,8 @@ public class Preferences extends PreferenceActivity {
 				return false;
 			}
 		});
+
 		updateInterval = (ListPreference) findPreference(Settings.UPDATE_INTERVAL);
-		updateInterval.setPersistent(true);
-		updateInterval.setDefaultValue(Settings.UPDATE_INTERVAL_DEFAULT);
 		updateInterval.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				updateSettings();
@@ -48,18 +51,12 @@ public class Preferences extends PreferenceActivity {
 		});
 
 		filter = (EditTextPreference)getPreferenceScreen().findPreference(Settings.FILTER);
-		filter.setText(Settings.getInstance().getSharedPreferences(this).getString(Settings.FILTER, ""));
 		filter.setDialogPreferenceListener(new DialogPreferenceListener() {
 			public void onDialogClosed(boolean positiveValue) {
 				if (positiveValue) {
-					String text = filter.getEditText().getText().toString();
-					Editor editor = Settings.getInstance().getSharedPreferences(Preferences.this).edit();
-					editor.putString(Settings.FILTER, text);
-					if (editor.commit()) {
-						filter.setText(text);
-						updateSettings();
-					}
+					filter.setText(filter.getEditText().getText().toString());
 				}
+				updateSettings();
 			}
 		});
 
@@ -67,22 +64,43 @@ public class Preferences extends PreferenceActivity {
 		filterDelete.setDialogPreferenceListener(new DialogPreferenceListener() {
 			public void onDialogClosed(boolean positiveValue) {
 				if (positiveValue) {
-					Editor editor = Settings.getInstance().getSharedPreferences(Preferences.this).edit();
-					editor.putString(Settings.FILTER, "");
-					if (editor.commit()) {
-						updateSettings();
-						filter.setText("");
-					}
+					filter.setText("");
+					updateSettings();
 				}
 			}
 		});
 
 		showAvatar = (CheckBoxPreference) findPreference(Settings.SHOW_AVATAR);
-		showAvatar.setPersistent(true);
-		showAvatar.setDefaultValue(Settings.SHOW_AVATAR_DEFAULT);
+		setValues();
 	}
 
 	protected void updateSettings() {
-		Settings.getInstance().callObservers();
+		Settings settings = Settings.getInstance();
+		Editor editor = settings.getSharedPreferences(this).edit();
+		editor.putBoolean(Settings.AUTOMATIC_UPDATE, automaticUpdate.isChecked());
+		editor.putString(Settings.UPDATE_INTERVAL, updateInterval.getValue());
+		editor.putString(Settings.FILTER, filter.getText());
+		editor.putBoolean(Settings.SHOW_AVATAR, showAvatar.isChecked());
+		if (editor.commit()) {
+			settings.callObservers();
+		}
+	}
+
+	public void settingsHasChanged(Settings settings) {
+		setValues();
+	}
+
+	public void setValues() {
+		SharedPreferences preferences = Settings.getInstance().getSharedPreferences(this);
+		updateInterval.setEnabled(automaticUpdate.isChecked());
+		automaticUpdate.setChecked(preferences.getBoolean(Settings.AUTOMATIC_UPDATE, Settings.AUTOMATIC_UPDATE_DEFAULT));
+		updateInterval.setValue(preferences.getString(Settings.UPDATE_INTERVAL, Settings.UPDATE_INTERVAL_DEFAULT));
+		filter.setText(preferences.getString(Settings.FILTER, ""));
+		showAvatar.setChecked(preferences.getBoolean(Settings.SHOW_AVATAR, Settings.SHOW_AVATAR_DEFAULT));
+	}
+
+	public void onDestroy() {
+		super.onDestroy();
+		Settings.getInstance().removeObserver(this);
 	}
 }

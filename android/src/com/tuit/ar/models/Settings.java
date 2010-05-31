@@ -2,13 +2,17 @@ package com.tuit.ar.models;
 
 import java.util.ArrayList;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 
 
-public class Settings {
+public class Settings extends BroadcastReceiver {
 	final static public String UPDATE_INTERVAL = "updateInterval";
 	final static public String AUTOMATIC_UPDATE = "automaticUpdate";
 	final static public String FILTER = "filter";
@@ -19,7 +23,7 @@ public class Settings {
 	final static public Boolean AUTOMATIC_UPDATE_DEFAULT = Boolean.TRUE;
 	final static public Boolean SHOW_AVATAR_DEFAULT = Boolean.FALSE;
 
-	private ArrayList<SettingsObserver> observers = new ArrayList<SettingsObserver>(); 
+	static private ArrayList<SettingsObserver> observers = new ArrayList<SettingsObserver>(); 
 	static private Settings instance;
 
 	public static Settings getInstance() {
@@ -27,12 +31,21 @@ public class Settings {
 			instance = new Settings();
 		return instance;
 	}
-	private Settings() {
+
+	public Settings() {
 		super();
+		instance = this;
+	}
+
+	public String getSettingsName(Context context) {
+		ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+		if (networkInfo == null) return "none";
+		else return networkInfo.getTypeName();
 	}
 
 	public SharedPreferences getSharedPreferences(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context);
+		return context.getSharedPreferences(getSettingsName(context), Context.MODE_PRIVATE);
 	}
 	
 	public void addObserver(SettingsObserver observer) {
@@ -46,6 +59,24 @@ public class Settings {
 	public void callObservers() {
 		for (SettingsObserver observer : observers) {
 			observer.settingsHasChanged(this);
+		}
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		// Not sure what this does, but according documentation, if this is disabled, we should avoid all background data
+		if (intent.getAction().equals(android.net.ConnectivityManager.ACTION_BACKGROUND_DATA_SETTING_CHANGED)) {
+			SharedPreferences preferences = getSharedPreferences(context);
+			if (manager.getBackgroundDataSetting() == false && preferences.getBoolean(Settings.AUTOMATIC_UPDATE, Settings.AUTOMATIC_UPDATE_DEFAULT)) {
+				Editor editor = preferences.edit();
+				editor.putBoolean(Settings.AUTOMATIC_UPDATE, false);
+				if (editor.commit()) {
+					callObservers();
+				}
+			}
+		} else if (intent.getAction().equals(android.net.ConnectivityManager.CONNECTIVITY_ACTION)) {
+			callObservers();
 		}
 	}
 }

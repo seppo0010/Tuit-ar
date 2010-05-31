@@ -16,6 +16,7 @@
 <string name="directMessages">Mensajes Directos</string>
 <string name="favorites">Favoritos</string>
 <string name="preferences">Preferencias</string>
+<string name="preferencesType">Preferencias (%s)</string>
 <string name="send">Enviar</string>
 <string name="messageSent">Mensaje Enviado</string>
 <string name="unableToPost">No se pudo enviar</string>
