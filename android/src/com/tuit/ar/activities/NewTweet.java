@@ -36,6 +36,7 @@ import com.tuit.ar.api.request.Options;
 
 public class NewTweet extends Activity implements OnClickListener, TwitterAccountRequestsObserver {
 	static private final int MENU_ADD_PHOTO = 0;
+	static private final int MENU_TAKE_PHOTO = 1;
 
 	static private final int MAX_CHARS = 140;
 
@@ -127,6 +128,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_ADD_PHOTO, 0, R.string.addPhoto);
+		menu.add(0, MENU_TAKE_PHOTO, 0, R.string.takePhoto);
 		return true;
 	}
 
@@ -135,6 +137,11 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	    case MENU_ADD_PHOTO:
 	    {
             startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 0);
+	    	break;
+	    }
+	    case MENU_TAKE_PHOTO:
+	    {
+            startActivity(new Intent(NewTweet.this, Preview.class));
 	    	break;
 	    }
 	    }
