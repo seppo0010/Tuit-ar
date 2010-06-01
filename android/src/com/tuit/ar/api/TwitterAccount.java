@@ -198,8 +198,8 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		String[] nicknames = folder.list(null);
 		ArrayList<TwitterAccount> accounts = new ArrayList<TwitterAccount>();
 		if (nicknames != null) {
-			for (int i = 0; i < nicknames.length; i++) {
-				TwitterAccount account = unserialize(nicknames[i]);
+			for (String nickname : nicknames) {
+				TwitterAccount account = unserialize(nickname);
 				if (account != null) {
 					accounts.add(account);
 				}
