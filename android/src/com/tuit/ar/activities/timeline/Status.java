@@ -94,8 +94,8 @@ abstract public class Status extends Timeline implements SettingsObserver {
 
 	protected boolean tweetShouldDisplay(com.tuit.ar.models.Status tweet) {
 		String text = tweet.getText();
-		for (int i = 0; i < filters.length; i++) {
-			if (text.contains(filters[i])) return false;
+		for (String filter : filters) {
+			if (text.contains(filter)) return false;
 		}
 		return true;
 	}

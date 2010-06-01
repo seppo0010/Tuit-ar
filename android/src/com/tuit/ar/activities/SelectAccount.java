@@ -151,6 +151,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 	public void onDestroy() {
 		super.onDestroy();
 		Twitter.getInstance().removeObserver(this);
+		getListView().setOnItemLongClickListener(null);
 	}
 
 	protected class AccountsAdapter extends ArrayAdapter<TwitterAccount> 

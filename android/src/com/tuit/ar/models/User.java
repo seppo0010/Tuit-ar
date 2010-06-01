@@ -14,7 +14,6 @@ import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
-import com.tuit.ar.api.TwitterRequest.Method;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
 
@@ -277,7 +276,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		account.addRequestObserver(this);
 		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("user_id", String.valueOf(getId())));
-		followRequest = account.requestUrl(Options.UNFOLLOW, nvps, Method.POST);
+		followRequest = account.requestUrl(Options.UNFOLLOW, nvps, TwitterRequest.METHOD_POST);
 	}
 
 	public void follow() throws Exception {
@@ -285,7 +284,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		account.addRequestObserver(this);
 		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("user_id", String.valueOf(getId())));
-		followRequest = account.requestUrl(Options.FOLLOW, nvps, Method.POST);
+		followRequest = account.requestUrl(Options.FOLLOW, nvps, TwitterRequest.METHOD_POST);
 	}
 
 	public void requestHasFinished(TwitterRequest request) {

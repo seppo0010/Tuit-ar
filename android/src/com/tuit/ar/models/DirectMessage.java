@@ -9,17 +9,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
+
 import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
-import com.tuit.ar.api.TwitterRequest.Method;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
 
 public class DirectMessage extends ListElement implements TwitterAccountRequestsObserver {
 	private static final String[] columns = new String[]{
@@ -157,7 +156,7 @@ public class DirectMessage extends ListElement implements TwitterAccountRequests
 		account.addRequestObserver(this);
 		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("id", String.valueOf(getId())));
-		deleteRequest = account.requestUrl(Options.DELETE_DIRECT_MESSAGE, nvps, Method.POST);
+		deleteRequest = account.requestUrl(Options.DELETE_DIRECT_MESSAGE, nvps, TwitterRequest.METHOD_POST);
 		com.tuit.ar.models.timeline.DirectMessages timeline = com.tuit.ar.models.timeline.DirectMessages.getInstance(Twitter.getInstance().getDefaultAccount());
 		timeline.startedUpdate();
 	}

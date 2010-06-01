@@ -23,14 +23,14 @@ public class TwitterRequestWithPhoto extends TwitterRequest {
 	private String message;
 
 	public TwitterRequestWithPhoto(TwitterAccount account, File photo, String message) throws Exception {
-		super(account, Options.POST_TWEET_WITH_PHOTO, null, Method.POST);
+		super(account, Options.POST_TWEET_WITH_PHOTO, null, TwitterRequest.METHOD_POST);
 		consumer = account.getConsumer();
 		this.photo = photo;
 		this.message = message;
-		this.run(null, null, null);
+		this.run(null, null, TwitterRequest.METHOD_POST);
 	}
 
-	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
+	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final int method) {
 		if (consumer == null) return;
 		(new Thread() {
 			public void run() {

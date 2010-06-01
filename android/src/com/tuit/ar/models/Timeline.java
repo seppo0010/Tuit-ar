@@ -30,7 +30,7 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		if (newestTweet > 0) nvps.add(new BasicNameValuePair("since_id", String.valueOf(newestTweet)));
 		nvps.add(new BasicNameValuePair("count", "25"));
 		try {
-			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
+			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.METHOD_GET);
 		} catch (UniqueRequestException e) {
 			// I wanna ignore this exceptions
 		} catch (Exception e) {

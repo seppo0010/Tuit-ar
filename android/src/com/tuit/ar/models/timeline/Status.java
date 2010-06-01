@@ -6,50 +6,58 @@ import java.util.Collection;
 import org.json.JSONArray;
 import org.json.JSONTokener;
 
+import android.os.Handler;
+
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
 import com.tuit.ar.models.Timeline;
 
 abstract public class Status extends Timeline {
+	protected ArrayList<com.tuit.ar.models.Status> tweets = new ArrayList<com.tuit.ar.models.Status>();
+
 	protected Status(TwitterAccount account) {
 		super(account);
 	}
 
-	protected ArrayList<com.tuit.ar.models.Status> tweets = new ArrayList<com.tuit.ar.models.Status>();
-
 	@Override
-	public void requestHasFinished(TwitterRequest request) {
+	public void requestHasFinished(final TwitterRequest request) {
 		if (!request.getUrl().equals(this.getTimeline())) return;
-		try {
-			JSONArray tweets = new JSONArray(new JSONTokener(request.getResponse()));
-			int c = tweets.length();
-			if (c > 0) {
-				for (int i = c-1; i >= 0; i--) {
-					com.tuit.ar.models.Status tweet = new com.tuit.ar.models.Status(tweets.getJSONObject(i));
-					//is_home INTEGER, is_reply INTEGER, belongs_to_user
-					tweet.setBelongsToUser(account.getUser().getId());
-					// FIXME: some kind of way to recognize this with more abstraction?
-					if (request.getUrl().equals(Options.FRIENDS_TIMELINE) || request.getUrl().equals(Options.REPLIES_TIMELINE)) {
-						tweet.setHome(request.getUrl().equals(Options.FRIENDS_TIMELINE));
-						tweet.setReply(request.getUrl().equals(Options.REPLIES_TIMELINE));
-						tweet.replace();
+		final Handler handler = new Handler();
+		final StatusRunnable runnable = new StatusRunnable(); 
+		new Thread() {
+			public void run() {
+				try {
+					JSONArray tweets = new JSONArray(new JSONTokener(request.getResponse()));
+					int c = tweets.length();
+					if (c > 0) {
+						for (int i = c-1; i >= 0; i--) {
+							com.tuit.ar.models.Status tweet = new com.tuit.ar.models.Status(tweets.getJSONObject(i));
+							//is_home INTEGER, is_reply INTEGER, belongs_to_user
+							tweet.setBelongsToUser(account.getUser().getId());
+							// FIXME: some kind of way to recognize this with more abstraction?
+							if (request.getUrl().equals(Options.FRIENDS_TIMELINE) || request.getUrl().equals(Options.REPLIES_TIMELINE)) {
+								tweet.setHome(request.getUrl().equals(Options.FRIENDS_TIMELINE));
+								tweet.setReply(request.getUrl().equals(Options.REPLIES_TIMELINE));
+								tweet.replace();
+							}
+
+							if (i == 0)
+								newestTweet = tweet.getId();
+							Status.this.tweets.add(0, tweet);
+						}
+
+						if (Status.this.tweets.size() > MAX_SIZE) {
+							Status.this.tweets.subList(MAX_SIZE, Status.this.tweets.size()).clear();
+						}
+						runnable.success = true;
 					}
-
-					if (i == 0)
-						newestTweet = tweet.getId();
-					this.tweets.add(0, tweet);
+				} catch (Exception e) {
+					runnable.success = false;
 				}
-
-				if (this.tweets.size() > MAX_SIZE) {
-					this.tweets.subList(MAX_SIZE, this.tweets.size()).clear();
-				}
-				timelineChanged();
+				handler.post(runnable);
 			}
-		} catch (Exception e) {
-			failedToUpdate();
-		}
-		finishedUpdate();
+		}.start();
 	}
 
 	public ArrayList<com.tuit.ar.models.Status> getTweets() {
@@ -59,4 +67,16 @@ abstract public class Status extends Timeline {
 	public Collection<com.tuit.ar.models.Status> getTweetsNewerThan(com.tuit.ar.models.Status status) {
 		return tweets.subList(0, tweets.indexOf(status));
 	}
+
+	private class StatusRunnable implements Runnable {
+		public boolean success;
+		public void run() {
+			if (success)
+				timelineChanged();
+			else
+				failedToUpdate();
+			finishedUpdate();
+		}
+	};
+
 }
