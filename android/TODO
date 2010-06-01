@@ -1,23 +1,28 @@
 Retweets of me
 Settings switcher - all settings?
 Profile
-Identi.ca upport
+Avatar cache
+Identi.ca support
 
 Received tweet
 Highlight unread
-Notifications
+Notifications (all, replies, dms)
+Color mentions
 
-Tweet Menu
-Tweet display
-Link preview
-Text color
+User profile
+View favorites
 
 Send Tweet
 Gps
 Auto nick
 Url shortening
+Tweet Widget
 
 Menus
 Search 
 Trends
 Lists
+
+Known Issues
+Account on bad state after a few usages
+Sometimes the tweet times jump the recents to 12 hours ago
