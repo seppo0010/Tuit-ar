@@ -191,4 +191,13 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	    }
 	    return false;
 	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		following.setOnClickListener(null);
+		url.setOnClickListener(null);
+		sendDm.setOnClickListener(null);
+		seeInMap.setOnClickListener(null);
+	}
 }

@@ -56,12 +56,13 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	private TextView imageSizeHeight;
 	private TextView imageSizeMb;
 	static private final int MAX_PROGRESS = 10000;
+	private Button send;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.new_tweet);
-		Button send = (Button)findViewById(R.id.send);
+		send = (Button)findViewById(R.id.send);
 		send.setOnClickListener(this);
 		Twitter.getInstance().getDefaultAccount().addRequestObserver(this);
 
@@ -223,6 +224,9 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 	public void onDestroy() {
 		super.onDestroy();
 		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
+		send.setOnClickListener(null);
+		messageField.setOnKeyListener(null);
+		imageSize.setOnSeekBarChangeListener(null);
 		if (photo != null) photo.delete();
 	}
 }

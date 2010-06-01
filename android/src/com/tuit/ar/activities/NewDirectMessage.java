@@ -41,12 +41,13 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
 	private AutoCompleteTextView userSelect = null;
 	private ArrayAdapter<String> usersAdapter = null;
 	private TimerTask autocompleterTask = null;
+	private Button send = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.new_direct_message);
-		Button send = (Button)findViewById(R.id.send);
+		send = (Button)findViewById(R.id.send);
 		send.setOnClickListener(this);
 		Twitter.getInstance().getDefaultAccount().addRequestObserver(this);
 
@@ -143,6 +144,8 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
 
 	public void onDestroy() {
 		super.onDestroy();
+		send.setOnClickListener(null);
+		messageField.setOnKeyListener(null);
 		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
 	}
 

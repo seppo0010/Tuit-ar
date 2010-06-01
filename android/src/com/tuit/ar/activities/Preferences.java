@@ -108,5 +108,10 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 	public void onDestroy() {
 		super.onDestroy();
 		Settings.getInstance().removeObserver(this);
+		automaticUpdate.setOnPreferenceClickListener(null);
+		updateInterval.setOnPreferenceClickListener(null);
+		filter.setDialogPreferenceListener(null);
+		filterDelete.setDialogPreferenceListener(null);
+		showAvatar.setOnPreferenceClickListener(null);
 	}
 }
