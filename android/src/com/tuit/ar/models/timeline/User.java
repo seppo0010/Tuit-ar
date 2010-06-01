@@ -26,7 +26,7 @@ public class User extends Status {
 		nvps.add(new BasicNameValuePair("screen_name", user.getScreenName()));
 		nvps.add(new BasicNameValuePair("include_rts", "false"));
 		try {
-			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
+			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.METHOD_GET);
 		} catch (UniqueRequestException e) {
 			// I wanna ignore this exceptions
 		} catch (Exception e) {

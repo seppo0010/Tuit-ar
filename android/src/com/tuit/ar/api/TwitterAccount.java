@@ -42,9 +42,9 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 		this.requestUrl(Options.LOGIN);
 	}
 
-	public void requestUrl(Options login) throws Exception { requestUrl(login, null, TwitterRequest.Method.GET); }
+	public void requestUrl(Options login) throws Exception { requestUrl(login, null, TwitterRequest.METHOD_GET); }
 
-	public TwitterRequest requestUrl(Options login, ArrayList<NameValuePair> params, TwitterRequest.Method get) throws Exception {
+	public TwitterRequest requestUrl(Options login, ArrayList<NameValuePair> params, int get) throws Exception {
 		TwitterRequest request = new TwitterRequest(this, login, params, get);
 		startedRequest(request);
 		return request;

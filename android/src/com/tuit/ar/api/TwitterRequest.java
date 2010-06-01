@@ -33,7 +33,8 @@ import com.tuit.ar.api.request.UniqueRequestException;
 
 public class TwitterRequest extends Request {
 	static private int BUFFER_SIZE = 1024;
-	static public enum Method { GET, POST };
+	static public final int METHOD_GET = 0;
+	static public final int METHOD_POST = 1;
 
 	protected Runnable runnable = new Runnable() {
 		public void run() {
@@ -59,7 +60,7 @@ public class TwitterRequest extends Request {
 	}
 
 	public TwitterRequest(TwitterAccount _account, final Options url, final ArrayList <NameValuePair> nvps,
-			final Method method) throws Exception {
+			final int method) throws Exception {
 		// this avoid having 2 request of the same kind at a time
 		if (url.mustBeUnique() && _account.hasUrlOnRequest(url)) throw new UniqueRequestException();
 		account = _account;
@@ -67,7 +68,7 @@ public class TwitterRequest extends Request {
 		run(url, nvps, method);
 	}
 
-	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final Method method) {
+	protected void run(final Options url, final ArrayList <NameValuePair> nvps, final int method) {
 		(new Thread() {
 			public void run() {
 				account.addUrlOnRequest(url);
@@ -75,7 +76,7 @@ public class TwitterRequest extends Request {
 
 				String full_url = "http" + (Twitter.isSecure ? "s" :"") + "://" + Twitter.BASE_URL + url.toString() + ".json";
 				HttpRequestBase request;
-				if (method == Method.POST) {
+				if (method == TwitterRequest.METHOD_POST) {
 					request = new HttpPost(full_url);
 					try {
 						((HttpPost) request).setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));

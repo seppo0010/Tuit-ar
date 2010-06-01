@@ -192,7 +192,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("status", message));
 				if (replyToTweetId != null) params.add(new BasicNameValuePair("in_reply_to_status_id", replyToTweetId));
-				TwitterRequest.Method method = TwitterRequest.Method.POST;
+				int method = TwitterRequest.METHOD_POST;
 				Twitter.getInstance().getDefaultAccount().requestUrl(Options.POST_TWEET, params, method);
 			}
 		} catch (Exception e) {

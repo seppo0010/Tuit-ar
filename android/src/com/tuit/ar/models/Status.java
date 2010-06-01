@@ -307,7 +307,7 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 		if (this.isReply()) com.tuit.ar.models.timeline.Replies.getInstance(account).startedUpdate();
 		
 		try {
-			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
+			account.requestUrl(option, nvps, TwitterRequest.METHOD_POST);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -326,7 +326,7 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 		com.tuit.ar.models.timeline.Favorites.getInstance(account).startedUpdate();
 
 		try {
-			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
+			account.requestUrl(option, nvps, TwitterRequest.METHOD_POST);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -362,7 +362,7 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 
 		TwitterAccount account = Twitter.getInstance().getDefaultAccount();
 		try {
-			account.requestUrl(option, nvps, TwitterRequest.Method.POST);
+			account.requestUrl(option, nvps, TwitterRequest.METHOD_POST);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

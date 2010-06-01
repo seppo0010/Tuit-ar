@@ -117,7 +117,7 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("text", message));
 			params.add(new BasicNameValuePair("screen_name", toUser));
-			TwitterRequest.Method method = TwitterRequest.Method.POST;
+			int method = TwitterRequest.METHOD_POST;
 			Twitter.getInstance().getDefaultAccount().requestUrl(Options.SEND_DIRECT_MESSAGE, params, method);
 		} catch (Exception e) {
 			sendFailed();

@@ -36,7 +36,7 @@ public class ViewConversation extends Status {
 		ArrayList <NameValuePair> nvps = new ArrayList <NameValuePair>();
 		nvps.add(new BasicNameValuePair("id", String.valueOf(nextTweetId)));
 		try {
-			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.Method.GET);
+			account.requestUrl(this.getTimeline(), nvps, TwitterRequest.METHOD_GET);
 		} catch (UniqueRequestException e) {
 			// I wanna ignore this exceptions
 		} catch (Exception e) {
