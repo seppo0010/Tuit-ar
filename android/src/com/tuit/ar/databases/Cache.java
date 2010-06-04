@@ -12,6 +12,7 @@ public class Cache extends Database {
 	protected static final int DATABASE_VERSION = 1;
 
 	private static Cache instance = null;
+	private String[] sql = null;
 
 	public static Cache getInstance(Context context) {
 		if (instance == null) instance = new Cache(context);
@@ -20,11 +21,12 @@ public class Cache extends Database {
 
 	protected Cache(Context context) {
 		super(context, DATABASE_NAME, DATABASE_VERSION);
+		sql = context.getString(R.string.cache_onCreate).split("\n");
 	}
 
 	public void onCreate(SQLiteDatabase db) {
-		String[] sql = mContext.getString(R.string.cache_onCreate).split("\n");
 		super.onCreate(db, sql);
+		sql = null;
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

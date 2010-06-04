@@ -9,12 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public abstract class Database extends SQLiteOpenHelper {
-	/** Keep track of context so that we can load SQL from string resources */
-	protected final Context mContext;
-
 	public Database(Context context, String databaseName, int databaseVersion) {
 		super(context, databaseName, null, databaseVersion);
-		this.mContext = context;
 		Model.db = this;
 	}
 
