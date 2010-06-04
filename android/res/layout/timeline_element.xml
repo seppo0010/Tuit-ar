@@ -7,9 +7,13 @@
 	android:paddingBottom="10sp">
 	<ImageView
 		android:id="@+id/avatar"
-		android:layout_height="48sp"
-		android:layout_width="48sp"
-		android:layout_margin="2sp" />
+		android:layout_height="52sp"
+		android:layout_width="52sp"
+		android:layout_marginTop="5sp" 
+		android:layout_marginRight="5sp" 
+		android:layout_marginBottom="5sp" 
+		android:layout_marginLeft="5sp" 
+		/>
 	<TextView 
 		android:id="@+id/username"
 		android:text="username"
