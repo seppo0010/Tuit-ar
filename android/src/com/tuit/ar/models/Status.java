@@ -224,7 +224,7 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 	public Date getDate() {
 		try {
 			if (createDate != null) return createDate;
-			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss Z yyyy", Locale.ENGLISH);
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.ENGLISH);
 			return createDate = sdf.parse(dataSourceJSON.getString("created_at"));
 		} catch (Exception e) {
 			return null;
