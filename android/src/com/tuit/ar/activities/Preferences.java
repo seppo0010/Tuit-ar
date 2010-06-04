@@ -98,8 +98,8 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 		Settings settings = Settings.getInstance();
 		setTitle(getString(R.string.preferencesType).replaceAll("%s", settings.getSettingsName(this)));
 		SharedPreferences preferences = settings.getSharedPreferences(this);
-		updateInterval.setEnabled(automaticUpdate.isChecked());
 		automaticUpdate.setChecked(preferences.getBoolean(Settings.AUTOMATIC_UPDATE, Settings.AUTOMATIC_UPDATE_DEFAULT));
+		updateInterval.setEnabled(automaticUpdate.isChecked());
 		updateInterval.setValue(preferences.getString(Settings.UPDATE_INTERVAL, Settings.UPDATE_INTERVAL_DEFAULT));
 		filter.setText(preferences.getString(Settings.FILTER, ""));
 		showAvatar.setChecked(preferences.getBoolean(Settings.SHOW_AVATAR, Settings.SHOW_AVATAR_DEFAULT));
