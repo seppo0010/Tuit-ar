@@ -1,6 +1,8 @@
 package com.tuit.ar.models;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,6 +20,8 @@ import com.tuit.ar.api.request.Options;
 import com.tuit.ar.databases.Model;
 
 public class User extends Model implements TwitterAccountRequestsObserver {
+	static private HashMap<Long, WeakReference<User>> cache = new HashMap<Long, WeakReference<User>>();
+
 	private static final String[] columns = new String[]{
 		"description", "followers_count", "following", "friends_count", "id", "location", "name", "profile_image_url", "is_protected", "screen_name", "statuses_count", "url", "verified", "belongs_to_user"
 	};
@@ -39,7 +43,11 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	private long belongs_to_user;
 
 	private TwitterRequest followRequest;
-	
+
+	static public User get(long id) {
+		return cache.containsKey(id) ? cache.get(id).get() : null;
+	}
+
 	public User(Cursor query) {
 		super();
 		setDescription(query.getString(0));
@@ -56,11 +64,13 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 		setUrl(query.getString(11));
 		setVerified(query.getInt(12) == 1);
 		setBelongsToUser(query.getLong(13));
+		cache.put(this.getId(), new WeakReference<User>(this));
 	}
 
 	public User(JSONObject object) {
 		super();
 		this.dataSourceJSON = object;
+		cache.put(this.getId(), new WeakReference<User>(this));
 	}
 
 	public String getDescription() {
@@ -119,7 +129,7 @@ public class User extends Model implements TwitterAccountRequestsObserver {
 	public long getId() {
 		if (id != 0 || dataSourceJSON == null) return id;
 		try {
-			return id = dataSourceJSON.getInt("id");
+			return id = dataSourceJSON.getLong("id");
 		} catch (JSONException e) {
 			return 0;
 		}

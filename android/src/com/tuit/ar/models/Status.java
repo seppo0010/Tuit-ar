@@ -63,6 +63,9 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 
 	public User getUser() {
 		if (user != null) return user;
+		user = User.get(getUserId());
+		if (user != null) return user;
+
 		if (dataSourceJSON != null) { 
 			try {
 				return user = new User(dataSourceJSON.getJSONObject("user"));
