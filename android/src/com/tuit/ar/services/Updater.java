@@ -28,7 +28,6 @@ public class Updater extends Service implements SettingsObserver {
 				Friends.getInstance(account).refresh();
 				Replies.getInstance(account).refresh();
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(), getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
 			}
 		}
 	};
