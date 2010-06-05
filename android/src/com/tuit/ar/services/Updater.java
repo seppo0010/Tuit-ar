@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
-import android.widget.Toast;
 
-import com.tuit.ar.R;
 import com.tuit.ar.api.Twitter;
 import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.models.Settings;
