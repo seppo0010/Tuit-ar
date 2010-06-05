@@ -2,6 +2,11 @@ package com.tuit.ar.api;
 
 import java.util.ArrayList;
 
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+
 
 public class Twitter {
 	static boolean isSecure = false;
@@ -10,6 +15,12 @@ public class Twitter {
 
 	private ArrayList<TwitterObserver> observers = new ArrayList<TwitterObserver>(); 
 	private ArrayList<TwitterAccount> accounts; 
+
+	private static String CONSUMER_KEY = "wLR28XpgOKbmpaFFvtMVA";
+	private static String CONSUMER_SECRET = "WOMQjlVaeuTs0eVQfTqXRxfLD58gbGCQrZdDIrQUSU";
+	public static String CALLBACK_URL = "tuitar://login";
+	private OAuthProvider provider;
+	private CommonsHttpOAuthConsumer consumer;
 
 	public static Twitter getInstance() {
 		if (instance == null)
@@ -33,6 +44,16 @@ public class Twitter {
 	protected void notifyChanges() {
 		for (TwitterObserver observer : observers) {
 			observer.accountListHasChanged(this);
+		}
+	}
+
+	private void createConsumerAndProvider() {
+		if (consumer == null) consumer = new CommonsHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);  
+		if (provider == null) {
+			provider = new CommonsHttpOAuthProvider("http://twitter.com/oauth/request_token", "http://twitter.com/oauth/access_token", "http://twitter.com/oauth/authorize");
+
+			// We are not sure if the provider is the same as before...
+			provider.setOAuth10a(true);
 		}
 	}
 
@@ -67,5 +88,15 @@ public class Twitter {
 		this.accounts.remove(account);
 		this.accounts.set(0, account);
 		this.accounts.add(previousDefault);
+	}
+
+	public OAuthConsumer getConsumer() {
+		createConsumerAndProvider();
+		return consumer;
+	}
+
+	public OAuthProvider getProvider() {
+		createConsumerAndProvider();
+		return provider;
 	}
 }

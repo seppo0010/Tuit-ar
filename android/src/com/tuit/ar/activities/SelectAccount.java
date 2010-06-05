@@ -3,9 +3,6 @@ package com.tuit.ar.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import oauth.signpost.OAuthProvider;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -35,16 +32,9 @@ import com.tuit.ar.databases.Cache;
 public class SelectAccount extends ListActivity implements TwitterObserver, OnItemLongClickListener {
 	protected static final int ACCOUNT_MENU_DELETE = 0;
 
-	private static String CONSUMER_KEY = "wLR28XpgOKbmpaFFvtMVA";
-	private static String CONSUMER_SECRET = "WOMQjlVaeuTs0eVQfTqXRxfLD58gbGCQrZdDIrQUSU";
-	private static String CALLBACK_URL = "tuitar://login";
-	private OAuthProvider provider;
-	static private CommonsHttpOAuthConsumer consumer;
 	static private AccountsAdapter accountsAdapter;
 	private ArrayList<TwitterAccount> accounts;
-
-	// FIXME: is there any way to avoid using the same Intent data twice?
-	private boolean isURIUsed = false;
+	private Twitter twitter;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -54,7 +44,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 
 		Cache.getInstance(this);
 		
-		Twitter twitter = Twitter.getInstance();
+		twitter = Twitter.getInstance();
 		accounts = (ArrayList<TwitterAccount>) twitter.getAccounts().clone();
 		this.setListAdapter(accountsAdapter = new AccountsAdapter(this));
 		getListView().setOnItemLongClickListener(this);
@@ -107,44 +97,13 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 		return true;
 	}
 
-	private void createConsumerAndProvider() {
-		if (consumer == null) consumer = new CommonsHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);  
-		if (provider == null) {
-			provider = new CommonsHttpOAuthProvider("http://twitter.com/oauth/request_token", "http://twitter.com/oauth/access_token", "http://twitter.com/oauth/authorize");
-
-			// We are not sure if the provider is the same as before...
-			provider.setOAuth10a(true);
-		}
-	}
-
 	private void addAccount() {
 		String authUrl;
 		try {
-			createConsumerAndProvider();
-			authUrl = provider.retrieveRequestToken(consumer, CALLBACK_URL);
+			authUrl = twitter.getProvider().retrieveRequestToken(twitter.getConsumer(), Twitter.CALLBACK_URL);
 			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));  
 		} catch (Exception e) {
 			Toast.makeText(this, getString(R.string.unableToAddAccount), Toast.LENGTH_SHORT).show();
-		}  
-	}
-
-	public void onResume() {
-		super.onResume();
-		Uri uri = this.getIntent().getData();
-		if (isURIUsed == false && uri != null && uri.toString().startsWith(CALLBACK_URL)) {
-			isURIUsed = true;
-			String verifier = uri.getQueryParameter("oauth_verifier");  
-  
-			try {
-				createConsumerAndProvider();
-				provider.retrieveAccessToken(consumer, verifier);
-				TwitterAccount account = new TwitterAccount(consumer);
-				consumer = null;
-				provider = null;
-				Twitter.getInstance().addAccount(account);
-			} catch (Exception e) {
-				Toast.makeText(this, getString(R.string.unableToAddAccount), Toast.LENGTH_SHORT).show();
-			}
 		}  
 	}
 
