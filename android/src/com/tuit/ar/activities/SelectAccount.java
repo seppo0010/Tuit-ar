@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -35,6 +36,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 	static private AccountsAdapter accountsAdapter;
 	private ArrayList<TwitterAccount> accounts;
 	private Twitter twitter;
+	private TextView text;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -46,10 +48,22 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 		
 		twitter = Twitter.getInstance();
 		accounts = (ArrayList<TwitterAccount>) twitter.getAccounts().clone();
+		setLegend();
 		this.setListAdapter(accountsAdapter = new AccountsAdapter(this));
 		getListView().setOnItemLongClickListener(this);
 
 		twitter.addObserver(this);
+	}
+
+	private void setLegend() {
+		if (accounts.size() == 0) {
+			text = new TextView(this);
+			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			text.setText(getString(R.string.accountSummary));
+			addContentView(text, params);
+		} else if (text != null) {
+			text.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	public void accountListHasChanged(Twitter twitter) {
