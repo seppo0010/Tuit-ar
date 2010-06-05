@@ -71,12 +71,8 @@ public class Settings extends BroadcastReceiver {
 			if (manager.getBackgroundDataSetting() == false && preferences.getBoolean(Settings.AUTOMATIC_UPDATE, Settings.AUTOMATIC_UPDATE_DEFAULT)) {
 				Editor editor = preferences.edit();
 				editor.putBoolean(Settings.AUTOMATIC_UPDATE, false);
-				if (editor.commit()) {
-					callObservers();
-				}
+				editor.commit();
 			}
-		} else if (intent.getAction().equals(android.net.ConnectivityManager.CONNECTIVITY_ACTION)) {
-			callObservers();
 		}
 	}
 }
