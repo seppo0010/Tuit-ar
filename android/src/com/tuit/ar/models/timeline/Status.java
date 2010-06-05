@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.os.Handler;
@@ -53,7 +54,12 @@ abstract public class Status extends Timeline {
 					}
 					runnable.success = true;
 				} catch (Exception e) {
-					runnable.error = e.getLocalizedMessage();
+					try {
+						JSONObject response = new JSONObject(new JSONTokener(request.getResponse()));
+						runnable.error = response.getString("error");
+					} catch (Exception ex) {
+						runnable.error = e.getLocalizedMessage();
+					}
 					runnable.success = false;
 				}
 				handler.post(runnable);
