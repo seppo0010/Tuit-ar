@@ -1,20 +1,14 @@
 package com.tuit.ar.api;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import oauth.signpost.exception.OAuthCommunicationException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -47,6 +41,7 @@ public class TwitterRequest extends Request {
 	private int statusCode;
 	private String response;
 	private final TwitterAccount account;
+	private Exception communicationException = null;
 
 	public Options getUrl() { return url; }
 	public void setUrl(Options url) { this.url = url; } 
@@ -123,20 +118,17 @@ public class TwitterRequest extends Request {
 						byte[] bytes = output.toByteArray();
 						setResponse(new String(bytes));
 					}
-				} catch (OAuthMessageSignerException e1) {
-					e1.printStackTrace();
-				} catch (OAuthExpectationFailedException e1) {
-					e1.printStackTrace();
-				} catch (OAuthCommunicationException e1) {
-					e1.printStackTrace();
-				} catch (ClientProtocolException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+					communicationException = e;
 				}
 				handler.post(runnable);
 				account.removeUrlOnRequest(url);
 			}
 		}).start();
+	}
+
+	public String getErrorMessage() {
+		return communicationException.getMessage();
 	}
 }

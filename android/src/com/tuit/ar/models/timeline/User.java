@@ -30,7 +30,7 @@ public class User extends Status {
 		} catch (UniqueRequestException e) {
 			// I wanna ignore this exceptions
 		} catch (Exception e) {
-			failedToUpdate();
+			failedToUpdate(e.getLocalizedMessage());
 		}
 	}
 

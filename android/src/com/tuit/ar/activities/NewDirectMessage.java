@@ -101,7 +101,7 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
 
 		if (toUser == null) {
 			// FIXME: improve error message?
-			sendFailed();
+			sendFailed(null);
 			return;
 		}
 
@@ -109,7 +109,7 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
 
 		if (message == null || message.length() == 0) {
 			// FIXME: improve error message?
-			sendFailed();
+			sendFailed(null);
 			return;
 		}
 
@@ -120,11 +120,14 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
 			int method = TwitterRequest.METHOD_POST;
 			Twitter.getInstance().getDefaultAccount().requestUrl(Options.SEND_DIRECT_MESSAGE, params, method);
 		} catch (Exception e) {
-			sendFailed();
+			sendFailed(e.getLocalizedMessage());
 		}
 	}
-	public void sendFailed() {
-		Toast.makeText(this, getString(R.string.unableToPost), Toast.LENGTH_SHORT).show();
+	public void sendFailed(String message) {
+		if (message == null)
+			Toast.makeText(this, getString(R.string.unableToPost), Toast.LENGTH_SHORT).show();
+		else
+			Toast.makeText(this, getString(R.string.unableToPost) + "(" + message + ")", Toast.LENGTH_SHORT).show();
 	}
 
 	public void requestHasStarted(TwitterRequest request) {
@@ -138,7 +141,7 @@ public class NewDirectMessage extends Activity implements OnClickListener, Twitt
     			Toast.makeText(this, getString(R.string.messageSent), Toast.LENGTH_SHORT).show();
     			finish();
     		}
-    		else sendFailed();
+    		else sendFailed(request.getErrorMessage());
     	}
 	}
 

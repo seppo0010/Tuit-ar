@@ -6,5 +6,5 @@ public interface TimelineObserver {
 	public void timelineRequestStarted(Timeline timeline);
 	public void timelineRequestFinished(Timeline timeline);
 	public void timelineHasChanged(Timeline timeline);
-	public void timelineUpdateHasFailed(Timeline timeline);
+	public void timelineUpdateHasFailed(Timeline timeline, String message);
 }

@@ -50,9 +50,10 @@ abstract public class Status extends Timeline {
 						if (Status.this.tweets.size() > MAX_SIZE) {
 							Status.this.tweets.subList(MAX_SIZE, Status.this.tweets.size()).clear();
 						}
-						runnable.success = true;
 					}
+					runnable.success = true;
 				} catch (Exception e) {
+					runnable.error = e.getLocalizedMessage();
 					runnable.success = false;
 				}
 				handler.post(runnable);
@@ -70,11 +71,13 @@ abstract public class Status extends Timeline {
 
 	private class StatusRunnable implements Runnable {
 		public boolean success;
+		public String error = null;
+
 		public void run() {
 			if (success)
 				timelineChanged();
 			else
-				failedToUpdate();
+				failedToUpdate(error);
 			finishedUpdate();
 		}
 	};

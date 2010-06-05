@@ -40,7 +40,7 @@ public class ViewConversation extends Status {
 		} catch (UniqueRequestException e) {
 			// I wanna ignore this exceptions
 		} catch (Exception e) {
-			failedToUpdate();
+			failedToUpdate(e.getLocalizedMessage());
 		}
 	}
 
@@ -63,7 +63,7 @@ public class ViewConversation extends Status {
 
 			timelineChanged();
 		} catch (Exception e) {
-			failedToUpdate();
+			failedToUpdate(e.getLocalizedMessage());
 		}
 		finishedUpdate();
 	}

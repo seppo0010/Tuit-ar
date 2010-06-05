@@ -178,9 +178,12 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		this.setProgressBarIndeterminateVisibility(false);
 	}
 
-	public void timelineUpdateHasFailed(com.tuit.ar.models.Timeline timeline) {
+	public void timelineUpdateHasFailed(com.tuit.ar.models.Timeline timeline, String message) {
 		if (isVisible) {
-			Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
+			if (message == null)
+				Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(this, getString(R.string.unableToFetchTimeline) + "(" + message + ")", Toast.LENGTH_SHORT).show();
 		}
 	}
 

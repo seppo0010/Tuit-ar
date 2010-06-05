@@ -56,7 +56,7 @@ public class DirectMessages extends Timeline {
 				timelineChanged();
 			}
 		} catch (Exception e) {
-			failedToUpdate();
+			failedToUpdate(e.getLocalizedMessage());
 		}
 		finishedUpdate();
 	}

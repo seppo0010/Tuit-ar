@@ -196,11 +196,14 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 				Twitter.getInstance().getDefaultAccount().requestUrl(Options.POST_TWEET, params, method);
 			}
 		} catch (Exception e) {
-			sendFailed();
+			sendFailed(e.getLocalizedMessage());
 		}
 	}
-	public void sendFailed() {
-		Toast.makeText(this, getString(R.string.unableToPost), Toast.LENGTH_SHORT).show();
+	public void sendFailed(String message) {
+		if (message == null)
+			Toast.makeText(this, getString(R.string.unableToPost), Toast.LENGTH_SHORT).show();
+		else
+			Toast.makeText(this, getString(R.string.unableToPost) + "(" + message + ")", Toast.LENGTH_SHORT).show();
 	}
 
 	public void requestHasStarted(TwitterRequest request) {
@@ -217,7 +220,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
     				Twitter.getInstance().getDefaultAccount().requestUrl(Options.FRIENDS_TIMELINE);
     			} catch (Exception e) {}
     		}
-    		else sendFailed();
+    		else sendFailed(request.getErrorMessage());
     	}
 	}
 

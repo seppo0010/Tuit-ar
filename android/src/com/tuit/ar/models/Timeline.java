@@ -34,7 +34,7 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		} catch (UniqueRequestException e) {
 			// I wanna ignore this exceptions
 		} catch (Exception e) {
-			failedToUpdate();
+			failedToUpdate(e.getLocalizedMessage());
 		}
 	}
 
@@ -51,9 +51,9 @@ abstract public class Timeline implements TwitterAccountRequestsObserver {
 		}
     }
 
-	protected void failedToUpdate() {
+	protected void failedToUpdate(String message) {
 		for (TimelineObserver observer : observers) {
-			observer.timelineUpdateHasFailed(this);
+			observer.timelineUpdateHasFailed(this, message);
 		}
     }
 
