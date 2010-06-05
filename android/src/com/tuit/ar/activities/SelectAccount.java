@@ -36,7 +36,7 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 	static private AccountsAdapter accountsAdapter;
 	private ArrayList<TwitterAccount> accounts;
 	private Twitter twitter;
-	private TextView text;
+	private TextView text = null;
 
 	@SuppressWarnings("unchecked")
 	@Override
