@@ -103,7 +103,7 @@ public class TwitterAccount implements TwitterAccountRequestsObserver {
 	public void requestHasFinished(TwitterRequest request) {
 		if (request.getUrl() == Options.LOGIN) {
 			// Unauthorized! I'm invalid!!!
-			if (request.getStatusCode() > 400 && request.getStatusCode() < 500) {
+			if (request.getStatusCode() >= 400 && request.getStatusCode() < 500) {
 				try {
 					Twitter.getInstance().removeAccount(this);
 				} catch (Exception e) {
