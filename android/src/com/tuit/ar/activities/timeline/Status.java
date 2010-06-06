@@ -149,7 +149,17 @@ abstract public class Status extends Timeline implements SettingsObserver {
 						}
 						case MY_TWEET_MENU_SHOW_PROFILE:
 						{
-							showProfile(tweet.getUser());
+							ArrayList<String> users = tweet.getNamedUsers();
+							if (users.size() > 0) {
+								String sender = "@"+tweet.getUsername();
+								if (users.contains(sender)) {
+									users.remove(sender);
+								}
+								users.add(0, sender);
+								selectUser(users);
+							} else {
+								showProfile(tweet.getUser());
+							}
 							break;
 						}
 						case MY_TWEET_MENU_OPEN_LINKS:
@@ -217,7 +227,17 @@ abstract public class Status extends Timeline implements SettingsObserver {
 				}
 				case TWEET_MENU_SHOW_PROFILE:
 				{
-					showProfile(tweet.getUser());
+					ArrayList<String> users = tweet.getNamedUsers();
+					if (users.size() > 0) {
+						String sender = "@"+tweet.getUsername();
+						if (users.contains(sender)) {
+							users.remove(sender);
+						}
+						users.add(0, sender);
+						selectUser(users);
+					} else {
+						showProfile(tweet.getUser());
+					}
 					break;
 				}
 				case TWEET_MENU_OPEN_LINKS:
@@ -239,6 +259,16 @@ abstract public class Status extends Timeline implements SettingsObserver {
 					break;
 				}
 				}
+			}
+		}).show();
+	}
+
+	protected void selectUser(final ArrayList<String> users) {
+		new AlertDialog.Builder(this).
+		setTitle(getString(R.string.executeAction)).
+		setItems(users.toArray(new CharSequence[]{}), new OnClickListener() {
+			public void onClick(DialogInterface arg0, int pos) {
+				showProfile(users.get(pos));
 			}
 		}).show();
 	}

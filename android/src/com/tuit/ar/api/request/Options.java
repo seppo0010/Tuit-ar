@@ -150,6 +150,15 @@ public enum Options {
 		public boolean mustBeUnique() {
 			return false;
 		}
+	}, USER_PROFILE {
+		public String toString() {
+			return "users/show";
+		}
+
+		@Override
+		public boolean mustBeUnique() {
+			return true;
+		}
 	};
 	protected HashMap<String, String> parameters = null;
 

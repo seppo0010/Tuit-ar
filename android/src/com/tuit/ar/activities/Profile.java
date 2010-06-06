@@ -1,7 +1,16 @@
 package com.tuit.ar.activities;
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +28,7 @@ import com.tuit.ar.R;
 import com.tuit.ar.api.Avatar;
 import com.tuit.ar.api.AvatarObserver;
 import com.tuit.ar.api.Twitter;
+import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
@@ -42,6 +52,8 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	private Button url;
 
 	private User user = null;
+
+	private ProgressDialog loading = null;
 	static private User userToDisplay = null;
 
 	static public void setUserToDisplay(User user) {
@@ -101,9 +113,36 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			}
 		});
 
-		showFollowing();
+		if (user == null) {
+			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("screen_name", getIntent().getStringExtra("screen_name")));
+			try {
+				loading  = new ProgressDialog(this);
+				loading.setTitle(R.string.loading);
+				loading.show();
+				TwitterAccount account = Twitter.getInstance().getDefaultAccount();
+				account.requestUrl(Options.USER_PROFILE, params, TwitterRequest.METHOD_GET);
+				account.addRequestObserver(this);
+			} catch (Exception e) {
+				fetchUserFailed();
+			}
+		} else {
+			setUser();
+		}
+	}
 
+	private void fetchUserFailed() {
+		Toast.makeText(this, getString(R.string.unableToShowUser), Toast.LENGTH_SHORT).show();
+		finish();
+	}
+
+	private void setUser() {
 		if (user != null) {
+			if (loading != null) {
+				loading.hide();
+				loading = null;
+			}
+			showFollowing();
 			Avatar avatar = Avatar.get(user.getProfileImageUrl());
 			avatar.addRequestObserver(this);
 			avatar.download();
@@ -162,14 +201,26 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	}
 
 	public void requestHasFinished(TwitterRequest request) {
-		if ((!request.getUrl().equals(Options.FOLLOW)) && (!request.getUrl().equals(Options.UNFOLLOW))) return;
-		user.requestHasFinished(request);
-		showFollowing();
+		if ((request.getUrl().equals(Options.FOLLOW)) || (request.getUrl().equals(Options.UNFOLLOW))) {
+			user.requestHasFinished(request);
+			showFollowing();
+		} else if (request.getUrl().equals(Options.USER_PROFILE)) {
+			try {
+				user = new User(new JSONObject(new JSONTokener(request.getResponse())));
+				setUser();
+			} catch (JSONException e) {
+				fetchUserFailed();
+			}
+		}
 	}
 
 	private void showFollowing() {
-		following.setVisibility(Twitter.getInstance().getDefaultAccount().getUser().getId() == user.getId() ? View.GONE : View.VISIBLE);
-		following.setText(getString(user.isFollowing() ? R.string.following : R.string.notFollowing));
+		if (user == null) {
+			following.setVisibility(View.GONE);
+		} else {
+			following.setVisibility(Twitter.getInstance().getDefaultAccount().getUser().getId() == user.getId() ? View.GONE : View.VISIBLE);
+			following.setText(getString(user.isFollowing() ? R.string.following : R.string.notFollowing));
+		}
 	}
 
 	public void requestHasStarted(TwitterRequest request) {

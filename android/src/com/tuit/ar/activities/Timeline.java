@@ -148,6 +148,19 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		startActivity(new Intent(getApplicationContext(), Profile.class));
 	}
 
+	protected void showProfile(String screen_name) {
+		ArrayList<User> users = User.select("screen_name = ?", new String[]{screen_name}, null, null, null, "1");
+		Intent intent = new Intent(getApplicationContext(), Profile.class);
+		if (users.size() > 0) {
+			Profile.setUserToDisplay(users.get(0));
+		} else {
+			Profile.setUserToDisplay(null);
+			intent.putExtra("screen_name", screen_name);
+		}
+		startActivity(intent);
+	}
+
+
 	protected void openLinksInBrowser(ListElement tweet) {
 		final String[] urls = parseUrls(tweet.getText());
 		if (urls.length == 0) {

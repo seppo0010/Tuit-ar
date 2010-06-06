@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -379,5 +381,20 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public ArrayList<String> getNamedUsers() {
+		String message = getMessage();
+		Pattern p = Pattern.compile("@[A-Za-z0-9]+");
+
+		Matcher m = p.matcher(message);
+		ArrayList<String> users = new ArrayList<String>();
+		while (m.find()) {
+			String user = m.group();
+			if (users.contains(user) == false) {
+				users.add(user);
+			}
+		}
+		return users;
 	}
 }
