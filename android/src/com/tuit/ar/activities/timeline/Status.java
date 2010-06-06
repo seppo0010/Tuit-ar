@@ -268,7 +268,7 @@ abstract public class Status extends Timeline implements SettingsObserver {
 		setTitle(getString(R.string.executeAction)).
 		setItems(users.toArray(new CharSequence[]{}), new OnClickListener() {
 			public void onClick(DialogInterface arg0, int pos) {
-				showProfile(users.get(pos));
+				showProfile(users.get(pos).substring(1));
 			}
 		}).show();
 	}
