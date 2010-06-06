@@ -28,7 +28,6 @@ import com.tuit.ar.R;
 import com.tuit.ar.api.Avatar;
 import com.tuit.ar.api.AvatarObserver;
 import com.tuit.ar.api.Twitter;
-import com.tuit.ar.api.TwitterAccount;
 import com.tuit.ar.api.TwitterAccountRequestsObserver;
 import com.tuit.ar.api.TwitterRequest;
 import com.tuit.ar.api.request.Options;
@@ -62,12 +61,33 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.profile);
 		Twitter.getInstance().getDefaultAccount().addRequestObserver(this);
 		user = userToDisplay;
 		
 		userToDisplay = null;
+		if (user == null) {
+			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("screen_name", getIntent().getStringExtra("screen_name")));
+			try {
+				loading  = new ProgressDialog(this);
+				loading.setTitle(R.string.loading);
+				loading.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface arg0) {
+						Profile.this.finish();
+					}
+				});
+				loading.show();
+				Twitter.getInstance().getDefaultAccount().requestUrl(Options.USER_PROFILE, params, TwitterRequest.METHOD_GET);
+			} catch (Exception e) {
+				fetchUserFailed();
+			}
+		} else {
+			setUI();
+		}
+	}
 
+	private void setUI() {
+		setContentView(R.layout.profile);
 		avatar = (ImageView)findViewById(R.id.avatar);
 		avatar.setVisibility(View.INVISIBLE);
 		nickname = (TextView)findViewById(R.id.nickname);
@@ -113,25 +133,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			}
 		});
 
-		if (user == null) {
-			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("screen_name", getIntent().getStringExtra("screen_name")));
-			try {
-				loading  = new ProgressDialog(this);
-				loading.setTitle(R.string.loading);
-				loading.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface arg0) {
-						Profile.this.finish();
-					}
-				});
-				loading.show();
-				Twitter.getInstance().getDefaultAccount().requestUrl(Options.USER_PROFILE, params, TwitterRequest.METHOD_GET);
-			} catch (Exception e) {
-				fetchUserFailed();
-			}
-		} else {
-			setUser();
-		}
+		setUser();
 	}
 
 	private void fetchUserFailed() {
@@ -210,7 +212,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 		} else if (request.getUrl().equals(Options.USER_PROFILE)) {
 			try {
 				user = new User(new JSONObject(new JSONTokener(request.getResponse())));
-				setUser();
+				setUI();
 			} catch (JSONException e) {
 				fetchUserFailed();
 			}
@@ -251,9 +253,9 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	public void onDestroy() {
 		super.onDestroy();
 		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
-		following.setOnClickListener(null);
-		url.setOnClickListener(null);
-		sendDm.setOnClickListener(null);
-		seeInMap.setOnClickListener(null);
+		if (following != null) following.setOnClickListener(null);
+		if (url != null) url.setOnClickListener(null);
+		if (sendDm != null) sendDm.setOnClickListener(null);
+		if (seeInMap != null) seeInMap.setOnClickListener(null);
 	}
 }
