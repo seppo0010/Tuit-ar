@@ -119,6 +119,11 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 			try {
 				loading  = new ProgressDialog(this);
 				loading.setTitle(R.string.loading);
+				loading.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface arg0) {
+						Profile.this.finish();
+					}
+				});
 				loading.show();
 				Twitter.getInstance().getDefaultAccount().requestUrl(Options.USER_PROFILE, params, TwitterRequest.METHOD_GET);
 			} catch (Exception e) {
