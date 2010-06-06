@@ -194,7 +194,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 			if (message == null)
 				Toast.makeText(this, getString(R.string.unableToFetchTimeline), Toast.LENGTH_SHORT).show();
 			else
-				Toast.makeText(this, getString(R.string.unableToFetchTimeline) + "(" + message + ")", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.unableToFetchTimeline) + " (" + message + ")", Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -203,7 +203,7 @@ public class NewTweet extends Activity implements OnClickListener, TwitterAccoun
 		if (message == null)
 			Toast.makeText(this, getString(R.string.unableToPost), Toast.LENGTH_SHORT).show();
 		else
-			Toast.makeText(this, getString(R.string.unableToPost) + "(" + message + ")", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.unableToPost) + " (" + message + ")", Toast.LENGTH_SHORT).show();
 	}
 
 	public void requestHasStarted(TwitterRequest request) {
