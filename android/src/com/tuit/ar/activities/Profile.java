@@ -120,9 +120,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 				loading  = new ProgressDialog(this);
 				loading.setTitle(R.string.loading);
 				loading.show();
-				TwitterAccount account = Twitter.getInstance().getDefaultAccount();
-				account.requestUrl(Options.USER_PROFILE, params, TwitterRequest.METHOD_GET);
-				account.addRequestObserver(this);
+				Twitter.getInstance().getDefaultAccount().requestUrl(Options.USER_PROFILE, params, TwitterRequest.METHOD_GET);
 			} catch (Exception e) {
 				fetchUserFailed();
 			}
@@ -247,6 +245,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Twitter.getInstance().getDefaultAccount().removeRequestObserver(this);
 		following.setOnClickListener(null);
 		url.setOnClickListener(null);
 		sendDm.setOnClickListener(null);
