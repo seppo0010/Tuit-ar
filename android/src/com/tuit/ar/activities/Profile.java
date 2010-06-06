@@ -168,6 +168,7 @@ public class Profile extends Activity implements AvatarObserver, TwitterAccountR
 	}
 
 	private void showFollowing() {
+		following.setVisibility(Twitter.getInstance().getDefaultAccount().getUser().getId() == user.getId() ? View.GONE : View.VISIBLE);
 		following.setText(getString(user.isFollowing() ? R.string.following : R.string.notFollowing));
 	}
 

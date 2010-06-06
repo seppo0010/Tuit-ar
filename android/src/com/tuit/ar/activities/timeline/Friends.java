@@ -19,7 +19,8 @@ public class Friends extends com.tuit.ar.activities.timeline.Status {
 		menu.add(0, MENU_REPLIES, 0, R.string.replies);  
 		menu.add(0, MENU_DIRECT, 0, R.string.directMessages);  
 		menu.add(0, MENU_FAVORITES, 0, R.string.favorites);  
-		menu.add(0, MENU_PREFERENCES, 0, R.string.preferences);  
+		menu.add(0, MENU_PREFERENCES, 0, R.string.preferences);
+		menu.add(0, MENU_MY_PROFILE, 0, R.string.profile);
 		return true;  
 	}  
 

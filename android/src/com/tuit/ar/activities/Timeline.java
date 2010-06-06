@@ -29,6 +29,7 @@ import com.tuit.ar.activities.timeline.Friends;
 import com.tuit.ar.activities.timeline.Replies;
 import com.tuit.ar.api.Avatar;
 import com.tuit.ar.api.AvatarObserver;
+import com.tuit.ar.api.Twitter;
 import com.tuit.ar.models.ListElement;
 import com.tuit.ar.models.Settings;
 import com.tuit.ar.models.User;
@@ -44,6 +45,7 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	protected static final int MENU_PREFERENCES = 5;
 	protected static final int MENU_NEW_DIRECT_MESSAGE = 6;
 	protected static final int MENU_FAVORITES = 7;
+	protected static final int MENU_MY_PROFILE = 8;
 
 	
 	protected TimelineAdapter<? extends ListElement> timelineAdapter;
@@ -126,6 +128,13 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 	    {
 			Intent intent = new Intent(this.getApplicationContext(), NewDirectMessage.class);
 			this.startActivity(intent);		
+	        return true;
+	    }
+	    case MENU_MY_PROFILE:
+	    {
+			Profile.setUserToDisplay(Twitter.getInstance().getDefaultAccount().getUser());
+			Intent intent = new Intent(this.getApplicationContext(), Profile.class);
+			this.startActivity(intent);
 	        return true;
 	    }
 	    }
