@@ -17,11 +17,12 @@ import com.tuit.ar.preferences.DialogPreferenceListener;
 import com.tuit.ar.preferences.EditTextPreference;
 
 public class Preferences extends PreferenceActivity implements SettingsObserver {
-	ListPreference updateInterval;
-	CheckBoxPreference automaticUpdate;
-	EditTextPreference filter;
-	DialogPreference filterDelete;
-	CheckBoxPreference showAvatar;
+	private ListPreference updateInterval;
+	private CheckBoxPreference lazyMode;
+	private CheckBoxPreference automaticUpdate;
+	private EditTextPreference filter;
+	private DialogPreference filterDelete;
+	private CheckBoxPreference showAvatar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +76,21 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 				return false;
 			}
 		});
+
+		lazyMode = (CheckBoxPreference) findPreference(Settings.LAZY_MODE);
+		lazyMode.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				updateSettings();
+				return false;
+			}
+		});
 		setValues();
 	}
 
 	protected void updateSettings() {
 		Settings settings = Settings.getInstance();
 		Editor editor = settings.getSharedPreferences(this).edit();
+		editor.putBoolean(Settings.LAZY_MODE, lazyMode.isChecked());
 		editor.putBoolean(Settings.AUTOMATIC_UPDATE, automaticUpdate.isChecked());
 		editor.putString(Settings.UPDATE_INTERVAL, updateInterval.getValue());
 		editor.putString(Settings.FILTER, filter.getText());
@@ -98,6 +108,7 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 		Settings settings = Settings.getInstance();
 		setTitle(getString(R.string.preferencesType).replaceAll("%s", settings.getSettingsName(this)));
 		SharedPreferences preferences = settings.getSharedPreferences(this);
+		lazyMode.setChecked(preferences.getBoolean(Settings.LAZY_MODE, Settings.LAZY_MODE_DEFAULT));
 		automaticUpdate.setChecked(preferences.getBoolean(Settings.AUTOMATIC_UPDATE, Settings.AUTOMATIC_UPDATE_DEFAULT));
 		updateInterval.setEnabled(automaticUpdate.isChecked());
 		updateInterval.setValue(preferences.getString(Settings.UPDATE_INTERVAL, Settings.UPDATE_INTERVAL_DEFAULT));
@@ -108,6 +119,7 @@ public class Preferences extends PreferenceActivity implements SettingsObserver 
 	public void onDestroy() {
 		super.onDestroy();
 		Settings.getInstance().removeObserver(this);
+		lazyMode.setOnPreferenceClickListener(null);
 		automaticUpdate.setOnPreferenceClickListener(null);
 		updateInterval.setOnPreferenceClickListener(null);
 		filter.setDialogPreferenceListener(null);

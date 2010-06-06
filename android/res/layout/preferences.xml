@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@+string/updatePreferences">
+		<CheckBoxPreference android:title="@+string/lazyMode"
+			android:defaultValue="false" android:key="lazyMode"
+			android:summary="@+string/lazyModeSummary" />
 		<CheckBoxPreference android:title="@+string/automaticUpdate"
 			android:defaultValue="false" android:key="automaticUpdate" />
 		<ListPreference android:title="@+string/updateInterval"

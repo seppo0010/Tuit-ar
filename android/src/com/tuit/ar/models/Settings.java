@@ -18,10 +18,12 @@ public class Settings extends BroadcastReceiver {
 	final static public String FILTER = "filter";
 	final static public String FILTER_DELETE = "deleteFilter";
 	public static final String SHOW_AVATAR = "showAvatar";
+	public static final String LAZY_MODE = "lazyMode";
 	
 	final static public String UPDATE_INTERVAL_DEFAULT = "5";
-	final static public Boolean AUTOMATIC_UPDATE_DEFAULT = Boolean.TRUE;
+	final static public Boolean AUTOMATIC_UPDATE_DEFAULT = Boolean.FALSE;
 	final static public Boolean SHOW_AVATAR_DEFAULT = Boolean.FALSE;
+	public static final Boolean LAZY_MODE_DEFAULT = Boolean.TRUE;
 
 	static private ArrayList<SettingsObserver> observers = new ArrayList<SettingsObserver>(); 
 	static private Settings instance;
