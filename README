@@ -1,3 +1,9 @@
 Twitter client.
 
 The goal is to make a lightweight and yet full featured client. The way to implement is making every feature optional.
+
+How to install.
+You can
+- Compile it from the source provided here
+- Download the latest .apk from http://hq.delapalo.net/~sebastianw/aptoide/Tuit-ar.apk
+- Add the aptoide repository: http://hq.delapalo.net/~sebastianw/aptoide/
