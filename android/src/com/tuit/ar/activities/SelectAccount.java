@@ -3,7 +3,6 @@ package com.tuit.ar.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import oauth.signpost.exception.OAuthMessageSignerException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -22,7 +21,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
