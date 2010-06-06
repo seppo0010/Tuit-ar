@@ -3,14 +3,17 @@ package com.tuit.ar.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import oauth.signpost.exception.OAuthMessageSignerException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -112,13 +116,39 @@ public class SelectAccount extends ListActivity implements TwitterObserver, OnIt
 	}
 
 	private void addAccount() {
-		String authUrl;
+		
 		try {
-			authUrl = twitter.getProvider().retrieveRequestToken(twitter.getConsumer(), Twitter.CALLBACK_URL);
-			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));  
+			final ProgressDialog dialog = new ProgressDialog(this);
+			dialog.setTitle(R.string.loading);
+			dialog.show();
+			final Handler handler = new Handler();
+			final AddAccountRunnable runnable = new AddAccountRunnable();
+			new Thread() {
+				public void run() {
+					try {
+						runnable.dialog = dialog;
+						runnable.authUrl = twitter.getProvider().retrieveRequestToken(twitter.getConsumer(), Twitter.CALLBACK_URL);
+					} catch (Exception e) {
+					}
+					handler.post(runnable);
+				}
+			}.start();
 		} catch (Exception e) {
-			Toast.makeText(this, getString(R.string.unableToAddAccount), Toast.LENGTH_SHORT).show();
 		}  
+	}
+
+	private class AddAccountRunnable implements Runnable {
+		protected ProgressDialog dialog;
+		protected String authUrl;
+
+		public void run() {
+			dialog.hide();
+			if (authUrl != null) {
+				SelectAccount.this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+			} else {
+				Toast.makeText(SelectAccount.this, getString(R.string.unableToAddAccount), Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 	public void onDestroy() {
