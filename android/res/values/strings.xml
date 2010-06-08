@@ -105,4 +105,6 @@ CREATE TABLE directmessage ( id INTEGER, sender_id INTEGER, date INTEGER, text T
 <string name="lazyMode">Modo "vago"</string>
 <string name="lazyModeSummary">Estando habilitado, no se actualizará automáticamente al cargar la Timeline.</string>
 <string name="unableToShowUser">No se puede ver el usuario seleccionado</string>
+<string name="firstRun">Primera ejecución</string>
+<string name="firstRunMessage">Bienvenido! Esta es su primera ejecución de Tuit-ar. Por defecto, se van a ejecutar la menor cantidad de actualizaciones posibles. Si quiere aumentar la frecuencia puede desactivar el modo "vago" en preferencias. ¿Desea deshabilitarlo ahora?</string>
 </resources>
