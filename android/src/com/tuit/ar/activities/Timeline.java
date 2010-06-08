@@ -60,13 +60,17 @@ abstract public class Timeline extends ListActivity implements TimelineObserver 
 		setContentView(R.layout.timeline);
 
 		getTimeline().addObserver(this);
-		if (Settings.getInstance().getSharedPreferences(this).getBoolean(Settings.LAZY_MODE, Settings.LAZY_MODE_DEFAULT) == false) {
+		if (Settings.getInstance().getSharedPreferences(this).getBoolean(Settings.LAZY_MODE, Settings.LAZY_MODE_DEFAULT) == false || shouldOverrideLazyMode()) {
 			getTimeline().refresh();
 		}
 		this.startService(new Intent(this, Updater.class));
 	}
 
-    protected void onResume() {
+    protected boolean shouldOverrideLazyMode() {
+		return false;
+	}
+
+	protected void onResume() {
     	super.onResume();
     	isVisible = true;
     	timelineAdapter.notifyDataSetChanged();

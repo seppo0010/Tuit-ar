@@ -14,6 +14,10 @@ public class ViewConversation extends Status {
 		super.onCreate(savedInstanceState);
 	}
 
+    protected boolean shouldOverrideLazyMode() {
+		return true;
+	}
+
 	@Override
 	protected com.tuit.ar.models.timeline.Status getTimeline() {
 		return timeline;

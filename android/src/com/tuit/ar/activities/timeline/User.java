@@ -11,6 +11,7 @@ import com.tuit.ar.api.Twitter;
 
 public class User extends Status {
 	static private com.tuit.ar.models.User user;
+	protected com.tuit.ar.models.timeline.Status timeline = null;
 
 	static public void setUser(com.tuit.ar.models.User _user) {
 		user = _user;
@@ -22,9 +23,14 @@ public class User extends Status {
 		setTitle(user.getScreenName());
 	}
 
+    protected boolean shouldOverrideLazyMode() {
+		return true;
+	}
+
 	@Override
 	protected com.tuit.ar.models.timeline.Status getTimeline() {
-		return new com.tuit.ar.models.timeline.User(Twitter.getInstance().getDefaultAccount(), user);
+		if (timeline == null) timeline = new com.tuit.ar.models.timeline.User(Twitter.getInstance().getDefaultAccount(), user);
+		return timeline;
 	}
 
 	@Override  
