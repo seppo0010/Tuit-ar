@@ -385,7 +385,7 @@ public class Status extends ListElement implements TwitterAccountRequestsObserve
 
 	public ArrayList<String> getNamedUsers() {
 		String message = getMessage();
-		Pattern p = Pattern.compile("@[A-Za-z0-9]+");
+		Pattern p = Pattern.compile("@[A-Za-z0-9\\_]+");
 
 		Matcher m = p.matcher(message);
 		ArrayList<String> users = new ArrayList<String>();
